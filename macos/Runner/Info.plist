@@ -28,5 +28,11 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Sesli mesaj göndermek için mikrofon erişimi gerekir.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Sohbete fotoğraf eklemek için galeri erişimi gerekir.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Profil fotoğrafı çekmek için kamera erişimi gerekir.</string>
 </dict>
 </plist>

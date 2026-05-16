@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/onboarding_wizard_progress_bar.dart';
+
+String _wizardStepLabel(int current, int total) {
+  return AppTranslations.section(
+    'onboarding',
+    'wizard_step_label',
+  ).replaceAll('{current}', '$current').replaceAll('{total}', '$total');
+}
 
 class OnboardingWizardTopBar extends StatelessWidget {
   const OnboardingWizardTopBar({
@@ -37,12 +45,12 @@ class OnboardingWizardTopBar extends StatelessWidget {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.only(right: 8),
             child: OnboardingWizardProgressBar(fraction: progress),
           ),
         ),
         Text(
-          '$currentStep / $totalSteps',
+          _wizardStepLabel(currentStep, totalSteps),
           style: AppTextStyles.onboardingWizardStepLabel(),
         ),
       ],

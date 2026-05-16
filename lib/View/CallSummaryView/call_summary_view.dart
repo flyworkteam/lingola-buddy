@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
@@ -43,11 +42,18 @@ class CallSummaryView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final seconds = ref.watch(callSessionControllerProvider).lastDurationSeconds;
+    final seconds = ref
+        .watch(callSessionControllerProvider)
+        .lastDurationSeconds;
     final tutorName = AppTranslations.section('call', 'title');
-    final subject = AppTranslations.section('video_session', 'practice_subject');
-    final topicPreview =
-        AppTranslations.section('video_session', 'next_topic_preview');
+    final subject = AppTranslations.section(
+      'video_session',
+      'practice_subject',
+    );
+    final topicPreview = AppTranslations.section(
+      'video_session',
+      'next_topic_preview',
+    );
 
     final feedback = _interp(
       AppTranslations.section('video_session', 'feedback_great'),
@@ -59,14 +65,13 @@ class CallSummaryView extends ConsumerWidget {
     );
     final badgeText = _interp(
       AppTranslations.section('video_session', 'badge_free'),
-      {
-        'current': '$_freeUsed',
-        'total': '$_freeTotal',
-      },
+      {'current': '$_freeUsed', 'total': '$_freeTotal'},
     );
 
-    final roleLabel =
-        AppTranslations.section('video_session', 'role_label_teacher');
+    final roleLabel = AppTranslations.section(
+      'video_session',
+      'role_label_teacher',
+    );
     final nextChosen = _interp(
       AppTranslations.section('video_session', 'next_topic_chosen'),
       {'name': tutorName},
@@ -79,13 +84,16 @@ class CallSummaryView extends ConsumerWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(
+        bottom: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -131,18 +139,20 @@ class CallSummaryView extends ConsumerWidget {
                                           vertical: 4,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: Colors.black
-                                              .withValues(alpha: 0.5),
-                                          borderRadius:
-                                              BorderRadius.circular(999),
+                                          color: Colors.black.withValues(
+                                            alpha: 0.5,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            999,
+                                          ),
                                         ),
                                         child: Text(
                                           AppTranslations.section(
                                             'video_session',
                                             'you',
                                           ),
-                                          style: AppTextStyles
-                                              .callSummarySnapshotName(),
+                                          style:
+                                              AppTextStyles.callSummarySnapshotName(),
                                         ),
                                       ),
                                     ),
@@ -174,8 +184,8 @@ class CallSummaryView extends ConsumerWidget {
                                     value: '$_wordsDemo',
                                     valueStyle:
                                         AppTextStyles.callSummaryStatValue(
-                                      color: AppColors.brandPrimary,
-                                    ),
+                                          color: AppColors.brandPrimary,
+                                        ),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -188,8 +198,8 @@ class CallSummaryView extends ConsumerWidget {
                                     value: _fluencyDemo,
                                     valueStyle:
                                         AppTextStyles.callSummaryStatValue(
-                                      color: AppColors.callPreviewCtaGreen,
-                                    ),
+                                          color: AppColors.callPreviewCtaGreen,
+                                        ),
                                   ),
                                 ),
                               ],
@@ -206,9 +216,7 @@ class CallSummaryView extends ConsumerWidget {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(10),
-                        child: _SessionScoreCard(
-                          percent: _sessionScorePercent,
-                        ),
+                        child: _SessionScoreCard(percent: _sessionScorePercent),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -231,7 +239,7 @@ class CallSummaryView extends ConsumerWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -260,10 +268,7 @@ class CallSummaryView extends ConsumerWidget {
                       );
                     },
                     child: Text(
-                      AppTranslations.section(
-                        'video_session',
-                        'another_time',
-                      ),
+                      AppTranslations.section('video_session', 'another_time'),
                       style: AppTextStyles.callSummaryNextTitle().copyWith(
                         color: Colors.black.withValues(alpha: 0.65),
                       ),
@@ -335,15 +340,9 @@ class _HeaderRow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                feedback,
-                style: AppTextStyles.callSummaryFeedbackTitle(),
-              ),
+              Text(feedback, style: AppTextStyles.callSummaryFeedbackTitle()),
               const SizedBox(height: 4),
-              Text(
-                statusLine,
-                style: AppTextStyles.callSummaryStatusLine(),
-              ),
+              Text(statusLine, style: AppTextStyles.callSummaryStatusLine()),
             ],
           ),
         ),
@@ -355,10 +354,7 @@ class _HeaderRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(999),
             border: Border.all(color: AppColors.brandPrimary),
           ),
-          child: Text(
-            badgeText,
-            style: AppTextStyles.callSummaryQuotaBadge(),
-          ),
+          child: Text(badgeText, style: AppTextStyles.callSummaryQuotaBadge()),
         ),
       ],
     );
@@ -366,10 +362,7 @@ class _HeaderRow extends StatelessWidget {
 }
 
 class _TeacherOverlayRich extends StatelessWidget {
-  const _TeacherOverlayRich({
-    required this.tutorName,
-    required this.roleLabel,
-  });
+  const _TeacherOverlayRich({required this.tutorName, required this.roleLabel});
 
   final String tutorName;
   final String roleLabel;
@@ -437,10 +430,7 @@ class _SnapshotTile extends StatelessWidget {
             bottom: 0,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
-              child: Align(
-                alignment: overlayAlignment,
-                child: overlay,
-              ),
+              child: Align(alignment: overlayAlignment, child: overlay),
             ),
           ),
         ],
@@ -585,10 +575,7 @@ class _SessionScoreCard extends StatelessWidget {
 }
 
 class _NextTopicCard extends StatelessWidget {
-  const _NextTopicCard({
-    required this.title,
-    required this.subtitle,
-  });
+  const _NextTopicCard({required this.title, required this.subtitle});
 
   final String title;
   final String subtitle;
@@ -629,7 +616,12 @@ class _NextTopicCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppTextStyles.callSummaryQuotaBadge().copyWith(color: Colors.black)),
+                  Text(
+                    title,
+                    style: AppTextStyles.callSummaryQuotaBadge().copyWith(
+                      color: Colors.black,
+                    ),
+                  ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,

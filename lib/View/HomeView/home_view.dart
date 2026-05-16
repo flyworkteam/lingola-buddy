@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:lingola_buddy/Core/Config/app_navigator.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
-import 'package:lingola_buddy/Models/tutor_model.dart';
+import 'package:lingola_buddy/Core/Widgets/character_card.dart';
+import 'package:lingola_buddy/Core/Widgets/weekly_progress_panel.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/user_provider.dart';
 
@@ -32,6 +32,7 @@ class HomeView extends ConsumerWidget {
         ),
       ),
       body: ListView(
+        physics: ClampingScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
         children: [
           const _StreakCard(),
@@ -44,7 +45,7 @@ class HomeView extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           SizedBox(
-            height: 310,
+            height: CharacterCard.designHeight,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               clipBehavior: Clip.none,
@@ -52,10 +53,15 @@ class HomeView extends ConsumerWidget {
               separatorBuilder: (_, __) => const SizedBox(width: 8),
               itemBuilder: (context, index) {
                 final tutor = tutors[index];
-                return _CharacterCard(
+                return CharacterCard(
                   tutor: tutor,
-                  buttonLabel: AppTranslations.section('home', 'start_talking'),
-                  onPressed: () {},
+                  displayName: AppTranslations.section('tudor', tutor.id),
+                  buttonLabel: AppTranslations.section('tudor', 'start_talking'),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    '/tutor',
+                    arguments: tutor.id,
+                  ),
                 );
               },
             ),
@@ -73,7 +79,7 @@ class HomeView extends ConsumerWidget {
             style: AppTextStyles.homeSectionTitle(),
           ),
           const SizedBox(height: 10),
-          const _ProgressCard(),
+          const WeeklyProgressPanel(translationChapter: 'home'),
         ],
       ),
     );
@@ -443,111 +449,6 @@ class _DayState {
   final bool active;
 }
 
-class _CharacterCard extends StatelessWidget {
-  const _CharacterCard({
-    required this.tutor,
-    required this.buttonLabel,
-    required this.onPressed,
-  });
-
-  final TutorModel tutor;
-  final String buttonLabel;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 190,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: const Color(0xFFF6F6F6),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: ColoredBox(
-                    color: Colors.white,
-                    child: Center(child: _AvatarPlaceholder(name: tutor.name)),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 4, 10, 8),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        tutor.name,
-                        style: AppTextStyles.homeCharacterName(),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            AppTranslations.section('tudor', 'native'),
-                            style: AppTextStyles.homeCharacterMeta(),
-                          ),
-                          const SizedBox(width: 4),
-                          SvgPicture.asset('assets/icons/america.svg', width: 15, height: 15),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      InkWell(
-                        borderRadius: BorderRadius.circular(999),
-                        onTap: onPressed,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(
-                            buttonLabel,
-                            style: AppTextStyles.homeCharacterCta(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AvatarPlaceholder extends StatelessWidget {
-  const _AvatarPlaceholder({required this.name});
-
-  final String name;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      child: ClipRRect(
-        child: Image.asset(
-          'assets/images/avatar_1.png',
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return const SizedBox.shrink();
-          },
-        ),
-      ),
-    );
-  }
-}
-
 class _DailyConversationCard extends StatelessWidget {
   const _DailyConversationCard();
 
@@ -679,168 +580,4 @@ class _DailyConversationCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class _ProgressCard extends StatelessWidget {
-  const _ProgressCard();
-
-  static const _stats = [
-    _ProgressStat(
-      icon: '📚',
-      valueKey: 'word_value',
-      labelKey: 'word_label',
-      color: AppColors.brandPrimary,
-    ),
-    _ProgressStat(
-      icon: '🎯',
-      valueKey: 'accuracy_value',
-      labelKey: 'accuracy_label',
-      color: AppColors.callPreviewCtaGreen,
-    ),
-    _ProgressStat(
-      icon: '⏰',
-      valueKey: 'time_value',
-      labelKey: 'time_label',
-      color: Colors.black,
-    ),
-    _ProgressStat(
-      icon: '🏆',
-      valueKey: 'level_value',
-      labelKey: 'level_label',
-      color: Color(0xFFFF8D28),
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF6F6F6),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppTranslations.section('home', 'this_week'),
-              style: AppTextStyles.homeConversationSubtitle().copyWith(
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 10),
-            const _WeekStrip(),
-            const SizedBox(height: 10),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                const spacing = 10.0;
-                final tileWidth = (constraints.maxWidth - spacing) / 2;
-                final tileHeight = (tileWidth * 1.5)
-                    .clamp(120.0, 140.0)
-                    .toDouble();
-
-                return GridView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: _stats.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: spacing,
-                    crossAxisSpacing: spacing,
-                    mainAxisExtent: tileHeight,
-                  ),
-                  itemBuilder: (context, index) {
-                    return _ProgressStatTile(stat: _stats[index]);
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _WeekStrip extends StatelessWidget {
-  const _WeekStrip();
-
-  static const _keys = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            for (final key in _keys)
-              Text(
-                AppTranslations.section('home', key).toUpperCase(),
-                style: AppTextStyles.homeDayLabel(
-                  color: key == 'thu'
-                      ? AppColors.brandPrimary
-                      : AppColors.secondaryText,
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ProgressStatTile extends StatelessWidget {
-  const _ProgressStatTile({required this.stat});
-
-  final _ProgressStat stat;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(stat.icon, style: const TextStyle(fontSize: 36)),
-            const SizedBox(height: 4),
-            Text(
-              AppTranslations.section('home', stat.valueKey),
-              style: AppTextStyles.homeProgressValue(color: stat.color),
-            ),
-            Text(
-              AppTranslations.section('home', stat.labelKey).toUpperCase(),
-              style: AppTextStyles.homeProgressLabel(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ProgressStat {
-  const _ProgressStat({
-    required this.icon,
-    required this.valueKey,
-    required this.labelKey,
-    required this.color,
-  });
-
-  final String icon;
-  final String valueKey;
-  final String labelKey;
-  final Color color;
 }

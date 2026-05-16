@@ -51,7 +51,8 @@
         "plan_desc3": "İlk konuşman hazırlanıyor",
         "plan_ready_title": "Planın hazır",
         "plan_ready_desc": "Artık konuşabilirsin",
-        "plan_ready_button": "Konuşmaya başla"
+        "plan_ready_button": "Konuşmaya başla",
+        "wizard_step_label": "{total} adımdan {current}"
     },
     "call": {
         "title": "Sophie",
@@ -84,7 +85,31 @@
         "title": "Sohbet",
         "title_with_tutor": "Sohbet: {tutor}",
         "message_hint": "Bir mesaj yazın...",
-        "message_hint_short": "Mesaj..."
+        "message_hint_short": "Mesaj yazın...",
+        "type_message": "Bir mesaj yazın...",
+        "translation_prefix": "Çeviri",
+        "translating": "Çevriliyor…",
+        "recording": "Kayıt",
+        "sent_voice": "Sesli mesaj",
+        "transcribing": "Ses metne çevriliyor…",
+        "voice_too_short": "Kayıt çok kısa. Biraz daha konuşup tekrar dene.",
+        "voice_record_failed": "Kayıt başlatılamadı. Mikrofon iznini kontrol et.",
+        "voice_tap_hint": "Sesli mesaj: mikrofona dokun, bitince tekrar dokun",
+        "voice_cancel": "İptal",
+        "voice_send": "Gönder",
+        "open_settings": "Ayarları aç",
+        "hold_to_record": "Sesli mesaj için mikrofona dokun",
+        "attach_title": "Paylaş",
+        "attach_subtitle": "Sohbete eklemek istediğini seç",
+        "attach_photo": "Fotoğraf",
+        "attach_document": "Belge",
+        "attach_subtitle_photo": "Galeriden seç",
+        "attach_subtitle_document": "PDF, Word ve daha fazlası",
+        "attach_cancel": "Vazgeç",
+        "attach_error": "Dosya seçilemedi",
+        "sent_photo": "Bir fotoğraf paylaştım.",
+        "sent_document_named": "Belge paylaştım: {name}",
+        "api_missing": "OpenAI anahtarı tanımlı değil. Uygulamayı --dart-define=OPENAI_API_KEY=... ile çalıştırın."
     },
     "talk": {
         "history_title": "Sohbet geçmişi",
@@ -208,6 +233,12 @@
     "profile_settings": {
         "title": "Profil ayarları",
         "change_photo": "Fotoğrafı değiştir",
+        "photo_sheet_title": "Profil fotoğrafı",
+        "from_gallery": "Galeriden seç",
+        "from_camera": "Kamera ile çek",
+        "remove_photo": "Fotoğrafı kaldır",
+        "photo_updated": "Profil fotoğrafı güncellendi",
+        "photo_error": "Fotoğraf seçilemedi",
         "name": "Ad",
         "email": "E-posta",
         "save_changes": "Değişiklikleri kaydet",
@@ -223,6 +254,8 @@
         "q1": "Lingola Buddy nedir?",
         "q2": "Lingola Buddy nasıl çalışır?",
         "q3": "Uygulamada hangi diller desteklenmektedir?",
+        "a1": "Lingola Buddy, yapay zekâ destekli bir dil öğrenme ve konuşma pratiği uygulamasıdır.",
+        "a2": "Öğrenmek istediğiniz dilde AI tutorlarla sesli, görüntülü veya yazılı sohbet ederek günlük pratik yaparsınız.",
         "a3": "Lingola Buddy, kullanıcıların farklı dillerde konuşma pratiği yapabilmelerini sağlamak için birçok dili destekler. Kullanıcılar öğrenmek istedikleri dili seçerek o dilde yapay zekâ karakterlerle sohbet edebilir."
     },
     "profile_language": {
@@ -257,12 +290,17 @@
         "accuracy": "Doğruluk",
         "time": "Süre",
         "level": "Seviye",
+        "word_value": "247",
+        "accuracy_value": "%89",
+        "time_value": "30 dk",
+        "level_value": "B1",
         "minutes_short": "dk",
         "share_progress": "İlerlemeyi paylaş"
     },
     "legal": {
         "privacy_title": "Gizlilik politikası",
-        "terms_title": "Kullanım şartları"
+        "terms_title": "Kullanım şartları",
+        "retry": "Yeniden dene"
     },
     "paywall": {
         "headline": "Bugün Konuşmaya Başla — Ücretsiz",

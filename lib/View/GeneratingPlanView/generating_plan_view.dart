@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
@@ -75,7 +74,9 @@ class _GeneratingPlanViewState extends ConsumerState<GeneratingPlanView> {
         .round()
         .clamp(1, 4096);
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       body: Stack(
         fit: StackFit.expand,
@@ -207,6 +208,7 @@ class _GeneratingPlanViewState extends ConsumerState<GeneratingPlanView> {
           ),
         ],
       ),
+    ),
     );
   }
 }
@@ -228,60 +230,69 @@ class _PlanCheckRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: _iconBox,
-          height: _iconBox,
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 260),
-            switchInCurve: Curves.easeOutCubic,
-            switchOutCurve: Curves.easeOutCubic,
-            transitionBuilder: (child, anim) {
-              return ScaleTransition(scale: anim, child: child);
-            },
-            child: completed
-                ? SizedBox(
-                    key: const ValueKey<String>('done'),
-                    width: _iconBox,
-                    height: _iconBox,
-                    child: Center(
-                      child: SvgPicture.asset(
-                        checkAsset,
-                        width: 20,
-                        height: 20,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  )
-                : SizedBox(
-                    key: const ValueKey<String>('pending'),
-                    width: _iconBox,
-                    height: _iconBox,
-                    child: Center(
-                      child: SvgPicture.asset(
-                        pendingAsset,
-                        width: 20,
-                        height: 20,
-                        colorFilter: ColorFilter.mode(
-                          AppColors.secondaryText.withValues(alpha: 0.65),
-                          BlendMode.srcIn,
+    final maxTextWidth = MediaQuery.sizeOf(context).width - 72;
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxTextWidth),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: _iconBox,
+              height: _iconBox,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 260),
+                switchInCurve: Curves.easeOutCubic,
+                switchOutCurve: Curves.easeOutCubic,
+                transitionBuilder: (child, anim) {
+                  return ScaleTransition(scale: anim, child: child);
+                },
+                child: completed
+                    ? SizedBox(
+                        key: const ValueKey<String>('done'),
+                        width: _iconBox,
+                        height: _iconBox,
+                        child: Center(
+                          child: SvgPicture.asset(
+                            checkAsset,
+                            width: 20,
+                            height: 20,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      )
+                    : SizedBox(
+                        key: const ValueKey<String>('pending'),
+                        width: _iconBox,
+                        height: _iconBox,
+                        child: Center(
+                          child: SvgPicture.asset(
+                            pendingAsset,
+                            width: 20,
+                            height: 20,
+                            colorFilter: ColorFilter.mode(
+                              AppColors.secondaryText.withValues(alpha: 0.65),
+                              BlendMode.srcIn,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-          ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Flexible(
+              child: Text(
+                label,
+                style: AppTextStyles.generatingPlanCheckRow(
+                  completed: completed,
+                ),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.generatingPlanCheckRow(completed: completed),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

@@ -3,10 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
+import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
+import 'package:lingola_buddy/Models/app_enums.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 
 class TutorProfileView extends ConsumerWidget {
@@ -70,12 +72,11 @@ class TutorProfileView extends ConsumerWidget {
               ),
             ),
           ),
-          ColoredBox(
-            color: Colors.white.withValues(alpha: 0.88),
-          ),
+          ColoredBox(color: Colors.white.withValues(alpha: 0.88)),
           SafeArea(
             top: false,
             child: SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -96,9 +97,7 @@ class TutorProfileView extends ConsumerWidget {
                             fit: BoxFit.cover,
                             errorBuilder: (_, __, ___) => const ColoredBox(
                               color: Colors.white,
-                              child: Center(
-                                child: Icon(Icons.face, size: 72),
-                              ),
+                              child: Center(child: Icon(Icons.face, size: 72)),
                             ),
                           ),
                         ),
@@ -125,10 +124,7 @@ class TutorProfileView extends ConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        bioText,
-                        style: AppTextStyles.tutorProfileBio(),
-                      ),
+                      Text(bioText, style: AppTextStyles.tutorProfileBio()),
                       const SizedBox(height: 16),
                       SizedBox(
                         height: 50,
@@ -158,13 +154,11 @@ class TutorProfileView extends ConsumerWidget {
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                AppTranslations.section(
-                                  'tudor',
-                                  'voice_call',
-                                ),
-                                style: AppTextStyles.tutorProfileCallButtonLabel(
-                                  color: Colors.black,
-                                ),
+                                AppTranslations.section('tudor', 'voice_call'),
+                                style:
+                                    AppTextStyles.tutorProfileCallButtonLabel(
+                                      color: Colors.black,
+                                    ),
                               ),
                             ],
                           ),
@@ -180,11 +174,14 @@ class TutorProfileView extends ConsumerWidget {
                             shape: const StadiumBorder(),
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                           ),
-                          onPressed: () => Navigator.pushNamed(
-                            context,
-                            '/video',
-                            arguments: tutor.id,
-                          ),
+                          onPressed: () {
+                            ref
+                                .read(callSessionControllerProvider.notifier)
+                                .bindTutor(tutor.id, kind: CallKind.video);
+                            Navigator.of(context, rootNavigator: true).pushNamed(
+                              AppRoutes.activeCall,
+                            );
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -195,13 +192,11 @@ class TutorProfileView extends ConsumerWidget {
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                AppTranslations.section(
-                                  'tudor',
-                                  'video_call',
-                                ),
-                                style: AppTextStyles.tutorProfileCallButtonLabel(
-                                  color: Colors.white,
-                                ),
+                                AppTranslations.section('tudor', 'video_call'),
+                                style:
+                                    AppTextStyles.tutorProfileCallButtonLabel(
+                                      color: Colors.white,
+                                    ),
                               ),
                             ],
                           ),

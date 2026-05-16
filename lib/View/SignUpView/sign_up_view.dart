@@ -7,9 +7,8 @@ import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/brand_aura_backdrop.dart';
+import 'package:lingola_buddy/Core/Utils/legal_link_launcher.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/SessionController/session_controller.dart';
-import 'package:lingola_buddy/View/ProfilePrivacyView/profile_privacy_view.dart';
-import 'package:lingola_buddy/View/ProfileTermsView/profile_terms_view.dart';
 
 class SignUpView extends ConsumerStatefulWidget {
   const SignUpView({super.key});
@@ -55,19 +54,11 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
   }
 
   void _openTerms(BuildContext context) {
-    Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(
-        builder: (_) => const ProfileTermsView(),
-      ),
-    );
+    LegalLinkLauncher.openTermsOfService(context);
   }
 
   void _openPrivacy(BuildContext context) {
-    Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(
-        builder: (_) => const ProfilePrivacyView(),
-      ),
-    );
+    LegalLinkLauncher.openPrivacyPolicy(context);
   }
 
   Future<void> _finish(BuildContext context) async {

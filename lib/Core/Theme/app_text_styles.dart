@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 
 /// Tekrar kullanılan metin stilleri. Ekran bazlı özel stiller buradan türetilir.
@@ -836,6 +835,103 @@ abstract final class AppTextStyles {
       fontWeight: FontWeight.w500,
       letterSpacing: -0.14,
       color: AppColors.secondaryText,
+    );
+  }
+
+  /// Profile paylaş — davet bağlantısı (Figma: Medium 14/16, -1%, #000000)
+  static TextStyle profileShareInviteLink() {
+    return GoogleFonts.manrope(
+      fontSize: 14,
+      height: 16 / 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: -0.14,
+      color: Colors.black,
+    );
+  }
+
+  /// Profile SSS — soru (Figma: Bold 14/21, -1%, #000000)
+  static TextStyle profileFaqQuestion() {
+    return GoogleFonts.manrope(
+      fontSize: 14,
+      height: 21 / 14,
+      fontWeight: FontWeight.w700,
+      letterSpacing: -0.14,
+      color: Colors.black,
+    );
+  }
+
+  /// Profile SSS — cevap (Figma: Medium 14/20, -1%, secondary-text)
+  static TextStyle profileFaqAnswer() {
+    return GoogleFonts.manrope(
+      fontSize: 14,
+      height: 20 / 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: -0.14,
+      color: AppColors.secondaryText,
+    );
+  }
+
+  /// Profile dil satırı — seçili: mor; değil: siyah (Figma)
+  static TextStyle profileLanguageRow({required bool selected}) {
+    return GoogleFonts.manrope(
+      fontSize: 16,
+      height: 18 / 16,
+      fontWeight: FontWeight.w600,
+      letterSpacing: -0.16,
+      color: selected ? AppColors.brandPrimary : Colors.black,
+    );
+  }
+
+  /// Sohbet — üst başlık (Figma: SemiBold 24 / 28, -1%, #171717)
+  static TextStyle chatTitle() {
+    return GoogleFonts.manrope(
+      fontSize: 24,
+      height: 28 / 24,
+      fontWeight: FontWeight.w600,
+      letterSpacing: -0.24,
+      color: const Color(0xFF171717),
+    );
+  }
+
+  /// Sohbet — eğitmen balonu (Figma: Regular 14 / 20, secondary-text)
+  static TextStyle chatTutorMessage() {
+    return GoogleFonts.manrope(
+      fontSize: 14,
+      height: 20 / 14,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0,
+      color: const Color(0xFF96989C),
+    );
+  }
+
+  /// Sohbet — kullanıcı balonu (beyaz metin)
+  static TextStyle chatUserMessage() {
+    return GoogleFonts.manrope(
+      fontSize: 14,
+      height: 20 / 14,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0,
+      color: Colors.white,
+    );
+  }
+
+  /// Sohbet — balon içi kelime çevirisi
+  static TextStyle chatInlineTranslation({bool loading = false}) {
+    return GoogleFonts.manrope(
+      fontSize: 13,
+      height: 18 / 13,
+      fontWeight: FontWeight.w600,
+      color: loading ? AppColors.secondaryText : AppColors.brandPrimary,
+    );
+  }
+
+  /// Sohbet — giriş alanı placeholder
+  static TextStyle chatInputHint() {
+    return GoogleFonts.manrope(
+      fontSize: 14,
+      height: 20 / 14,
+      fontWeight: FontWeight.w400,
+      color: const Color(0xFF96989C),
     );
   }
 }

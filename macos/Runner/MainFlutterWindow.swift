@@ -9,6 +9,9 @@ class MainFlutterWindow: NSWindow {
     self.setFrame(windowFrame, display: true)
 
     RegisterGeneratedPlugins(registry: flutterViewController)
+    MicrophonePermissionPlugin.register(
+      with: flutterViewController.registrar(forPlugin: "MicrophonePermissionPlugin")
+    )
 
     super.awakeFromNib()
   }

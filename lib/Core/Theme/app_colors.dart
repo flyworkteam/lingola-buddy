@@ -11,16 +11,28 @@ abstract final class AppColors {
   /// İkincil metin (Figma secondary-text)
   static const Color secondaryText = Color(0xFF727590);
 
-  /// CTA pill: dikey mor gradient (Figma / splash ikon kartı ile uyumlu)
-  static const LinearGradient primaryCtaGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
+  /// Tam genişlik primary CTA — tek katman, alttan üste (#7429FF tabanlı)
+  static const LinearGradient primaryButtonGradient = LinearGradient(
+    begin: Alignment(0, 1),
+    end: Alignment(0, -1),
     colors: [
-      Color(0xFF8F56FF),
-      brandPrimary,
       Color(0xFF5A17D4),
+      brandPrimary,
+      Color(0xFF9568FF),
     ],
     stops: [0.0, 0.42, 1.0],
+  );
+
+  /// Onboarding / paywall CTA — alttan üste mor geçiş
+  static const LinearGradient primaryCtaGradient = LinearGradient(
+    begin: Alignment(0, 1),
+    end: Alignment(0, -1),
+    colors: [
+      Color(0xFF5A17D4),
+      brandPrimary,
+      Color(0xFF8F56FF),
+    ],
+    stops: [0.0, 0.58, 1.0],
   );
 
   /// Splash: sol üst nane tonu

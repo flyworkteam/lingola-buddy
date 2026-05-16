@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:lingola_buddy/Core/Config/app_config.dart';
 import 'package:lingola_buddy/Core/Config/app_navigator.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
@@ -28,7 +27,7 @@ class LingolaBuddyApp extends StatelessWidget {
           navigatorKey: appNavigatorKey,
           title: AppConfig.appName,
           theme: AppTheme.light(),
-          initialRoute: AppRoutes.splash,
+          initialRoute: AppRoutes.bottomNav,
           routes: AppRoutes.routes,
           onGenerateRoute: AppRoutes.onGenerateRoute,
           debugShowCheckedModeBanner: false,

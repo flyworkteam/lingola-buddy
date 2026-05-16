@@ -7,17 +7,20 @@ class TabNavigatorShell extends StatelessWidget {
     required this.navigatorKey,
     required this.onGenerateRoute,
     this.initialRoute = '/',
+    this.observers = const [],
   });
 
   final GlobalKey<NavigatorState> navigatorKey;
   final Route<dynamic>? Function(RouteSettings settings) onGenerateRoute;
   final String initialRoute;
+  final List<NavigatorObserver> observers;
 
   @override
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
       initialRoute: initialRoute,
+      observers: observers,
       onGenerateRoute: (settings) =>
           onGenerateRoute(settings) ??
           MaterialPageRoute<void>(

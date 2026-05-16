@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
+import 'package:lingola_buddy/Core/Widgets/character_card.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 
@@ -133,21 +133,27 @@ class _TutorListViewState extends ConsumerState<TutorListView> {
                         ),
                       )
                     : GridView.builder(
+                        physics: ClampingScrollPhysics(),
                         padding: const EdgeInsets.only(bottom: 24),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          childAspectRatio: 0.72,
-                        ),
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              childAspectRatio: CharacterCard.designAspectRatio,
+                            ),
                         itemCount: filtered.length,
                         itemBuilder: (context, index) {
                           final t = filtered[index];
-                          return _TutorGridCard(
+                          return CharacterCard(
                             tutor: t,
                             displayName: _displayName(t),
-                            onOpenProfile: () => Navigator.pushNamed(
+                            buttonLabel: AppTranslations.section(
+                              'tudor',
+                              'start_talking',
+                            ),
+                            width: null,
+                            onPressed: () => Navigator.pushNamed(
                               context,
                               '/tutor',
                               arguments: t.id,
@@ -158,113 +164,6 @@ class _TutorListViewState extends ConsumerState<TutorListView> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TutorGridCard extends StatelessWidget {
-  const _TutorGridCard({
-    required this.tutor,
-    required this.displayName,
-    required this.onOpenProfile,
-  });
-
-  final TutorModel tutor;
-  final String displayName;
-  final VoidCallback onOpenProfile;
-
-  @override
-  Widget build(BuildContext context) {
-    final avatarPath =
-        tutor.avatarAssetPath ?? 'assets/images/avatar_1.png';
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF6F6F6),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: ColoredBox(
-                  color: Colors.white,
-                  child: Image.asset(
-                    avatarPath,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    errorBuilder: (_, __, ___) => const Center(
-                      child: Icon(Icons.face, size: 48),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 4, 10, 8),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      displayName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.homeCharacterName(),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AppTranslations.section('tudor', 'native'),
-                          style: AppTextStyles.homeCharacterMeta(),
-                        ),
-                        const SizedBox(width: 4),
-                        SvgPicture.asset(
-                          'assets/icons/america.svg',
-                          width: 15,
-                          height: 15,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(999),
-                      onTap: onOpenProfile,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 4,
-                        ),
-                        child: Text(
-                          AppTranslations.section('tudor', 'start_talking'),
-                          style: AppTextStyles.homeCharacterCta(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

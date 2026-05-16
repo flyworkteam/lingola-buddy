@@ -3,22 +3,20 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/BottomNavController/bottom_nav_controller.dart';
 import 'package:lingola_buddy/View/BottomNavBarView/tab_navigator_shell.dart';
+import 'package:lingola_buddy/View/BottomNavBarView/tab_route_observer.dart';
 import 'package:lingola_buddy/View/ChatView/chat_view.dart';
 import 'package:lingola_buddy/View/HomeView/home_view.dart';
-import 'package:lingola_buddy/View/ProfileLanguageView/profile_language_view.dart';
-import 'package:lingola_buddy/View/ProfileView/profile_view.dart';
-import 'package:lingola_buddy/View/ProfileSettingsView/profile_settings_view.dart';
 import 'package:lingola_buddy/View/ProfileFaqView/profile_faq_view.dart';
-import 'package:lingola_buddy/View/ProfilePrivacyView/profile_privacy_view.dart';
+import 'package:lingola_buddy/View/ProfileLanguageView/profile_language_view.dart';
 import 'package:lingola_buddy/View/ProfileProgressView/profile_progress_view.dart';
+import 'package:lingola_buddy/View/ProfileSettingsView/profile_settings_view.dart';
 import 'package:lingola_buddy/View/ProfileShareView/profile_share_view.dart';
-import 'package:lingola_buddy/View/ProfileTermsView/profile_terms_view.dart';
+import 'package:lingola_buddy/View/ProfileView/profile_view.dart';
 import 'package:lingola_buddy/View/TalkHistoryView/talk_history_view.dart';
 import 'package:lingola_buddy/View/TutorListView/tutor_list_view.dart';
 import 'package:lingola_buddy/View/TutorProfileView/tutor_profile_view.dart';
@@ -38,12 +36,49 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
   final _talkKey = GlobalKey<NavigatorState>();
   final _profileKey = GlobalKey<NavigatorState>();
 
+  late final List<TabRouteObserver> _tabObservers;
+  final List<String?> _routeNameByTab = ['/', '/', '/', '/'];
+
   List<GlobalKey<NavigatorState>> get _keys => [
     _homeKey,
     _tutorKey,
     _talkKey,
     _profileKey,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabObservers = List.generate(
+      4,
+      (i) => TabRouteObserver(
+        tabIndex: i,
+        onRouteChanged: _onTabRouteChanged,
+      ),
+    );
+  }
+
+  void _onTabRouteChanged(int tab, String? name) {
+    final resolved = name ?? '/';
+    if (_routeNameByTab[tab] == resolved) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (_routeNameByTab[tab] == resolved) return;
+      setState(() => _routeNameByTab[tab] = resolved);
+    });
+  }
+
+  bool _hideNavBarForTab(int tabIndex) {
+    final nav = _keys[tabIndex].currentState;
+    if (nav == null || !nav.canPop()) return false;
+
+    final name = _routeNameByTab[tabIndex];
+    if (TabRoutesHideNavBar.shouldHide(name)) return true;
+
+    // Observer güncellenmeden önce geçiş karesi: yığın derinleşmişse gizle.
+    return true;
+  }
 
   Future<void> _onBackInvoked() async {
     final idx = ref.read(bottomNavControllerProvider).index;
@@ -62,6 +97,38 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
       case '/':
         return MaterialPageRoute<void>(
           builder: (_) => const HomeView(),
+          settings: settings,
+        );
+      case '/tutor':
+        final id = settings.arguments is String
+            ? settings.arguments as String
+            : '';
+        return MaterialPageRoute<void>(
+          builder: (_) => TutorProfileView(tutorId: id),
+          settings: settings,
+        );
+      case '/voice':
+        final id = settings.arguments is String
+            ? settings.arguments as String
+            : '';
+        return MaterialPageRoute<void>(
+          builder: (_) => VoiceCallView(tutorId: id),
+          settings: settings,
+        );
+      case '/video':
+        final id = settings.arguments is String
+            ? settings.arguments as String
+            : '';
+        return MaterialPageRoute<void>(
+          builder: (_) => VideoCallView(tutorId: id),
+          settings: settings,
+        );
+      case '/chat':
+        final id = settings.arguments is String
+            ? settings.arguments as String
+            : '';
+        return MaterialPageRoute<void>(
+          builder: (_) => ChatView(tutorId: id),
           settings: settings,
         );
       default:
@@ -120,6 +187,30 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
           builder: (_) => const TalkHistoryView(),
           settings: settings,
         );
+      case '/tutor':
+        final id = settings.arguments is String
+            ? settings.arguments as String
+            : '';
+        return MaterialPageRoute<void>(
+          builder: (_) => TutorProfileView(tutorId: id),
+          settings: settings,
+        );
+      case '/voice':
+        final id = settings.arguments is String
+            ? settings.arguments as String
+            : '';
+        return MaterialPageRoute<void>(
+          builder: (_) => VoiceCallView(tutorId: id),
+          settings: settings,
+        );
+      case '/video':
+        final id = settings.arguments is String
+            ? settings.arguments as String
+            : '';
+        return MaterialPageRoute<void>(
+          builder: (_) => VideoCallView(tutorId: id),
+          settings: settings,
+        );
       case '/chat':
         final id = settings.arguments is String
             ? settings.arguments as String
@@ -165,16 +256,6 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
           builder: (_) => const ProfileProgressView(),
           settings: settings,
         );
-      case '/privacy':
-        return MaterialPageRoute<void>(
-          builder: (_) => const ProfilePrivacyView(),
-          settings: settings,
-        );
-      case '/terms':
-        return MaterialPageRoute<void>(
-          builder: (_) => const ProfileTermsView(),
-          settings: settings,
-        );
       default:
         return null;
     }
@@ -183,6 +264,7 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
   @override
   Widget build(BuildContext context) {
     final tabIndex = ref.watch(bottomNavControllerProvider).index;
+    final hideNavBar = _hideNavBarForTab(tabIndex);
 
     return PopScope(
       canPop: false,
@@ -190,34 +272,40 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
         if (!didPop) await _onBackInvoked();
       },
       child: Scaffold(
-        extendBody: true,
+        extendBody: !hideNavBar,
         body: IndexedStack(
           index: tabIndex,
           children: [
             TabNavigatorShell(
               navigatorKey: _homeKey,
               onGenerateRoute: _homeRoutes,
+              observers: [_tabObservers[0]],
             ),
             TabNavigatorShell(
               navigatorKey: _tutorKey,
               onGenerateRoute: _tutorRoutes,
+              observers: [_tabObservers[1]],
             ),
             TabNavigatorShell(
               navigatorKey: _talkKey,
               onGenerateRoute: _talkRoutes,
+              observers: [_tabObservers[2]],
             ),
             TabNavigatorShell(
               navigatorKey: _profileKey,
               onGenerateRoute: _profileRoutes,
+              observers: [_tabObservers[3]],
             ),
           ],
         ),
-        bottomNavigationBar: _BottomNavBar(
-          selectedIndex: tabIndex,
-          onTabSelected: ref
-              .read(bottomNavControllerProvider.notifier)
-              .setIndex,
-        ),
+        bottomNavigationBar: hideNavBar
+            ? null
+            : _BottomNavBar(
+                selectedIndex: tabIndex,
+                onTabSelected: ref
+                    .read(bottomNavControllerProvider.notifier)
+                    .setIndex,
+              ),
       ),
     );
   }
@@ -261,9 +349,11 @@ class _BottomNavBar extends StatelessWidget {
             top: false,
             child: SizedBox(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 12,
+                  bottom: 0,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
@@ -108,38 +107,36 @@ class _NotificationsViewState extends State<NotificationsView> {
                   ],
                 ),
               ),
-            Expanded(
-              child: _items.isEmpty
-                  ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              AppTranslations.section(
-                                'notifications',
-                                'no_notifications',
+              Expanded(
+                child: _items.isEmpty
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                AppTranslations.section(
+                                  'notifications',
+                                  'no_notifications',
+                                ),
+                                style: AppTextStyles.notificationCardTitle(),
+                                textAlign: TextAlign.center,
                               ),
-                              style: AppTextStyles.notificationCardTitle(),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              AppTranslations.section(
-                                'notifications',
-                                'no_notifications_desc',
+                              const SizedBox(height: 8),
+                              Text(
+                                AppTranslations.section(
+                                  'notifications',
+                                  'no_notifications_desc',
+                                ),
+                                style: AppTextStyles.notificationCardBody(),
+                                textAlign: TextAlign.center,
                               ),
-                              style: AppTextStyles.notificationCardBody(),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
+                      )
+                    : SingleChildScrollView(
                         child: Align(
                           alignment: Alignment.topCenter,
                           child: DecoratedBox(
@@ -151,8 +148,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                               padding: const EdgeInsets.all(10),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.stretch,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   for (var i = 0; i < _items.length; i++) ...[
                                     if (i > 0) const SizedBox(height: 16),
@@ -164,12 +160,11 @@ class _NotificationsViewState extends State<NotificationsView> {
                           ),
                         ),
                       ),
-                    ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }
@@ -212,16 +207,12 @@ class _NotificationCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    AppTranslations.section(
-                      'notifications',
-                      item.titleKey,
-                    ),
+                    AppTranslations.section('notifications', item.titleKey),
                     style: AppTextStyles.notificationCardTitle(),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 4),
             Text(
               AppTranslations.section('notifications', item.descKey),
               style: AppTextStyles.notificationCardBody().copyWith(

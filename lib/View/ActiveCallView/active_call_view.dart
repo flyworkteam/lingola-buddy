@@ -3,12 +3,12 @@ import 'dart:async' show Timer;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
+import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 
 /// Aktif görüşme — Figma: üst başlık + iki video kartı, altta koyu şerit ve 4 kontrol.
 ///
@@ -66,11 +66,16 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
   }
 
   void _endCall() {
-    ref.read(callSessionControllerProvider.notifier).endCall(
-          durationSeconds: _elapsedSeconds,
-        );
-    Navigator.pushReplacementNamed(context, AppRoutes.callSummary);
+    ref
+        .read(callSessionControllerProvider.notifier)
+        .endCall(durationSeconds: _elapsedSeconds);
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).pushReplacementNamed(AppRoutes.callSummary);
   }
+
+  NavigatorState get _rootNav => Navigator.of(context, rootNavigator: true);
 
   Widget _roundControlButton({
     required String asset,
@@ -87,19 +92,11 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
         child: Ink(
           width: ActiveCallView._controlButtonSize,
           height: ActiveCallView._controlButtonSize,
-          decoration: BoxDecoration(
-            color: bg,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
           child: Center(
             child: Opacity(
               opacity: iconOpacity ?? 1,
-              child: SvgPicture.asset(
-                asset,
-                width: ActiveCallView._controlIconSize,
-                height: ActiveCallView._controlIconSize,
-                colorFilter: _whiteIcon,
-              ),
+              child: SvgPicture.asset(asset, colorFilter: _whiteIcon),
             ),
           ),
         ),
@@ -126,16 +123,9 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
             ),
           ),
           if (dimContent)
-            ColoredBox(
-              color: Colors.black.withValues(alpha: 0.45),
-            ),
+            ColoredBox(color: Colors.black.withValues(alpha: 0.45)),
           if (bottomOverlay != null)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: bottomOverlay,
-            ),
+            Positioned(left: 0, right: 0, bottom: 0, child: bottomOverlay),
         ],
       ),
     );
@@ -191,7 +181,13 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
 
   @override
   Widget build(BuildContext context) {
-    final name = AppTranslations.section('call', 'title');
+    final session = ref.watch(callSessionControllerProvider);
+    final tutors = ref.watch(tutorsCatalogProvider);
+    final tutorId = session.activeTutorId ?? 'sophie';
+    final matches = tutors.where((t) => t.id == tutorId);
+    final tutor = matches.isEmpty ? tutors.first : matches.first;
+    final name = AppTranslations.section('tudor', tutor.id);
+    final remoteAvatar = tutor.avatarAssetPath ?? ActiveCallView._remoteAvatar;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -208,11 +204,10 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
                     alignment: Alignment.centerLeft,
                     child: IconButton(
                       onPressed: () {
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
+                        if (_rootNav.canPop()) {
+                          _rootNav.pop();
                         } else {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
+                          _rootNav.pushNamedAndRemoveUntil(
                             AppRoutes.bottomNav,
                             (_) => false,
                           );
@@ -252,7 +247,7 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _videoCard(
-                  imageAsset: ActiveCallView._remoteAvatar,
+                  imageAsset: remoteAvatar,
                   bottomOverlay: null,
                 ),
               ),
@@ -260,7 +255,7 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
             const SizedBox(height: 8),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _videoCard(
                   imageAsset: ActiveCallView._localAvatar,
                   bottomOverlay: _controlBar(),

@@ -151,7 +151,11 @@ class OnboardingGoalView extends ConsumerWidget {
                     ref
                         .read(sessionControllerProvider.notifier)
                         .markPreferenceWizardCompleted();
-                    Navigator.pushNamed(context, AppRoutes.generatingPlan);
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      AppRoutes.generatingPlan,
+                      (route) => false,
+                    );
                   },
           ),
         ],
