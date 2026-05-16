@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingola_buddy/Core/Config/app_config.dart';
@@ -9,6 +10,7 @@ import 'package:lingola_buddy/Core/Theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   await AppTranslations.load();
   runApp(const ProviderScope(child: LingolaBuddyApp()));
 }
