@@ -821,7 +821,7 @@ abstract final class AppTextStyles {
     return GoogleFonts.manrope(
       fontSize: 16,
       height: 22 / 16,
-      fontWeight: FontWeight.w700,
+      fontWeight: FontWeight.w600,
       letterSpacing: -0.16,
       color: Colors.black,
     );

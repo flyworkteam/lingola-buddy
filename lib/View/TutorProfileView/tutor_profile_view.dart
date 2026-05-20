@@ -50,23 +50,19 @@ class TutorProfileView extends ConsumerWidget {
           AppTranslations.section('tudor', 'character_profile'),
           style: AppTextStyles.tutorProfileScreenTitle(),
         ),
-        centerTitle: true,
       ),
       body: Stack(
         fit: StackFit.expand,
         children: [
           Positioned.fill(
             child: IgnorePointer(
-              child: ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
-                child: Opacity(
-                  opacity: 0.45,
-                  child: Image.asset(
-                    avatarPath,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => ColoredBox(
-                      color: AppColors.brandPrimary.withValues(alpha: 0.15),
-                    ),
+              child: Opacity(
+                opacity: 0.45,
+                child: Image.asset(
+                  avatarPath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => ColoredBox(
+                    color: AppColors.brandPrimary.withValues(alpha: 0.15),
                   ),
                 ),
               ),
@@ -82,7 +78,7 @@ class TutorProfileView extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: const Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(16),
-                ),
+                ), 
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
@@ -90,8 +86,8 @@ class TutorProfileView extends ConsumerWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: AspectRatio(
-                          aspectRatio: 1,
+                        child: ColoredBox(
+                          color: Colors.white.withValues(alpha: 0.7),
                           child: Image.asset(
                             avatarPath,
                             fit: BoxFit.cover,
@@ -104,12 +100,12 @@ class TutorProfileView extends ConsumerWidget {
                       ),
                       const SizedBox(height: 12),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Flexible(
                             child: Text(
                               displayName,
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.start,
                               style: AppTextStyles.tutorProfileName(),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -123,9 +119,9 @@ class TutorProfileView extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       Text(bioText, style: AppTextStyles.tutorProfileBio()),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 12),
                       SizedBox(
                         height: 50,
                         width: double.infinity,
@@ -134,10 +130,10 @@ class TutorProfileView extends ConsumerWidget {
                             foregroundColor: Colors.black,
                             backgroundColor: Colors.white,
                             side: BorderSide(
-                              color: Colors.black.withValues(alpha: 0.1),
+                              color: Colors.transparent,
                             ),
                             shape: const StadiumBorder(),
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 13),
                           ),
                           onPressed: () => Navigator.pushNamed(
                             context,
@@ -164,7 +160,7 @@ class TutorProfileView extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 8),
                       SizedBox(
                         height: 50,
                         width: double.infinity,
@@ -172,7 +168,7 @@ class TutorProfileView extends ConsumerWidget {
                           style: FilledButton.styleFrom(
                             backgroundColor: AppColors.brandPrimary,
                             shape: const StadiumBorder(),
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 13),
                           ),
                           onPressed: () {
                             ref

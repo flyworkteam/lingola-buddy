@@ -66,10 +66,10 @@ class _NotificationsViewState extends State<NotificationsView> {
                   children: [
                     IconButton(
                       onPressed: () => Navigator.of(context).maybePop(),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
-                        minWidth: 40,
-                        minHeight: 48,
+                      style: IconButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: const Size(24, 48),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       icon: SvgPicture.asset(
                         'assets/icons/arrow_left.svg',
@@ -77,7 +77,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                         height: 24,
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Align(
                         alignment: Alignment.centerLeft,
@@ -85,7 +85,13 @@ class _NotificationsViewState extends State<NotificationsView> {
                           AppTranslations.section('notifications', 'title'),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.homeWelcomeTitle(),
+                          style: AppTextStyles.homeWelcomeTitle().copyWith(
+                            fontSize: 20, 
+                            height: 28 / 20, 
+                            fontWeight: FontWeight.w700, 
+                            letterSpacing: -0.1, 
+                            color: const Color(0xFF171717),
+                          ),
                         ),
                       ),
                     ),
@@ -93,7 +99,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                       onPressed: _items.isEmpty ? null : _clearAll,
                       style: TextButton.styleFrom(
                         foregroundColor: const Color(0xFFE53935),
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.zero,
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
@@ -107,6 +113,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
               Expanded(
                 child: _items.isEmpty
                     ? Center(

@@ -337,7 +337,7 @@ class _ProfileSettingsRow extends StatelessWidget {
               width: 20,
               height: 20,
               colorFilter: const ColorFilter.mode(
-                Color(0xFFA1A4B7),
+AppColors.secondaryText,
                 BlendMode.srcIn,
               ),
             ),
