@@ -11,6 +11,9 @@ import 'package:lingola_buddy/Core/Widgets/onboarding_option_tile.dart';
 import 'package:lingola_buddy/Core/Widgets/onboarding_wizard_page_shell.dart';
 import 'package:lingola_buddy/Core/Widgets/onboarding_wizard_top_bar.dart';
 import 'package:lingola_buddy/Models/app_enums.dart';
+import 'package:lingola_buddy/Models/lesson_model.dart';
+import 'package:lingola_buddy/Riverpod/Providers/curriculum_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/user_profile_api_provider.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/OnboardingPrefsController/onboarding_prefs_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/SessionController/session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
@@ -76,7 +79,7 @@ class OnboardingGoalView extends ConsumerWidget {
     final canSubmit =
         selected != null &&
         prefs.learnLanguageCode != null &&
-        prefs.proficiency != null;
+        prefs.cefrLevel != null;
 
     return OnboardingWizardPageShell(
       child: Column(
@@ -138,19 +141,33 @@ class OnboardingGoalView extends ConsumerWidget {
             icon: _ctaArrowIcon(),
             onPressed: !canSubmit
                 ? null
-                : () {
+                : () async {
+                    final cefr = prefs.cefrLevel ?? CefrLevel.a1;
                     ref
                         .read(userProfileControllerProvider.notifier)
                         .applyOnboardingPrefs(
-                          learnLanguageCode: prefs.learnLanguageCode ?? 'en',
+                          learnLanguageCode: 'en',
                           nativeLanguageCode: prefs.nativeLanguageCode ?? 'tr',
-                          proficiency:
-                              prefs.proficiency ?? ProficiencyLevel.simple,
+                          cefrLevel: cefr,
                           dailyGoal: selected,
                         );
-                    ref
+                    try {
+                      final api = ref.read(userProfileApiProvider);
+                      await api.updateLearningProfile(
+                        cefrLevel: cefr.code,
+                        learnLanguageCode: 'en',
+                        nativeLanguageCode: prefs.nativeLanguageCode ?? 'tr',
+                        dailyGoal: selected.name,
+                      );
+                      await ref
+                          .read(lessonRepositoryProvider)
+                          .setCefrLevel(cefr.code);
+                      ref.invalidate(userCurriculumProvider);
+                    } catch (_) {}
+                    await ref
                         .read(sessionControllerProvider.notifier)
                         .markPreferenceWizardCompleted();
+                    if (!context.mounted) return;
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       AppRoutes.generatingPlan,

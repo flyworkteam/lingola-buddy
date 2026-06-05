@@ -6,9 +6,18 @@ import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/app_primary_button.dart';
+import 'package:lingola_buddy/Core/Widgets/app_snackbar.dart';
+import 'package:lingola_buddy/Core/Widgets/delete_account_confirm_dialog.dart';
+import 'package:lingola_buddy/Core/Widgets/future_extensions_dialog.dart';
+import 'package:lingola_buddy/Services/http_api_service.dart';
 import 'package:lingola_buddy/Core/Widgets/profile_photo_sheet.dart';
 import 'package:lingola_buddy/Core/Widgets/user_profile_avatar.dart';
+import 'package:lingola_buddy/Core/Routes/app_routes.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/SessionController/session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
+import 'package:lingola_buddy/Riverpod/Providers/auth_repository_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/user_scoped_providers.dart';
+import 'package:lingola_buddy/Services/local_notification_scheduler.dart';
 
 class ProfileSettingsView extends ConsumerStatefulWidget {
   const ProfileSettingsView({super.key});
@@ -36,16 +45,70 @@ class _ProfileSettingsViewState extends ConsumerState<ProfileSettingsView> {
     _email ??= TextEditingController(text: state.user?.email ?? '');
   }
 
-  void _save() {
-    ref
-        .read(userProfileControllerProvider.notifier)
-        .updateDisplayName(_name!.text.trim());
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppTranslations.section('common', 'save_changes')),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+  Future<void> _save() async {
+    final name = _name!.text.trim();
+    if (name.isEmpty) {
+      AppSnackBar.error(
+        AppTranslations.section('profile_settings', 'name_empty'),
+        context: context,
+      );
+      return;
+    }
+
+    try {
+      await FutureExtensionsDialog.guard(
+        context,
+        () async {
+          await ref
+              .read(userProfileControllerProvider.notifier)
+              .saveDisplayName(name);
+        }(),
+      );
+      if (!mounted) return;
+      AppSnackBar.success(
+        AppTranslations.section('profile_settings', 'profile_saved'),
+        context: context,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      final message = e is ApiException && e.message.isNotEmpty
+          ? e.message
+          : AppTranslations.section('profile_settings', 'save_error');
+      AppSnackBar.error(message, context: context);
+    }
+  }
+
+  Future<void> _onDeleteAccountTap() async {
+    final confirmed = await DeleteAccountConfirmDialog.show(context);
+    if (confirmed != true || !mounted) return;
+    await _deleteAccount();
+  }
+
+  Future<void> _deleteAccount() async {
+    try {
+      await FutureExtensionsDialog.guard(
+        context,
+        () async {
+          await ref.read(authRepositoryProvider).deleteAccount();
+          await LocalNotificationScheduler.instance.cancelAll();
+          resetUserScopedAppState(ref);
+          await ref.read(sessionControllerProvider.notifier).clearAuthSession();
+          ref.read(userProfileControllerProvider.notifier).clearUser();
+          if (!mounted) return;
+          await Navigator.of(context, rootNavigator: true)
+              .pushNamedAndRemoveUntil(
+            AppRoutes.signUp,
+            (route) => false,
+          );
+        }(),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      final message = e is ApiException && e.message.isNotEmpty
+          ? e.message
+          : AppTranslations.section('delete_account_dialog', 'error_failed');
+      AppSnackBar.error(message, context: context);
+    }
   }
 
   void _openPhotoSheet() {
@@ -66,41 +129,33 @@ class _ProfileSettingsViewState extends ConsumerState<ProfileSettingsView> {
     try {
       final updated = await ref
           .read(userProfileControllerProvider.notifier)
-          .updateProfilePhoto(source);
+          .updateProfilePhoto(source)
+          .withFutureExtensionsDialog(context);
       if (!mounted) return;
       if (updated) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppTranslations.section('profile_settings', 'photo_updated'),
-            ),
-            behavior: SnackBarBehavior.floating,
-          ),
+        AppSnackBar.success(
+          AppTranslations.section('profile_settings', 'photo_updated'),
+          context: context,
         );
       }
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppTranslations.section('profile_settings', 'photo_error'),
-          ),
-          behavior: SnackBarBehavior.floating,
-        ),
+      AppSnackBar.error(
+        AppTranslations.section('profile_settings', 'photo_error'),
+        context: context,
       );
     }
   }
 
   Future<void> _removePhoto() async {
-    await ref.read(userProfileControllerProvider.notifier).removeProfilePhoto();
+    await ref
+        .read(userProfileControllerProvider.notifier)
+        .removeProfilePhoto()
+        .withFutureExtensionsDialog(context);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          AppTranslations.section('profile_settings', 'photo_updated'),
-        ),
-        behavior: SnackBarBehavior.floating,
-      ),
+    AppSnackBar.success(
+      AppTranslations.section('profile_settings', 'photo_updated'),
+      context: context,
     );
   }
 
@@ -179,7 +234,7 @@ class _ProfileSettingsViewState extends ConsumerState<ProfileSettingsView> {
                   ),
                   const SizedBox(height: 8),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: _onDeleteAccountTap,
                     style: TextButton.styleFrom(
                       foregroundColor: const Color(0xFFE53935),
                     ),
@@ -230,7 +285,10 @@ class _PhotoPanel extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Row(
               children: [
-                UserProfileAvatar(localPath: avatarPath, size: 76),
+                GestureDetector(
+                  onTap: onChangePhoto,
+                  child: UserProfileAvatar(imageUrl: avatarPath, size: 76),
+                ),
                 const Spacer(),
                 AppPrimaryButton(
                   label: AppTranslations.section(

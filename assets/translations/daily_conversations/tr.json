@@ -1,0 +1,242 @@
+{
+  "dc_a1_01": {
+    "title": "Sabah selamı",
+    "subtitle": "Güne başlama"
+  },
+  "dc_a1_02": {
+    "title": "Günün nasıl geçti?",
+    "subtitle": "Günlük check-in"
+  },
+  "dc_a1_03": {
+    "title": "Öğle sohbeti",
+    "subtitle": "Öğle arası"
+  },
+  "dc_a1_04": {
+    "title": "Favori içecek",
+    "subtitle": "Kafe muhabbeti"
+  },
+  "dc_a1_05": {
+    "title": "Şu an ne yapıyorsun?",
+    "subtitle": "Anlık sohbet"
+  },
+  "dc_a1_06": {
+    "title": "Hafta sonu planı",
+    "subtitle": "Basit gelecek"
+  },
+  "dc_a1_07": {
+    "title": "Teşekkür ve hoşça kal",
+    "subtitle": "Nezaket"
+  },
+  "dc_a1_08": {
+    "title": "Hava durumu",
+    "subtitle": "Gündelik sohbet"
+  },
+  "dc_a2_01": {
+    "title": "Neler var neler yok?",
+    "subtitle": "Arkadaş güncellemesi"
+  },
+  "dc_a2_02": {
+    "title": "İşten sonra",
+    "subtitle": "Akşam dinlenmesi"
+  },
+  "dc_a2_03": {
+    "title": "Alışveriş hikâyesi",
+    "subtitle": "Günlük işler"
+  },
+  "dc_a2_04": {
+    "title": "Bu akşam yemek",
+    "subtitle": "Mutfak sohbeti"
+  },
+  "dc_a2_05": {
+    "title": "Seyahat anısı",
+    "subtitle": "Geçmiş gezi"
+  },
+  "dc_a2_06": {
+    "title": "Müzik ve ruh hali",
+    "subtitle": "Çalma listesi"
+  },
+  "dc_a2_07": {
+    "title": "Komşu sohbeti",
+    "subtitle": "Mahalle hayatı"
+  },
+  "dc_a2_08": {
+    "title": "Telefon alışkanlıkları",
+    "subtitle": "Günlük teknoloji"
+  },
+  "dc_b1_01": {
+    "title": "Kahve molası tartışması",
+    "subtitle": "Hafif görüş"
+  },
+  "dc_b1_02": {
+    "title": "İş–yaşam dengesi",
+    "subtitle": "Yoğun hafta"
+  },
+  "dc_b1_03": {
+    "title": "Sosyal planlar",
+    "subtitle": "Plan yapma"
+  },
+  "dc_b1_04": {
+    "title": "İngilizce öğrenmek",
+    "subtitle": "Motivasyon"
+  },
+  "dc_b1_05": {
+    "title": "Sağlıklı alışkanlıklar",
+    "subtitle": "İyi hissetme"
+  },
+  "dc_b1_06": {
+    "title": "Film gecesi",
+    "subtitle": "Öneriler"
+  },
+  "dc_b1_07": {
+    "title": "Şehir hayatı",
+    "subtitle": "Kentsel sohbet"
+  },
+  "dc_b1_08": {
+    "title": "Stres ve sakinlik",
+    "subtitle": "Duygular"
+  },
+  "dc_b1_09": {
+    "title": "Hayalindeki gezi",
+    "subtitle": "Gelecek sohbeti"
+  },
+  "dc_b1_10": {
+    "title": "Günlük haberler",
+    "subtitle": "Gündem"
+  },
+  "dc_b2_01": {
+    "title": "Uzaktan mı ofis mi?",
+    "subtitle": "İş kültürü"
+  },
+  "dc_b2_02": {
+    "title": "İlişkiler",
+    "subtitle": "Kişisel hayat"
+  },
+  "dc_b2_03": {
+    "title": "Para zihniyeti",
+    "subtitle": "Finans sohbeti"
+  },
+  "dc_b2_04": {
+    "title": "Kültür ve gelenekler",
+    "subtitle": "Kültürler arası"
+  },
+  "dc_b2_05": {
+    "title": "Kariyer değişimi",
+    "subtitle": "Profesyonel yol"
+  },
+  "dc_b2_06": {
+    "title": "Podcast ve kitaplar",
+    "subtitle": "Medya diyeti"
+  },
+  "dc_b2_07": {
+    "title": "Etik seçimler",
+    "subtitle": "Değerler"
+  },
+  "dc_b2_08": {
+    "title": "Mentorluk",
+    "subtitle": "Rehberlik"
+  },
+  "dc_b2_09": {
+    "title": "Yaratıcılık tıkanıklığı",
+    "subtitle": "Üretkenlik"
+  },
+  "dc_b2_10": {
+    "title": "Yapay zekânın geleceği",
+    "subtitle": "Teknoloji toplumu"
+  },
+  "dc_c1_01": {
+    "title": "Kimlik ve aidiyet",
+    "subtitle": "Derin kişisel"
+  },
+  "dc_c1_02": {
+    "title": "İkna sanatı",
+    "subtitle": "Etki"
+  },
+  "dc_c1_03": {
+    "title": "Kültürler arası mizah",
+    "subtitle": "Komik nüans"
+  },
+  "dc_c1_04": {
+    "title": "Liderlik anları",
+    "subtitle": "Öncülük"
+  },
+  "dc_c1_05": {
+    "title": "Mahremiyet ve güven",
+    "subtitle": "Dijital hayat"
+  },
+  "dc_c1_06": {
+    "title": "İklim sohbeti",
+    "subtitle": "Büyük konu"
+  },
+  "dc_c1_07": {
+    "title": "Etkileyen sanat",
+    "subtitle": "Estetik"
+  },
+  "dc_c1_08": {
+    "title": "Müzakere hikâyesi",
+    "subtitle": "Anlaşma"
+  },
+  "dc_c1_09": {
+    "title": "Mentorluk deneyimi",
+    "subtitle": "Gelişim"
+  },
+  "dc_c1_10": {
+    "title": "Dil ve düşünce",
+    "subtitle": "Dilbilim"
+  },
+  "dc_c1_11": {
+    "title": "Risk ve pişmanlık",
+    "subtitle": "Yaşam seçimleri"
+  },
+  "dc_c1_12": {
+    "title": "Topluluk kurmak",
+    "subtitle": "Sosyal bağ"
+  },
+  "dc_c2_01": {
+    "title": "Kahve üstü felsefe",
+    "subtitle": "Büyük sorular"
+  },
+  "dc_c2_02": {
+    "title": "Medyada retorik",
+    "subtitle": "Söylem"
+  },
+  "dc_c2_03": {
+    "title": "Güç ve etik",
+    "subtitle": "Kurumlar"
+  },
+  "dc_c2_04": {
+    "title": "Yaratıcılık ve yapay zekâ",
+    "subtitle": "Gelecek zanaat"
+  },
+  "dc_c2_05": {
+    "title": "Küresel İngilizce",
+    "subtitle": "Dünya dili"
+  },
+  "dc_c2_06": {
+    "title": "Hafıza ve hikâye",
+    "subtitle": "Anlatı"
+  },
+  "dc_c2_07": {
+    "title": "Ekonomi ve hayat",
+    "subtitle": "Makro–mikro"
+  },
+  "dc_c2_08": {
+    "title": "Adalet tartışması",
+    "subtitle": "Ahlak sistemleri"
+  },
+  "dc_c2_09": {
+    "title": "Bilim ve toplum",
+    "subtitle": "Kamusal anlayış"
+  },
+  "dc_c2_10": {
+    "title": "Doğaçlama ustalığı",
+    "subtitle": "Hazırlıksız"
+  },
+  "dc_c2_11": {
+    "title": "Üslup oyunu",
+    "subtitle": "Stil değişimi"
+  },
+  "dc_c2_12": {
+    "title": "Serbest salon",
+    "subtitle": "Özgür sohbet"
+  }
+}

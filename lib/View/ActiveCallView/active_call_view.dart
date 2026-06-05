@@ -1,5 +1,6 @@
-import 'dart:async' show Timer;
+import 'dart:async' show Timer, unawaited;
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,25 +8,34 @@ import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
+import 'package:lingola_buddy/Core/Utils/call_permissions.dart';
+import 'package:lingola_buddy/Core/Utils/realtime_auth_token.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
+import 'package:lingola_buddy/Core/Widgets/local_camera_preview.dart';
+import 'package:lingola_buddy/Core/Widgets/tutor_rive_avatar.dart';
+import 'package:lingola_buddy/Services/rive_preload_service.dart';
+import 'package:lingola_buddy/Models/app_enums.dart';
+import 'package:lingola_buddy/Models/tutor_model.dart';
+import 'package:lingola_buddy/Riverpod/Providers/realtime_call_holder_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/user_provider.dart';
+import 'package:lingola_buddy/Services/local_camera_holder.dart';
+import 'package:lingola_buddy/Services/local_notification_scheduler.dart';
+import 'package:lingola_buddy/Services/realtime_call_engine.dart';
+import 'package:lingola_buddy/Services/session_local_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// Aktif görüşme — Figma: üst başlık + iki video kartı, altta koyu şerit ve 4 kontrol.
-///
-/// Uzaktaki ve yerel görüntü şimdilik [Image.asset] ile (ileride `camera` / WebRTC
-/// önizlemesi buraya bağlanabilir; canlı kamera için manifest izinleri ve paket
-/// kurulumu gerektiğinden demo aşamasında statik görsel kullanılıyor).
 class ActiveCallView extends ConsumerStatefulWidget {
   const ActiveCallView({super.key});
 
   static const double _videoRadius = 16;
   static const double _controlBarHeight = 99;
   static const double _controlButtonSize = 60;
-  static const double _controlIconSize = 26;
   static const double _controlGap = 16;
 
   static const String _remoteAvatar = 'assets/images/avatar_4.png';
-  static const String _localAvatar = 'assets/images/avatar_2.png';
 
   @override
   ConsumerState<ActiveCallView> createState() => _ActiveCallViewState();
@@ -33,11 +43,17 @@ class ActiveCallView extends ConsumerStatefulWidget {
 
 class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
   Timer? _timer;
-  int _elapsedSeconds = 0;
+  DateTime? _callStartedAt;
+  RealtimeCallEngine? _engine;
+  CameraController? _cameraController;
+  List<CameraDescription> _cameras = [];
+  CameraLensDirection _lensDirection = CameraLensDirection.front;
+  bool _cameraLoading = true;
+  bool _cameraSwitching = false;
 
-  bool _videoOn = true;
-  bool _micMuted = true;
-  bool _speakerMuted = true;
+  bool _micMuted = false;
+  bool _speakerOn = true;
+  bool _lipSyncAudible = false;
 
   static const ColorFilter _whiteIcon = ColorFilter.mode(
     Colors.white,
@@ -47,35 +63,253 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _bootstrap());
+  }
+
+  Future<void> _bootstrap() async {
+    _startCallDuration();
+    final tutorId =
+        ref.read(callSessionControllerProvider).activeTutorId ?? 'sophie';
+    final tutor = ref.read(tutorByIdProvider(tutorId)) ??
+        ref.read(tutorsCatalogProvider).first;
+    RivePreloadService.instance.preload(tutor.rivUrl);
+
+    var engine = ref.read(realtimeCallHolderProvider);
+    if (engine == null) {
+      final session = ref.read(callSessionControllerProvider);
+      final tutorId = session.activeTutorId ?? 'sophie';
+      final lang = ref.read(userProfileControllerProvider).uiLanguageCode;
+      final lessonId = session.activeLessonId;
+      final learnerName = ref.read(currentUserProvider)?.displayName ?? '';
+      engine = RealtimeCallEngine(
+        tutorId: tutorId,
+        languageCode: lang,
+        lessonId: lessonId,
+        learnerDisplayName: learnerName,
+        videoMode: true,
+        getAuthToken: () => ensureRealtimeAuthToken(ref),
+      );
+      ref.read(callSessionControllerProvider.notifier).bindTutor(
+            tutorId,
+            kind: CallKind.video,
+            lessonId: lessonId,
+          );
+      ref.read(realtimeCallHolderProvider.notifier).attach(engine);
+      await engine.start();
+    }
+    _engine = engine;
+    _lipSyncAudible = engine.lipSyncAudible;
+    engine.onLipSyncAudibleChanged = (audible) {
       if (!mounted) return;
-      setState(() => _elapsedSeconds++);
+      setState(() => _lipSyncAudible = audible);
+    };
+    engine.bindServerEndedHandler(() {
+      if (!mounted) return;
+      unawaited(_endCall());
     });
+    await engine.activateForActiveCall();
+    if (!mounted) return;
+    final live = _engine!;
+    setState(() {
+      _micMuted = live.isMuted;
+      _speakerOn = live.isSpeakerOn;
+    });
+    _scheduleCameraLast();
+  }
+
+  void _startCallDuration() {
+    if (_callStartedAt != null) return;
+    final sessionStart =
+        ref.read(callSessionControllerProvider).callStartedAt;
+    _callStartedAt = sessionStart ?? DateTime.now();
+    if (sessionStart == null) {
+      ref.read(callSessionControllerProvider.notifier).markCallStarted(
+            _callStartedAt,
+          );
+    }
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted || _callStartedAt == null) return;
+      setState(() {});
+    });
+    if (mounted) setState(() {});
+  }
+
+  int _resolvedElapsedSeconds() {
+    if (_callStartedAt == null) return 0;
+    return DateTime.now().difference(_callStartedAt!).inSeconds;
+  }
+
+  /// Kamera yalnızca önizleme — ilk kare çizildikten sonra (idle kuyruğuna güvenme).
+  void _scheduleCameraLast() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(_initCamera());
+    });
+  }
+
+  Future<void> _initCamera() async {
+    if (!mounted) return;
+
+    await LocalCameraHolder.instance.ensureReady();
+    if (!mounted) return;
+
+    final prewarmed = LocalCameraHolder.instance.claimFrontController();
+    if (prewarmed != null && prewarmed.value.isInitialized) {
+      _cameras = LocalCameraHolder.instance.cameras;
+      if (mounted) {
+        setState(() {
+          _cameraController = prewarmed;
+          _lensDirection = CameraLensDirection.front;
+          _cameraLoading = false;
+        });
+      }
+      _deferAudioRefreshAfterCamera();
+      return;
+    }
+
+    final ok = await Permission.camera.isGranted || await ensureCameraPermission();
+    if (!ok || !mounted) {
+      if (mounted) setState(() => _cameraLoading = false);
+      return;
+    }
+    try {
+      _cameras = LocalCameraHolder.instance.cameras;
+      if (_cameras.isEmpty) {
+        _cameras = await availableCameras();
+      }
+      if (_cameras.isEmpty) {
+        if (mounted) setState(() => _cameraLoading = false);
+        return;
+      }
+      await _openCamera(_lensDirection);
+    } catch (e) {
+      debugPrint('ActiveCallView camera: $e');
+      if (mounted) setState(() => _cameraLoading = false);
+    }
+  }
+
+  void _deferAudioRefreshAfterCamera() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(_engine?.refreshAudioSessionAfterCamera());
+    });
+  }
+
+  CameraDescription? _cameraForLens(CameraLensDirection direction) {
+    final list = _cameras.where((c) => c.lensDirection == direction).toList();
+    return list.isEmpty ? null : list.first;
+  }
+
+  /// Önizleme kamerası — yalnızca görüntü; mikrofon/ses [RealtimeCallEngine]'de.
+  Future<void> _openCamera(CameraLensDirection direction) async {
+    if (_cameraSwitching) return;
+    final desc = _cameraForLens(direction);
+    if (desc == null) {
+      if (mounted) setState(() => _cameraLoading = false);
+      return;
+    }
+    _cameraSwitching = true;
+    try {
+      await _cameraController?.dispose();
+      final controller = CameraController(
+        desc,
+        ResolutionPreset.low,
+        enableAudio: false,
+      );
+      await controller.initialize();
+      if (!mounted) {
+        await controller.dispose();
+        return;
+      }
+      setState(() {
+        _lensDirection = desc.lensDirection;
+        _cameraController = controller;
+        _cameraLoading = false;
+      });
+      _deferAudioRefreshAfterCamera();
+    } catch (e) {
+      debugPrint('ActiveCallView camera: $e');
+      if (mounted) setState(() => _cameraLoading = false);
+    } finally {
+      _cameraSwitching = false;
+    }
+  }
+
+  Future<void> _flipCamera() async {
+    if (_cameraSwitching || _cameras.length < 2) return;
+    final next = _lensDirection == CameraLensDirection.front
+        ? CameraLensDirection.back
+        : CameraLensDirection.front;
+    if (_cameraForLens(next) == null) return;
+    await _openCamera(next);
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    unawaited(_cameraController?.dispose());
     super.dispose();
   }
 
   String _formatDuration() {
-    final m = _elapsedSeconds ~/ 60;
-    final s = _elapsedSeconds % 60;
+    final elapsed = _resolvedElapsedSeconds();
+    final m = elapsed ~/ 60;
+    final s = elapsed % 60;
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
 
-  void _endCall() {
-    ref
-        .read(callSessionControllerProvider.notifier)
-        .endCall(durationSeconds: _elapsedSeconds);
+  Future<void> _endCall() async {
+    _timer?.cancel();
+    final elapsed = _resolvedElapsedSeconds();
+    final session = ref.read(callSessionControllerProvider);
+    final engine = ref.read(realtimeCallHolderProvider);
+    final words = engine?.userWordsSpoken ?? 0;
+    final score = RealtimeCallEngine.computeSessionScore(
+      durationSeconds: elapsed,
+      words: words,
+    );
+    final lessonCompleted = session.activeLessonId != null &&
+        session.activeLessonId!.isNotEmpty &&
+        elapsed >= 120;
+    ref.read(callSessionControllerProvider.notifier).endCall(
+          durationSeconds: elapsed,
+          wordsSpoken: words,
+          sessionScorePercent: score,
+          lessonCompleted: lessonCompleted,
+        );
+    final lessonId = session.activeLessonId;
+    if (!lessonCompleted &&
+        lessonId != null &&
+        lessonId.isNotEmpty) {
+      final title = lessonId.startsWith('dc_')
+          ? AppTranslations.dailyConversationField(
+              lessonId,
+              'title',
+              fallback: lessonId,
+            )
+          : AppTranslations.lessonField(
+              lessonId,
+              'title',
+              fallback: lessonId,
+            );
+      unawaited(
+        LocalNotificationScheduler.instance.scheduleCallFollowUp(
+          lessonId: lessonId,
+          lessonTitle: title,
+        ),
+      );
+    } else {
+      unawaited(SessionLocalStorage.clearCallReminder());
+      unawaited(LocalNotificationScheduler.instance.clearCallFollowUp());
+    }
+    await ref.read(realtimeCallHolderProvider.notifier).detachAndEnd();
+    if (!mounted) return;
     Navigator.of(
       context,
       rootNavigator: true,
     ).pushReplacementNamed(AppRoutes.callSummary);
   }
-
-  NavigatorState get _rootNav => Navigator.of(context, rootNavigator: true);
 
   Widget _roundControlButton({
     required String asset,
@@ -104,11 +338,55 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
     );
   }
 
+  Widget _localPreviewContent() {
+    final c = _cameraController;
+    if (c != null && c.value.isInitialized && !_cameraLoading) {
+      return LocalCameraPreview(controller: c);
+    }
+    if (_cameraLoading) {
+      return const ColoredBox(
+        color: Color(0xFF2A2A2A),
+        child: Center(
+          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white38),
+        ),
+      );
+    }
+    return const ColoredBox(
+      color: Color(0xFF2A2A2A),
+      child: Center(
+        child: Icon(Icons.videocam_off_outlined, color: Colors.white38, size: 32),
+      ),
+    );
+  }
+
   Widget _videoCard({
-    required String imageAsset,
+    TutorModel? tutor,
     required Widget? bottomOverlay,
+    bool isLocalPreview = false,
     bool dimContent = false,
   }) {
+    final Widget portrait;
+    if (tutor != null) {
+      portrait = Transform.translate(
+        offset: const Offset(0, 32),
+        child: Transform.scale(
+          scale: 0.9,
+          alignment: Alignment.topCenter,
+          child: TutorRiveAvatar(
+            tutor: tutor,
+            isTalking: _lipSyncAudible,
+            fit: BoxFit.cover,
+            alignment: const Alignment(0, -1.15),
+            fallbackAsset: ActiveCallView._remoteAvatar,
+          ),
+        ),
+      );
+    } else if (isLocalPreview) {
+      portrait = _localPreviewContent();
+    } else {
+      portrait = const SizedBox.shrink();
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(ActiveCallView._videoRadius),
       child: Stack(
@@ -116,11 +394,7 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
         children: [
           ColoredBox(
             color: const Color(0xFFF6F6F6),
-            child: Image.asset(
-              imageAsset,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            ),
+            child: portrait,
           ),
           if (dimContent)
             ColoredBox(color: Colors.black.withValues(alpha: 0.45)),
@@ -149,22 +423,30 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
             children: [
               _roundControlButton(
                 asset: 'assets/icons/video.svg',
-                onTap: () => setState(() => _videoOn = !_videoOn),
-                iconOpacity: _videoOn ? 1 : 0.45,
+                onTap: _flipCamera,
               ),
               const SizedBox(width: ActiveCallView._controlGap),
               _roundControlButton(
-                asset: _speakerMuted
-                    ? 'assets/icons/volume_slash.svg'
-                    : 'assets/icons/volume.svg',
-                onTap: () => setState(() => _speakerMuted = !_speakerMuted),
+                asset: _speakerOn
+                    ? 'assets/icons/volume.svg'
+                    : 'assets/icons/volume_slash.svg',
+                onTap: () async {
+                  final next = !_speakerOn;
+                  setState(() => _speakerOn = next);
+                  await _engine?.setSpeakerOn(next);
+                },
+                iconOpacity: _speakerOn ? 1 : 0.45,
               ),
               const SizedBox(width: ActiveCallView._controlGap),
               _roundControlButton(
                 asset: _micMuted
                     ? 'assets/icons/microphone_slash.svg'
                     : 'assets/icons/microphone.svg',
-                onTap: () => setState(() => _micMuted = !_micMuted),
+                onTap: () {
+                  final next = !_micMuted;
+                  setState(() => _micMuted = next);
+                  _engine?.setMuted(next);
+                },
               ),
               const SizedBox(width: ActiveCallView._controlGap),
               _roundControlButton(
@@ -182,12 +464,10 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(callSessionControllerProvider);
-    final tutors = ref.watch(tutorsCatalogProvider);
     final tutorId = session.activeTutorId ?? 'sophie';
-    final matches = tutors.where((t) => t.id == tutorId);
-    final tutor = matches.isEmpty ? tutors.first : matches.first;
-    final name = AppTranslations.section('tudor', tutor.id);
-    final remoteAvatar = tutor.avatarAssetPath ?? ActiveCallView._remoteAvatar;
+    final tutor = ref.watch(tutorByIdProvider(tutorId)) ??
+        ref.watch(tutorsCatalogProvider).first;
+    final name = tutor.localizedDisplayName;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -203,16 +483,7 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: IconButton(
-                      onPressed: () {
-                        if (_rootNav.canPop()) {
-                          _rootNav.pop();
-                        } else {
-                          _rootNav.pushNamedAndRemoveUntil(
-                            AppRoutes.bottomNav,
-                            (_) => false,
-                          );
-                        }
-                      },
+                      onPressed: _endCall,
                       icon: SvgPicture.asset(
                         'assets/icons/arrow_left.svg',
                         width: 24,
@@ -247,7 +518,7 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _videoCard(
-                  imageAsset: remoteAvatar,
+                  tutor: tutor,
                   bottomOverlay: null,
                 ),
               ),
@@ -257,9 +528,8 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _videoCard(
-                  imageAsset: ActiveCallView._localAvatar,
+                  isLocalPreview: true,
                   bottomOverlay: _controlBar(),
-                  dimContent: !_videoOn,
                 ),
               ),
             ),

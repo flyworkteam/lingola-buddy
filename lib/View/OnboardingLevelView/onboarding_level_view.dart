@@ -10,22 +10,24 @@ import 'package:lingola_buddy/Core/Widgets/app_primary_button.dart';
 import 'package:lingola_buddy/Core/Widgets/onboarding_option_tile.dart';
 import 'package:lingola_buddy/Core/Widgets/onboarding_wizard_page_shell.dart';
 import 'package:lingola_buddy/Core/Widgets/onboarding_wizard_top_bar.dart';
-import 'package:lingola_buddy/Models/app_enums.dart';
+import 'package:lingola_buddy/Models/lesson_model.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/OnboardingPrefsController/onboarding_prefs_controller.dart';
 
 class _LevelRow {
   const _LevelRow({
     required this.level,
-    required this.translationKey,
+    required this.label,
+    required this.subtitle,
     required this.iconAsset,
   });
 
-  final ProficiencyLevel level;
-  final String translationKey;
+  final CefrLevel level;
+  final String label;
+  final String subtitle;
   final String iconAsset;
 }
 
-/// Dil yeterliliği (2 / 3) — Figma ile aynı sihirbaz iskelesi ve ikonlu seçenekler.
+/// CEFR İngilizce seviyesi (A1–C2).
 class OnboardingLevelView extends ConsumerWidget {
   const OnboardingLevelView({super.key});
 
@@ -34,18 +36,39 @@ class OnboardingLevelView extends ConsumerWidget {
 
   static const List<_LevelRow> _rows = [
     _LevelRow(
-      level: ProficiencyLevel.none,
-      translationKey: 'option2_1',
+      level: CefrLevel.a1,
+      label: 'A1',
+      subtitle: 'Beginner — first words & phrases',
       iconAsset: 'assets/icons/hand_holding_seeding.svg',
     ),
     _LevelRow(
-      level: ProficiencyLevel.simple,
-      translationKey: 'option2_2',
+      level: CefrLevel.a2,
+      label: 'A2',
+      subtitle: 'Elementary — simple everyday talk',
       iconAsset: 'assets/icons/speak.svg',
     ),
     _LevelRow(
-      level: ProficiencyLevel.fluent,
-      translationKey: 'option2_3',
+      level: CefrLevel.b1,
+      label: 'B1',
+      subtitle: 'Intermediate — opinions & travel',
+      iconAsset: 'assets/icons/running.svg',
+    ),
+    _LevelRow(
+      level: CefrLevel.b2,
+      label: 'B2',
+      subtitle: 'Upper intermediate — debates & work',
+      iconAsset: 'assets/icons/lightning.svg',
+    ),
+    _LevelRow(
+      level: CefrLevel.c1,
+      label: 'C1',
+      subtitle: 'Advanced — nuance & fluency',
+      iconAsset: 'assets/icons/fire.svg',
+    ),
+    _LevelRow(
+      level: CefrLevel.c2,
+      label: 'C2',
+      subtitle: 'Mastery — near-native control',
       iconAsset: 'assets/icons/rocket.svg',
     ),
   ];
@@ -69,7 +92,7 @@ class OnboardingLevelView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selected = ref.watch(onboardingPrefsControllerProvider).proficiency;
+    final selected = ref.watch(onboardingPrefsControllerProvider).cefrLevel;
 
     return OnboardingWizardPageShell(
       child: Column(
@@ -84,13 +107,11 @@ class OnboardingLevelView extends ConsumerWidget {
           Text(
             AppTranslations.section('onboarding', 'question2'),
             style: AppTextStyles.onboardingWizardTitle(),
-            textAlign: TextAlign.start,
           ),
           const SizedBox(height: 8),
           Text(
-            AppTranslations.section('onboarding', 'q2_desc'),
+            'Choose your English level (CEFR). We\'ll build 8–12 lessons for your band.',
             style: AppTextStyles.onboardingWizardSubtitle(),
-            textAlign: TextAlign.start,
           ),
           const SizedBox(height: 24),
           Expanded(
@@ -100,27 +121,30 @@ class OnboardingLevelView extends ConsumerWidget {
               separatorBuilder: (_, __) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final row = _rows[index];
-                final label = AppTranslations.section(
-                  'onboarding',
-                  row.translationKey,
-                );
                 return OnboardingOptionTile(
                   leading: SvgPicture.asset(
                     row.iconAsset,
                     width: 28,
                     height: 28,
-                    fit: BoxFit.contain,
-                    colorFilter: ColorFilter.mode( selected == row.level ? AppColors.brandPrimary : AppColors.secondaryText, BlendMode.srcIn),
+                    colorFilter: ColorFilter.mode(
+                      selected == row.level
+                          ? AppColors.brandPrimary
+                          : AppColors.secondaryText,
+                      BlendMode.srcIn,
+                    ),
                   ),
-                  label: label,
+                  label: '${row.label} — ${row.subtitle}',
                   selected: selected == row.level,
-                  onTap: () => ref.read(onboardingPrefsControllerProvider.notifier).selectProficiency(row.level),
+                  onTap: () => ref
+                      .read(onboardingPrefsControllerProvider.notifier)
+                      .selectCefrLevel(row.level),
                 );
               },
             ),
           ),
+          const SizedBox(height: 8),
           AppPrimaryButton(
-            label: AppTranslations.section('common', 'continue'),
+            label: AppTranslations.section('onboarding', 'button2_continue'),
             decorationGradient: AppColors.primaryCtaGradient,
             foregroundColor: Colors.white,
             labelStyle: AppTextStyles.onboardingCta(),

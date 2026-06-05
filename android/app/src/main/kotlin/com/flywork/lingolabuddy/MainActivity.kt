@@ -7,6 +7,7 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MicrophonePermissionPlugin.attach(flutterEngine, this)
+        VoiceAudioSessionPlugin.attach(flutterEngine, this)
     }
 
     override fun onRequestPermissionsResult(

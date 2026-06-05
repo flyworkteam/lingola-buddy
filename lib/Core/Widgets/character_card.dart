@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
+import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
 
 /// Eğitmen kartı — ana sayfa yatay listesi ve eğitmen grid’inde ortak.
@@ -43,8 +44,6 @@ class CharacterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final avatarPath = tutor.avatarAssetPath ?? 'assets/images/avatar_1.png';
-
     final card = Material(
       color: backgroundColor,
       elevation: elevated ? 2 : 0,
@@ -52,7 +51,14 @@ class CharacterCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: onPressed,
+        onTap: () {
+          final cacheW = TutorAvatarImage.decodePixels(
+            context,
+            width ?? designWidth,
+          );
+          TutorAvatarImage.precache(context, tutor, cacheWidth: cacheW);
+          onPressed();
+        },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -63,14 +69,14 @@ class CharacterCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 child: ColoredBox(
                   color: Colors.white,
-                  child: Image.asset(
-                    avatarPath,
-                    fit: BoxFit.cover,
+                  child: TutorAvatarImage(
+                    tutor: tutor,
                     width: double.infinity,
                     height: double.infinity,
-                    alignment: Alignment.topCenter,
-                    errorBuilder: (_, __, ___) =>
-                        const Center(child: Icon(Icons.face, size: 48)),
+                    cacheWidth: TutorAvatarImage.decodePixels(
+                      context,
+                      width ?? designWidth,
+                    ),
                   ),
                 ),
               ),

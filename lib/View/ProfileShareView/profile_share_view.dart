@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/app_primary_button.dart';
+import 'package:lingola_buddy/Core/Widgets/app_snackbar.dart';
 
 /// Arkadaşına paylaş — Figma: illüstrasyon, gri panel + beyaz pill link, CTA.
 class ProfileShareView extends StatelessWidget {
@@ -17,11 +18,9 @@ class ProfileShareView extends StatelessWidget {
 
   void _copyLink(BuildContext context) {
     Clipboard.setData(const ClipboardData(text: inviteUrl));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppTranslations.section('profile_share', 'copy_success')),
-        behavior: SnackBarBehavior.floating,
-      ),
+    AppSnackBar.success(
+      AppTranslations.section('profile_share', 'copy_success'),
+      context: context,
     );
   }
 

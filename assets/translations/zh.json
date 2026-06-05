@@ -1,0 +1,913 @@
+{
+    "common": {
+        "app_name": "Lingola Buddy",
+        "continue": "继续",
+        "save_changes": "保存更改",
+        "cancel": "取消",
+        "back": "返回",
+        "copy": "复制",
+        "delete": "删除",
+        "edit": "编辑",
+        "link_open_failed": "无法打开链接"
+    },
+    "auth": {
+        "sign_in_failed": "登录失败，请重试。"
+    },
+    "onboarding": {
+        "title1": "你懂英语但不会说",
+        "description1": "在现实生活中无法开口会降低你的自信心。",
+        "button1": "我想说英语",
+        "title2": "没有人可以对话？",
+        "description2": "随时随地开口说。无需等待任何人，练习并提高你的口语技能。",
+        "button2": "开始练习",
+        "title3": "通过开口说来开始学习。",
+        "description3": "通过真实对话进行练习，提高自信心，并开始在日常生活中使用英语。",
+        "button3": "开始说话",
+        "question1": "你想练习哪种语言？",
+        "q1_desc": "个性化你的学习路径",
+        "option1": "英语",
+        "option2": "德语",
+        "option3": "意大利语",
+        "option4": "法语",
+        "option5": "土耳其语",
+        "option6": "日语",
+        "option7": "西班牙语",
+        "option8": "俄语",
+        "option9": "韩语",
+        "option10": "印地语",
+        "option11": "葡萄牙语",
+        "option12": "中文",
+        "see_more": "查看更多",
+        "question2": "你的语言熟练程度如何？",
+        "q2_desc": "根据你的水平调整内容",
+        "option2_1": "我完全不会说",
+        "option2_2": "我可以说基础内容",
+        "option2_3": "我想流利地说",
+        "question3": "你每天想练习多久？",
+        "q3_desc": "设定你的每日学习目标",
+        "option3_1": "每天5–10分钟（进度较慢）",
+        "option3_2": "每天15–20分钟（推荐）",
+        "option3_3": "每天30分钟（见效快）",
+        "button3_continue": "我们开始吧",
+        "plan_title": "正在创建你的个性化计划",
+        "plan_desc1": "正在为你准备量身定制的对话场景",
+        "plan_desc2": "正在创建适合你水平的对话",
+        "plan_desc3": "正在准备你的第一次对话",
+        "plan_ready_title": "你的计划已准备就绪",
+        "plan_ready_desc": "你现在可以开始说了",
+        "plan_ready_button": "开始说话",
+        "wizard_step_label": "第 {current} 步，共 {total} 步"
+    },
+    "call": {
+        "title": "Sophie",
+        "desc": "{name} 想和你练习",
+        "desc_with_lesson": "{name} 想和你练习“{lesson}”",
+        "button": "开始说话",
+        "another_time": "下次再说",
+        "desc_with_daily": "{name} 想和你聊聊“{topic}”"
+    },
+    "video_session": {
+        "title": "视频通话",
+        "feedback_great": "和 {name} 聊得很棒！",
+        "status_just_finished": "刚刚结束 • {subject}",
+        "practice_subject": "英语练习",
+        "next_topic_preview": "日常购物对话",
+        "badge_free": "第 {current}/{total} 次免费",
+        "badge_streak_fmt": "连续{days}天",
+        "role_teacher": "{name} • 导师",
+        "role_label_teacher": "导师",
+        "you": "你",
+        "stat_duration": "时长",
+        "stat_words": "字数",
+        "stat_fluency": "流利度",
+        "session_score": "会话评分",
+        "level_beginner": "初级",
+        "cta_advanced": "继续进入高级阶段",
+        "next_topic_chosen": "{name} 选择了下一个话题",
+        "next_topic_ready": "{topic} • 已准备好并等待你",
+        "start_new_conversation": "开始新对话",
+        "another_time": "下次再说",
+        "lesson_completed_banner": "课程完成！下一课已解锁。",
+        "level_advanced_banner_fmt": "你已完成 {previous}！你现在处于 {new} 级别。"
+    },
+    "chat": {
+        "title": "聊天",
+        "title_with_tutor": "聊天：{tutor}",
+        "message_hint": "输入消息...",
+        "message_hint_short": "输入消息...",
+        "type_message": "输入消息...",
+        "translation_prefix": "翻译",
+        "translating": "正在翻译…",
+        "recording": "录音中",
+        "sent_voice": "语音消息",
+        "transcribing": "正在将语音转换为文字…",
+        "voice_too_short": "录音太短。请多说一点然后再试一次。",
+        "voice_record_failed": "无法开始录音。请检查麦克风权限。",
+        "voice_tap_hint": "语音消息：点击麦克风，完成后再次点击",
+        "voice_cancel": "取消",
+        "voice_send": "发送",
+        "open_settings": "打开设置",
+        "hold_to_record": "点击麦克风发送语音消息",
+        "attach_title": "分享",
+        "attach_subtitle": "选择你想添加到聊天的内容",
+        "attach_photo": "照片",
+        "attach_document": "文档",
+        "attach_subtitle_photo": "从相册中选择",
+        "attach_subtitle_document": "PDF、Word 及更多",
+        "attach_cancel": "取消",
+        "attach_error": "无法选择文件",
+        "sent_photo": "分享了一张照片。",
+        "sent_document_named": "分享了一个文档：{name}",
+        "api_missing": "OpenAI 密钥未定义。请使用 --dart-define=OPENAI_API_KEY=... 运行应用程序"
+    },
+    "talk": {
+        "history_title": "聊天记录",
+        "quick_messages": "快捷消息",
+        "continue": "继续",
+        "empty_title": "暂无对话",
+        "empty_desc": "当你开始与导师聊天时，记录会显示在这里",
+        "delete_title": "删除对话？",
+        "delete_message": "要删除你与 {name} 的聊天记录吗？此操作无法撤销。",
+        "delete_confirm": "删除对话",
+        "time_am": "上午",
+        "time_pm": "下午"
+    },
+    "call_summary": {
+        "title": "会话摘要",
+        "session_subtitle": "练习会话",
+        "duration_label": "时长",
+        "duration_value": "{minutes} 分 {seconds} 秒",
+        "growth_stats": "成长数据",
+        "stat_word": "词汇",
+        "stat_grammar": "语法",
+        "continue_conversation": "继续对话"
+    },
+    "navigation": {
+        "home": "首页",
+        "tutor": "导师",
+        "talk": "交谈",
+        "profile": "我的"
+    },
+    "home": {
+        "greeting_morning": "早上好",
+        "greeting_afternoon": "下午好",
+        "greeting_evening": "晚上好",
+        "greeting_night": "晚安",
+        "welcome": "欢迎",
+        "past_7_days": "过去7天",
+        "streak_desc": "通过每天学习来建立连续打卡记录，并养成良好的学习习惯。",
+        "mon": "周一",
+        "tue": "周二",
+        "wed": "周三",
+        "thu": "周四",
+        "fri": "周五",
+        "sat": "周六",
+        "sun": "周日",
+        "pick_up": "从上次停下的地方继续",
+        "lesson": "课程",
+        "lesson_progress": "第 6 / 10 课",
+        "lesson_progress_fmt": "第 {current} / {total} 课",
+        "level_subtitle_fmt": "{level} • {subtitle}",
+        "lessons_title": "我的课程",
+        "lessons_empty": "暂无课程",
+        "lesson_locked": "未解锁",
+        "lesson_in_progress": "进行中",
+        "lesson_completed": "已完成",
+        "lesson_pass_rule": "通过课程的条件：与你的导师完成至少 2 分钟的视频通话。",
+        "coffee_shop_title": "在咖啡馆",
+        "level_daily_conversation": "B1 • 日常对话",
+        "continue": "继续对话",
+        "character_label": "角色",
+        "view_all": "查看全部",
+        "start_talking": "开始说话",
+        "daily_conversation": "日常对话",
+        "today_topic": "今日话题",
+        "new": "全新",
+        "suitable_for_your_level": "适合你的水平",
+        "making_plans_with_friends": "和朋友制定计划",
+        "duration_estimate": "约 5 分钟",
+        "start_conversation": "开始对话",
+        "progress_label": "进度",
+        "this_week": "本周",
+        "word_label": "词汇",
+        "accuracy_label": "准确率",
+        "time_label": "时间",
+        "level_label": "级别",
+        "word_value": "247",
+        "accuracy_value": "89%",
+        "time_value": "30 分钟",
+        "level_value": "B1",
+        "minutes_fmt": "{n} 分钟",
+        "accuracy_fmt": "{n}%"
+    },
+    "notifications": {
+        "title": "通知",
+        "clear_all": "清除全部",
+        "no_notifications": "没有通知",
+        "no_notifications_desc": "你将在这里看到你的通知",
+        "sample_1_title": "连5分钟都用不了",
+        "sample_1_desc": "花五分钟时间进行每天的词汇练习怎么样？",
+        "sample_2_title": "晨间练习",
+        "sample_2_desc": "学习的最佳时间是清晨。来做个练习怎么样？"
+    },
+    "local_notifications": {
+        "channel_name": "Lingola 提醒",
+        "channel_desc": "课程、连续打卡和练习提醒",
+        "reminder_morning_title": "快速练习一下？",
+        "reminder_morning_body": "五分钟的英语练习就能保持你的连续打卡记录。",
+        "reminder_afternoon_title": "马上就到了",
+        "reminder_afternoon_body": "再完成一节课，你离今天的目标就更近了。",
+        "reminder_evening_title": "今天练习了吗？",
+        "reminder_evening_body": "晚上是重新投入学习的好时机。",
+        "streak_title": "不要中断你的连续打卡",
+        "streak_body": "你已经连续打卡 {streak} 天了 — 今天继续练习以保持记录。",
+        "progress_title": "不错的进展",
+        "progress_body": "已完成你所在级别的 {completed}/{total} 节课程（{percent}%）。",
+        "unfinished_lesson_title": "从上次停下的地方继续",
+        "unfinished_lesson_body": "只需几分钟就能完成“{lesson}”。",
+        "call_unfinished_title": "你留下了一个未完成的会话",
+        "call_unfinished_body": "回来完成你的“{lesson}”练习吧。",
+        "level_advanced_title": "升级了！",
+        "level_advanced_body_fmt": "你已完成所有 {previous} 课程。你现在是 {new} 级别。"
+    },
+    "tudor": {
+        "title": "选择一位导师",
+        "description": "选择你觉得最亲近的角色",
+        "search_tudor": "搜索导师...",
+        "no_tudors_found": "未找到导师",
+        "no_tudors_found_desc": "请尝试不同的搜索词",
+        "james": "James",
+        "sophie": "Sophie",
+        "emma": "Emma",
+        "clara": "Clara",
+        "jhon": "Jhon",
+        "seraphine": "Seraphine",
+        "lin": "Lin",
+        "frank": "Frank",
+        "annie": "Annie",
+        "lee": "Lee",
+        "nina": "Nina",
+        "aria": "Aria",
+        "brian": "Brian",
+        "elara": "Elara",
+        "lyra": "Lyra",
+        "max": "Max",
+        "mira": "Mira",
+        "native": "母语者",
+        "start_talking": "开始说话",
+        "character_profile": "角色资料",
+        "character_profile_desc": "每一季都在世界不同的角落教授英语，Sophie将每一堂课都变成了一次文化之旅。",
+        "voice_call": "语音通话",
+        "video_call": "视频通话",
+        "text_message": "发送短信",
+        "signal_connecting": "正在连接信号",
+        "signal_listening": "正在倾听",
+        "signal_thinking": "正在处理",
+        "signal_speaking": "正在说话",
+        "signal_error": "连接错误",
+        "bio_fallback": "这位导师的简介将很快添加。"
+    },
+    "profile": {
+        "title": "我的",
+        "edit_profile": "编辑个人资料",
+        "section_general": "通用设置",
+        "language": "语言",
+        "notifications": "通知",
+        "notifications_enabled": "已启用通知",
+        "notifications_denied": "通知权限被拒绝",
+        "notifications_disabled": "已禁用通知",
+        "premium": "高级版",
+        "share_friend": "与好友分享",
+        "progress": "学习进度",
+        "section_support": "支持",
+        "rate_us": "评价我们",
+        "faq": "常见问题",
+        "contact_us": "联系我们",
+        "section_legal": "法律条款",
+        "privacy_policy": "隐私政策",
+        "terms_of_use": "使用条款",
+        "log_out": "退出登录",
+        "restore_purchases": "恢复购买",
+        "premium_badge_pro": "Pro",
+        "premium_already_active": "你的 Pro 订阅已激活。"
+    },
+    "logout_dialog": {
+        "title": "退出登录",
+        "message": "你确定要退出当前账号吗？",
+        "confirm": "退出登录"
+    },
+    "delete_account_dialog": {
+        "title": "注销账号",
+        "message": "你的账号和数据将被永久删除。此操作无法撤销。",
+        "confirm": "注销账号",
+        "error_failed": "无法注销账号。请重试。"
+    },
+    "profile_settings": {
+        "title": "个人资料设置",
+        "change_photo": "更换照片",
+        "photo_sheet_title": "个人资料照片",
+        "from_gallery": "从相册中选择",
+        "from_camera": "用相机拍摄",
+        "remove_photo": "移除照片",
+        "photo_updated": "个人资料照片已更新",
+        "photo_error": "无法选择照片",
+        "name": "姓名",
+        "email": "电子邮箱",
+        "save_changes": "保存更改",
+        "profile_saved": "个人资料已更新",
+        "save_error": "无法保存更改",
+        "name_empty": "姓名不能为空",
+        "delete_account": "注销账号"
+    },
+    "profile_share": {
+        "title": "与好友分享",
+        "copy_link": "复制链接",
+        "copy_success": "链接已复制到剪贴板"
+    },
+    "profile_faq": {
+        "title": "常见问题",
+        "q1": "Lingola Buddy 是什么？",
+        "q2": "Lingola Buddy 是如何运作的？",
+        "q3": "应用程序支持哪些语言？",
+        "a1": "Lingola Buddy 是一款由人工智能支持的语言学习和口语练习应用程序。",
+        "a2": "你可以每天通过语音、视频或文本与人工智能导师用你想学的语言进行聊天练习。",
+        "a3": "Lingola Buddy 支持多种语言，使用户能够练习不同语言的口语。用户可以选择他们想学的语言，并与该语言的人工智能角色进行聊天。"
+    },
+    "profile_language": {
+        "title": "语言",
+        "save_changes": "保存更改"
+    },
+    "languages": {
+        "en": "英语",
+        "de": "德语",
+        "it": "意大利语",
+        "fr": "法语",
+        "tr": "土耳其语",
+        "ja": "日语",
+        "es": "西班牙语",
+        "ru": "俄语",
+        "ko": "韩语",
+        "hi": "印地语",
+        "pt": "葡萄牙语",
+        "zh": "中文"
+    },
+    "profile_progress": {
+        "title": "学习进度",
+        "this_week": "本周",
+        "mon": "周一",
+        "tue": "周二",
+        "wed": "周三",
+        "thu": "周四",
+        "fri": "周五",
+        "sat": "周六",
+        "sun": "周日",
+        "word": "词汇",
+        "accuracy": "准确率",
+        "time": "时间",
+        "level": "级别",
+        "word_value": "247",
+        "accuracy_value": "89%",
+        "time_value": "30 分钟",
+        "level_value": "B1",
+        "minutes_short": "分钟",
+        "minutes_fmt": "{n} 分钟",
+        "accuracy_fmt": "{n}%",
+        "share_progress": "分享进度",
+        "share_subject": "我的 Lingola Buddy 学习进度",
+        "share_message_fmt": "我正在用 Lingola Buddy 学习英语！\n\n🔥 连续打卡：{streak} 天\n📚 级别：{level}\n📖 本周词汇：{words}\n🎯 准确率：{accuracy}\n⏱ 时间：{time}\n\n加入我吧：{link}",
+        "share_loading": "正在加载进度，请稍候。",
+        "share_failed": "无法打开分享功能。"
+    },
+    "legal": {
+        "privacy_title": "隐私政策",
+        "terms_title": "使用条款",
+        "retry": "重试"
+    },
+    "premium": {
+        "badge_pro": "Pro",
+        "offerings_failed": "无法加载订阅选项，请重试。",
+        "paywall_failed": "无法打开付费墙，请重试。",
+        "purchased_success": "欢迎加入 Lingola Buddy Pro！",
+        "restored_success": "你的订阅已恢复。",
+        "restore_none": "未找到有效订阅。",
+        "restore_failed": "无法恢复购买，请重试。",
+        "restore_purchases": "恢复购买",
+        "already_active": "你的 Pro 订阅已激活。",
+        "not_configured": "此设备不支持订阅。"
+    },
+    "paywall": {
+        "headline": "今天就开始免费开口说",
+        "subheadline": "通过真实的对话提升你的英语水平",
+        "feature_unlimited": "与 AI 进行无限次对话",
+        "feature_scenarios": "真实的日常对话场景",
+        "feature_feedback": "即时反馈",
+        "three_days_free": "3 天免费",
+        "per_month_price": "每月 $15.99",
+        "free_trial_active": "免费试用激活中",
+        "payable_today": "今日应付",
+        "three_days_free_charge": "3 天免费",
+        "amount_zero": "$0.00",
+        "price_due": "$15.99",
+        "payment_date_line": "付款日期：2026年3月13日",
+        "cancel_anytime": "随时取消",
+        "subscribe_now": "立即订阅",
+        "continue_without_purchasing": "跳过并继续"
+    },
+    "sign_up": {
+        "headline": "注册以继续",
+        "continue_google": "使用 Google 账号继续",
+        "continue_apple": "使用 Apple 账号继续",
+        "continue_guest": "以游客身份继续",
+        "legal_part1": "注册 Lingola Buddy 即表示你同意我们的",
+        "legal_terms": "服务条款",
+        "legal_part2": "。有关处理你数据的信息，你可以查阅我们的",
+        "legal_privacy": "隐私政策",
+        "legal_part3": "和",
+        "legal_cookies": "Cookie 政策",
+        "legal_part4": "。"
+    },
+    "lessons": {
+        "a1_01": {
+            "title": "问候与介绍",
+            "subtitle": "初次接触"
+        },
+        "a1_02": {
+            "title": "数字与时间",
+            "subtitle": "数数与时间"
+        },
+        "a1_03": {
+            "title": "在咖啡馆",
+            "subtitle": "点饮料"
+        },
+        "a1_04": {
+            "title": "家人与朋友",
+            "subtitle": "你认识的人"
+        },
+        "a1_05": {
+            "title": "城镇周围",
+            "subtitle": "指路"
+        },
+        "a1_06": {
+            "title": "购物基础",
+            "subtitle": "在商店里"
+        },
+        "a1_07": {
+            "title": "日常生活",
+            "subtitle": "日常习惯"
+        },
+        "a1_08": {
+            "title": "天气与情绪",
+            "subtitle": "你的感受"
+        },
+        "a2_01": {
+            "title": "上个周末",
+            "subtitle": "一般过去时"
+        },
+        "a2_02": {
+            "title": "看医生",
+            "subtitle": "就医"
+        },
+        "a2_03": {
+            "title": "面试基础",
+            "subtitle": "第一次面试"
+        },
+        "a2_04": {
+            "title": "旅行计划",
+            "subtitle": "计划旅行"
+        },
+        "a2_05": {
+            "title": "爱好与兴趣",
+            "subtitle": "空闲时间"
+        },
+        "a2_06": {
+            "title": "餐厅用餐",
+            "subtitle": "外出就餐"
+        },
+        "a2_07": {
+            "title": "电话与信息",
+            "subtitle": "远程聊天"
+        },
+        "a2_08": {
+            "title": "家庭与家务",
+            "subtitle": "家庭生活"
+        },
+        "b1_01": {
+            "title": "观点：社交媒体",
+            "subtitle": "发表意见"
+        },
+        "b1_02": {
+            "title": "工作中的问题",
+            "subtitle": "职场问题"
+        },
+        "b1_03": {
+            "title": "环境",
+            "subtitle": "环保习惯"
+        },
+        "b1_04": {
+            "title": "文化冲击",
+            "subtitle": "海外生活"
+        },
+        "b1_05": {
+            "title": "健康与健身",
+            "subtitle": "健康生活"
+        },
+        "b1_06": {
+            "title": "教育选择",
+            "subtitle": "学习路径"
+        },
+        "b1_07": {
+            "title": "生活中的科技",
+            "subtitle": "科技习惯"
+        },
+        "b1_08": {
+            "title": "描述一部电影",
+            "subtitle": "故事梗概"
+        },
+        "b1_09": {
+            "title": "谈判",
+            "subtitle": "公平交易"
+        },
+        "b1_10": {
+            "title": "未来目标",
+            "subtitle": "未来计划"
+        },
+        "b2_01": {
+            "title": "辩论：远程办公",
+            "subtitle": "结构化辩论"
+        },
+        "b2_02": {
+            "title": "新闻摘要",
+            "subtitle": "当前话题"
+        },
+        "b2_03": {
+            "title": "假设情况",
+            "subtitle": "如果…"
+        },
+        "b2_04": {
+            "title": "正式邮件语气",
+            "subtitle": "职场写作"
+        },
+        "b2_05": {
+            "title": "领导风格",
+            "subtitle": "人员管理"
+        },
+        "b2_06": {
+            "title": "经济趋势",
+            "subtitle": "宏观视角"
+        },
+        "b2_07": {
+            "title": "艺术与创造力",
+            "subtitle": "表达性谈话"
+        },
+        "b2_08": {
+            "title": "日常生活中的科学",
+            "subtitle": "科学漫谈"
+        },
+        "b2_09": {
+            "title": "道德困境",
+            "subtitle": "道德抉择"
+        },
+        "b2_10": {
+            "title": "演示技巧",
+            "subtitle": "迷你演讲"
+        },
+        "c1_01": {
+            "title": "语境中的习语",
+            "subtitle": "地道表达"
+        },
+        "c1_02": {
+            "title": "学术论文",
+            "subtitle": "论证结构"
+        },
+        "c1_03": {
+            "title": "讽刺与反语",
+            "subtitle": "微妙的语气"
+        },
+        "c1_04": {
+            "title": "外交辞令",
+            "subtitle": "委婉表达"
+        },
+        "c1_05": {
+            "title": "文学分析",
+            "subtitle": "文本探讨"
+        },
+        "c1_06": {
+            "title": "政策讨论",
+            "subtitle": "公共议题"
+        },
+        "c1_07": {
+            "title": "职业人脉",
+            "subtitle": "职场聊天"
+        },
+        "c1_08": {
+            "title": "跨文化沟通",
+            "subtitle": "全球团队"
+        },
+        "c1_09": {
+            "title": "抽象概念",
+            "subtitle": "大思想"
+        },
+        "c1_10": {
+            "title": "媒介素养",
+            "subtitle": "批判性视角"
+        },
+        "c1_11": {
+            "title": "高级谈判",
+            "subtitle": "高风险谈判"
+        },
+        "c1_12": {
+            "title": "TED式演讲",
+            "subtitle": "说服性演讲"
+        },
+        "c2_01": {
+            "title": "修辞与说服",
+            "subtitle": "精妙的论点"
+        },
+        "c2_02": {
+            "title": "法律语言入门",
+            "subtitle": "正式合同"
+        },
+        "c2_03": {
+            "title": "讽刺与幽默",
+            "subtitle": "喜剧色彩"
+        },
+        "c2_04": {
+            "title": "哲学辩论",
+            "subtitle": "深层问题"
+        },
+        "c2_05": {
+            "title": "科学论文",
+            "subtitle": "研究探讨"
+        },
+        "c2_06": {
+            "title": "母语般流利",
+            "subtitle": "精益求精"
+        },
+        "c2_07": {
+            "title": "文学中的潜台词",
+            "subtitle": "读懂言外之意"
+        },
+        "c2_08": {
+            "title": "全球经济",
+            "subtitle": "宏观经济探讨"
+        },
+        "c2_09": {
+            "title": "英语指导",
+            "subtitle": "教授他人"
+        },
+        "c2_10": {
+            "title": "即兴演讲",
+            "subtitle": "毫无准备"
+        },
+        "c2_11": {
+            "title": "语域切换",
+            "subtitle": "风格把控"
+        },
+        "c2_12": {
+            "title": "精通复习",
+            "subtitle": "自由练习"
+        }
+    },
+    "daily_conversations": {
+        "dc_a1_01": {
+            "title": "早晨问好",
+            "subtitle": "开启新的一天"
+        },
+        "dc_a1_02": {
+            "title": "今天过得怎么样？",
+            "subtitle": "每日问候"
+        },
+        "dc_a1_03": {
+            "title": "午餐闲聊",
+            "subtitle": "午间休息"
+        },
+        "dc_a1_04": {
+            "title": "最爱的饮品",
+            "subtitle": "咖啡馆闲聊"
+        },
+        "dc_a1_05": {
+            "title": "就在现在",
+            "subtitle": "活在当下"
+        },
+        "dc_a1_06": {
+            "title": "周末计划",
+            "subtitle": "一般将来时"
+        },
+        "dc_a1_07": {
+            "title": "感谢与道别",
+            "subtitle": "礼貌收尾"
+        },
+        "dc_a1_08": {
+            "title": "聊聊天气",
+            "subtitle": "闲聊"
+        },
+        "dc_a2_01": {
+            "title": "叙旧",
+            "subtitle": "朋友近况"
+        },
+        "dc_a2_02": {
+            "title": "下班后",
+            "subtitle": "夜晚放松"
+        },
+        "dc_a2_03": {
+            "title": "购物故事",
+            "subtitle": "跑腿琐事"
+        },
+        "dc_a2_04": {
+            "title": "今晚做饭",
+            "subtitle": "厨房趣事"
+        },
+        "dc_a2_05": {
+            "title": "旅行回忆",
+            "subtitle": "过去的旅行"
+        },
+        "dc_a2_06": {
+            "title": "音乐与心情",
+            "subtitle": "播放列表闲聊"
+        },
+        "dc_a2_07": {
+            "title": "邻里聊天",
+            "subtitle": "当地生活"
+        },
+        "dc_a2_08": {
+            "title": "手机使用习惯",
+            "subtitle": "日常科技"
+        },
+        "dc_b1_01": {
+            "title": "咖啡时间小辩论",
+            "subtitle": "轻松的意见交流"
+        },
+        "dc_b1_02": {
+            "title": "工作与生活的平衡",
+            "subtitle": "忙碌的一周"
+        },
+        "dc_b1_03": {
+            "title": "社交计划",
+            "subtitle": "制定计划"
+        },
+        "dc_b1_04": {
+            "title": "学习英语",
+            "subtitle": "聊聊动力"
+        },
+        "dc_b1_05": {
+            "title": "健康习惯",
+            "subtitle": "健康养生"
+        },
+        "dc_b1_06": {
+            "title": "电影之夜",
+            "subtitle": "推荐影片"
+        },
+        "dc_b1_07": {
+            "title": "城市生活",
+            "subtitle": "都市漫谈"
+        },
+        "dc_b1_08": {
+            "title": "压力与平静",
+            "subtitle": "谈论感受"
+        },
+        "dc_b1_09": {
+            "title": "梦想之旅",
+            "subtitle": "畅想未来"
+        },
+        "dc_b1_10": {
+            "title": "每日新闻",
+            "subtitle": "时事动态"
+        },
+        "dc_b2_01": {
+            "title": "远程办公与办公室",
+            "subtitle": "工作文化"
+        },
+        "dc_b2_02": {
+            "title": "人际关系",
+            "subtitle": "个人生活"
+        },
+        "dc_b2_03": {
+            "title": "金钱观",
+            "subtitle": "财务漫谈"
+        },
+        "dc_b2_04": {
+            "title": "文化与习俗",
+            "subtitle": "跨文化"
+        },
+        "dc_b2_05": {
+            "title": "职业转型",
+            "subtitle": "职业道路"
+        },
+        "dc_b2_06": {
+            "title": "播客与书籍",
+            "subtitle": "媒介素养"
+        },
+        "dc_b2_07": {
+            "title": "道德选择",
+            "subtitle": "价值观探讨"
+        },
+        "dc_b2_08": {
+            "title": "育儿 / 指导",
+            "subtitle": "指导交流"
+        },
+        "dc_b2_09": {
+            "title": "创作瓶颈",
+            "subtitle": "创作者漫谈"
+        },
+        "dc_b2_10": {
+            "title": "AI 的未来",
+            "subtitle": "科技与社会"
+        },
+        "dc_c1_01": {
+            "title": "身份与归属感",
+            "subtitle": "深度个人话题"
+        },
+        "dc_c1_02": {
+            "title": "生活中的说服力",
+            "subtitle": "影响力"
+        },
+        "dc_c1_03": {
+            "title": "跨文化幽默",
+            "subtitle": "喜剧色彩"
+        },
+        "dc_c1_04": {
+            "title": "领导力时刻",
+            "subtitle": "影响力"
+        },
+        "dc_c1_05": {
+            "title": "隐私与信任",
+            "subtitle": "数字生活"
+        },
+        "dc_c1_06": {
+            "title": "气候对话",
+            "subtitle": "重大议题"
+        },
+        "dc_c1_07": {
+            "title": "打动你的艺术",
+            "subtitle": "美学探讨"
+        },
+        "dc_c1_08": {
+            "title": "谈判故事",
+            "subtitle": "交易达成"
+        },
+        "dc_c1_09": {
+            "title": "导师制度",
+            "subtitle": "成长"
+        },
+        "dc_c1_10": {
+            "title": "语言与思维",
+            "subtitle": "浅谈语言学"
+        },
+        "dc_c1_11": {
+            "title": "风险与遗憾",
+            "subtitle": "人生选择"
+        },
+        "dc_c1_12": {
+            "title": "社区建设",
+            "subtitle": "社会结构"
+        },
+        "dc_c2_01": {
+            "title": "咖啡时间聊哲学",
+            "subtitle": "宏大问题"
+        },
+        "dc_c2_02": {
+            "title": "媒体中的修辞",
+            "subtitle": "话语"
+        },
+        "dc_c2_03": {
+            "title": "权力与伦理",
+            "subtitle": "制度"
+        },
+        "dc_c2_04": {
+            "title": "创造力与 AI",
+            "subtitle": "未来的手艺"
+        },
+        "dc_c2_05": {
+            "title": "全球英语",
+            "subtitle": "世界语言"
+        },
+        "dc_c2_06": {
+            "title": "记忆与故事",
+            "subtitle": "叙事"
+        },
+        "dc_c2_07": {
+            "title": "经济与生活",
+            "subtitle": "宏观与微观"
+        },
+        "dc_c2_08": {
+            "title": "关于正义的辩论",
+            "subtitle": "道德体系"
+        },
+        "dc_c2_09": {
+            "title": "科学与社会",
+            "subtitle": "公众认知"
+        },
+        "dc_c2_10": {
+            "title": "即兴大师课",
+            "subtitle": "毫无准备"
+        },
+        "dc_c2_11": {
+            "title": "语域运用",
+            "subtitle": "风格转换"
+        },
+        "dc_c2_12": {
+            "title": "开放休息室",
+            "subtitle": "自由畅聊"
+        }
+    }
+}

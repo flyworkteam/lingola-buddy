@@ -1,22 +1,34 @@
-import 'package:lingola_buddy/Models/user_model.dart';
+import 'package:lingola_buddy/Services/lingola_auth_service.dart';
 
-/// Kimlik doğrulama için depo katmanı iskeleti (Google/Apple vb. daha sonra bağlanır)
 abstract class AuthRepository {
-  Future<UserModel?> fetchCurrentUser();
-  Future<UserModel?> signOut();
+  Future<AuthResult> signInWithGoogle();
+  Future<AuthResult> signInWithApple();
+  Future<AuthResult> signInAsGuest();
+  Future<AuthResult?> restoreSession();
+  Future<void> signOut();
+  Future<void> deleteAccount();
 }
 
-class StubAuthRepository implements AuthRepository {
-  @override
-  Future<UserModel?> fetchCurrentUser() async {
-    return const UserModel(
-      id: 'demo',
-      displayName: 'Örnek Kullanıcı',
-      email: 'ornek@lingola.dev',
-      learnLanguageCode: 'en',
-    );
-  }
+class ApiAuthRepository implements AuthRepository {
+  ApiAuthRepository(this._auth);
+
+  final LingolaAuthService _auth;
 
   @override
-  Future<UserModel?> signOut() async => null;
+  Future<AuthResult> signInWithGoogle() => _auth.signInWithGoogle();
+
+  @override
+  Future<AuthResult> signInWithApple() => _auth.signInWithApple();
+
+  @override
+  Future<AuthResult> signInAsGuest() => _auth.signInAsGuest();
+
+  @override
+  Future<AuthResult?> restoreSession() => _auth.restoreSession();
+
+  @override
+  Future<void> signOut() => _auth.signOut();
+
+  @override
+  Future<void> deleteAccount() => _auth.deleteAccount();
 }

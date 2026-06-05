@@ -43,7 +43,13 @@ app.*.map.json
 .env.*
 !.env.example
 
+lingola_apis/.env
+lingola_apis/firebase-service-account.json
+
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile
 /android/app/release
+mindcoach/
+mindcoach_apis-main
+lingola_apis/

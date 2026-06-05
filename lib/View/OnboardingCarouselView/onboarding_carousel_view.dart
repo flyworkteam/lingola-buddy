@@ -120,7 +120,9 @@ class _OnboardingCarouselViewState
     final lastIndex = carousel.slides.length - 1;
 
     if (carousel.pageIndex >= lastIndex) {
-      ref.read(sessionControllerProvider.notifier).markIntroCarouselCompleted();
+      await ref
+          .read(sessionControllerProvider.notifier)
+          .markIntroCarouselCompleted();
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, AppRoutes.onboardingLanguage);
       return;

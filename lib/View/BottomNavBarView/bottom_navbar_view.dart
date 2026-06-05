@@ -7,10 +7,14 @@ import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/BottomNavController/bottom_nav_controller.dart';
+import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/View/BottomNavBarView/tab_navigator_shell.dart';
 import 'package:lingola_buddy/View/BottomNavBarView/tab_route_observer.dart';
+import 'package:lingola_buddy/Models/chat_route_args.dart';
 import 'package:lingola_buddy/View/ChatView/chat_view.dart';
 import 'package:lingola_buddy/View/HomeView/home_view.dart';
+import 'package:lingola_buddy/View/DailyConversationsListView/daily_conversations_list_view.dart';
+import 'package:lingola_buddy/View/LessonsListView/lessons_list_view.dart';
 import 'package:lingola_buddy/View/ProfileFaqView/profile_faq_view.dart';
 import 'package:lingola_buddy/View/ProfileLanguageView/profile_language_view.dart';
 import 'package:lingola_buddy/View/ProfileProgressView/profile_progress_view.dart';
@@ -124,15 +128,31 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
           settings: settings,
         );
       case '/chat':
-        final id = settings.arguments is String
-            ? settings.arguments as String
-            : '';
+        final args = ChatRouteArgs.parse(settings.arguments);
         return MaterialPageRoute<void>(
-          builder: (_) => ChatView(tutorId: id),
+          builder: (_) => ChatView(
+            tutorId: args.tutorId,
+            showHistoryShimmer: args.showHistoryShimmer,
+          ),
+          settings: settings,
+        );
+      case '/language':
+        return MaterialPageRoute<void>(
+          builder: (_) => const ProfileLanguageView(),
+          settings: settings,
+        );
+      case '/lessons':
+        return MaterialPageRoute<void>(
+          builder: (_) => const LessonsListView(),
+          settings: settings,
+        );
+      case '/daily-conversations':
+        return MaterialPageRoute<void>(
+          builder: (_) => const DailyConversationsListView(),
           settings: settings,
         );
       default:
-        return null;
+        return AppRoutes.buildCallRoute(settings);
     }
   }
 
@@ -168,15 +188,16 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
           settings: settings,
         );
       case '/chat':
-        final id = settings.arguments is String
-            ? settings.arguments as String
-            : '';
+        final args = ChatRouteArgs.parse(settings.arguments);
         return MaterialPageRoute<void>(
-          builder: (_) => ChatView(tutorId: id),
+          builder: (_) => ChatView(
+            tutorId: args.tutorId,
+            showHistoryShimmer: args.showHistoryShimmer,
+          ),
           settings: settings,
         );
       default:
-        return null;
+        return AppRoutes.buildCallRoute(settings);
     }
   }
 
@@ -212,15 +233,16 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
           settings: settings,
         );
       case '/chat':
-        final id = settings.arguments is String
-            ? settings.arguments as String
-            : '';
+        final args = ChatRouteArgs.parse(settings.arguments);
         return MaterialPageRoute<void>(
-          builder: (_) => ChatView(tutorId: id),
+          builder: (_) => ChatView(
+            tutorId: args.tutorId,
+            showHistoryShimmer: args.showHistoryShimmer,
+          ),
           settings: settings,
         );
       default:
-        return null;
+        return AppRoutes.buildCallRoute(settings);
     }
   }
 
@@ -257,7 +279,7 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
           settings: settings,
         );
       default:
-        return null;
+        return AppRoutes.buildCallRoute(settings);
     }
   }
 

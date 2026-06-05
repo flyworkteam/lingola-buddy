@@ -1,30 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lingola_buddy/Models/conversation_model.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
+import 'package:lingola_buddy/Riverpod/Providers/authenticated_user_scope_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/conversation_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 
-final talkHistoryProvider = Provider<List<ConversationSummaryModel>>((ref) {
-  return const [
-    ConversationSummaryModel(
-      tutorId: 'lee',
-      tutorName: 'Lee',
-      updatedAtIso: '2026-05-16T10:00:00Z',
-      timeLabel: '10:00 AM',
-      lastMessagePreview:
-          'Hey! I was about to explode with boredom. Your energy has reached me!',
-    ),
-    ConversationSummaryModel(
-      tutorId: 'sophie',
-      tutorName: 'Sophie',
-      updatedAtIso: '2026-05-16T09:30:00Z',
-      timeLabel: '10:00 AM',
-      lastMessagePreview:
-          'Hey! I was about to explode with boredom. Your energy has reached me!',
-    ),
-  ];
+/// Sohbet mesajı olan eğitmenler (sunucu / DB).
+
+final talkHistoryProvider =
+    FutureProvider<List<ConversationSummaryModel>>((ref) async {
+  final userId = ref.watch(authenticatedUserIdProvider);
+  if (userId == null) {
+    throw StateError('Talk history requires an authenticated user');
+  }
+  return ref.read(conversationRepositoryProvider).fetchSummaries();
 });
 
-/// Sohbet geçmişi üst bölümünde gösterilen öne çıkan eğitmenler.
+/// Üst bölümde gösterilen öne çıkan eğitmen kartları.
 final talkFeaturedTutorsProvider = Provider<List<TutorModel>>((ref) {
   const featuredIds = ['clara', 'james'];
   final catalog = ref.watch(tutorsCatalogProvider);

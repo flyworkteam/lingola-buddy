@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -22,22 +23,34 @@ class ChatVoiceMessageBubble extends StatefulWidget {
 }
 
 class _ChatVoiceMessageBubbleState extends State<ChatVoiceMessageBubble> {
-  final AudioPlayer _player = AudioPlayer();
+  AudioPlayer get _player => ChatVoicePlaybackService.sharedPlayer;
+
   bool _playing = false;
   Duration _position = Duration.zero;
+  StreamSubscription<PlayerState>? _stateSub;
+  StreamSubscription<Duration>? _positionSub;
+  StreamSubscription<void>? _completeSub;
+
+  bool get _isActive => ChatVoicePlaybackService.activePath == widget.path;
 
   @override
   void initState() {
     super.initState();
-    _player.onPlayerStateChanged.listen((state) {
+    _stateSub = _player.onPlayerStateChanged.listen((state) {
       if (!mounted) return;
-      setState(() => _playing = state == PlayerState.playing);
+      final active = _isActive;
+      setState(() {
+        _playing = active && state == PlayerState.playing;
+        if (!active) {
+          _position = Duration.zero;
+        }
+      });
     });
-    _player.onPositionChanged.listen((position) {
-      if (!mounted) return;
+    _positionSub = _player.onPositionChanged.listen((position) {
+      if (!mounted || !_isActive) return;
       setState(() => _position = position);
     });
-    _player.onPlayerComplete.listen((_) {
+    _completeSub = _player.onPlayerComplete.listen((_) {
       if (!mounted) return;
       setState(() {
         _playing = false;
@@ -48,7 +61,9 @@ class _ChatVoiceMessageBubbleState extends State<ChatVoiceMessageBubble> {
 
   @override
   void dispose() {
-    _player.dispose();
+    _stateSub?.cancel();
+    _positionSub?.cancel();
+    _completeSub?.cancel();
     super.dispose();
   }
 
@@ -56,7 +71,7 @@ class _ChatVoiceMessageBubbleState extends State<ChatVoiceMessageBubble> {
     if (!File(widget.path).existsSync()) return;
 
     try {
-      await ChatVoicePlaybackService.play(_player, widget.path);
+      await ChatVoicePlaybackService.play(widget.path);
     } catch (e, st) {
       debugPrint('Voice playback failed: $e\n$st');
     }

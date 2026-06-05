@@ -22,10 +22,38 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.768085789416-ie4ct7mde6mcvifrhc80eui7rkeuro19</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>GIDClientID</key>
+	<string>768085789416-ie4ct7mde6mcvifrhc80eui7rkeuro19.apps.googleusercontent.com</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Görüntülü görüşme ve profil fotoğrafı için kamera erişimi gerekir.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Geliştirme sırasında yerel API sunucusuna bağlanmak için yerel ağ erişimi gerekir.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Sesli mesaj göndermek için mikrofon erişimi gerekir.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Sohbete fotoğraf eklemek için galeri erişimi gerekir.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Sohbete fotoğraf eklemek için galeri erişimi gerekir.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -49,6 +77,10 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -57,14 +89,6 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Sesli mesaj göndermek için mikrofon erişimi gerekir.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Sohbete fotoğraf eklemek için galeri erişimi gerekir.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Sohbete fotoğraf eklemek için galeri erişimi gerekir.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Profil fotoğrafı çekmek için kamera erişimi gerekir.</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeRight</string>

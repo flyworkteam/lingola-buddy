@@ -1,39 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lingola_buddy/Core/Config/app_ui_languages.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/app_primary_button.dart';
+import 'package:lingola_buddy/Core/Widgets/future_extensions_dialog.dart';
 import 'package:lingola_buddy/Core/Widgets/profile_language_option_tile.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
-
-class _LanguageRow {
-  const _LanguageRow({required this.code, required this.flagAsset});
-
-  final String code;
-  final String flagAsset;
-}
+import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
+import 'package:lingola_buddy/Services/local_notification_scheduler.dart';
+import 'package:lingola_buddy/Services/session_local_storage.dart';
 
 /// Uygulama dili — Figma: gri panel, beyaz liste, 12px köşeli dil satırları, kaydet CTA.
 class ProfileLanguageView extends ConsumerStatefulWidget {
   const ProfileLanguageView({super.key});
 
   static const Color _panelBackground = Color(0xFFF6F6F6);
-
-  static const List<_LanguageRow> _rows = [
-    _LanguageRow(code: 'en', flagAsset: 'assets/icons/english.svg'),
-    _LanguageRow(code: 'de', flagAsset: 'assets/icons/german.svg'),
-    _LanguageRow(code: 'it', flagAsset: 'assets/icons/italian.svg'),
-    _LanguageRow(code: 'fr', flagAsset: 'assets/icons/french.svg'),
-    _LanguageRow(code: 'tr', flagAsset: 'assets/icons/turkish.svg'),
-    _LanguageRow(code: 'ja', flagAsset: 'assets/icons/japanese.svg'),
-    _LanguageRow(code: 'es', flagAsset: 'assets/icons/spanish.svg'),
-    _LanguageRow(code: 'ru', flagAsset: 'assets/icons/russian.svg'),
-    _LanguageRow(code: 'ko', flagAsset: 'assets/icons/korean.svg'),
-    _LanguageRow(code: 'hi', flagAsset: 'assets/icons/hindi.svg'),
-    _LanguageRow(code: 'pt', flagAsset: 'assets/icons/portuguese.svg'),
-    _LanguageRow(code: 'zh', flagAsset: 'assets/icons/chinese.svg'),
-  ];
 
   @override
   ConsumerState<ProfileLanguageView> createState() =>
@@ -43,11 +26,22 @@ class ProfileLanguageView extends ConsumerStatefulWidget {
 class _ProfileLanguageViewState extends ConsumerState<ProfileLanguageView> {
   String? _pendingCode;
 
-  void _save() {
+  Future<void> _save() async {
     final code = _pendingCode;
     if (code == null) return;
 
-    ref.read(userProfileControllerProvider.notifier).setUiLanguageCode(code);
+    await FutureExtensionsDialog.guard(
+      context,
+      () async {
+        await SessionLocalStorage.setUiLanguageCode(code, manual: true);
+        await AppTranslations.setLocale(code);
+        ref.read(userProfileControllerProvider.notifier).setUiLanguageCode(code);
+        ref.invalidate(tutorsCatalogAsyncProvider);
+        if (ref.read(userProfileControllerProvider).notificationsEnabled) {
+          await LocalNotificationScheduler.instance.syncEnabled(enabled: true);
+        }
+      }(),
+    );
     if (!mounted) return;
     Navigator.of(context).maybePop();
   }
@@ -86,18 +80,18 @@ class _ProfileLanguageViewState extends ConsumerState<ProfileLanguageView> {
                             children: [
                               for (
                                 var i = 0;
-                                i < ProfileLanguageView._rows.length;
+                                i < AppUiLanguages.entries.length;
                                 i++
                               ) ...[
                                 if (i > 0) const SizedBox(height: 8),
                                 _LanguageOptionRow(
-                                  row: ProfileLanguageView._rows[i],
+                                  row: AppUiLanguages.entries[i],
                                   selected:
                                       _pendingCode ==
-                                      ProfileLanguageView._rows[i].code,
+                                      AppUiLanguages.entries[i].code,
                                   onTap: () => setState(
                                     () => _pendingCode =
-                                        ProfileLanguageView._rows[i].code,
+                                        AppUiLanguages.entries[i].code,
                                   ),
                                 ),
                               ],
@@ -184,7 +178,7 @@ class _LanguageOptionRow extends StatelessWidget {
     required this.onTap,
   });
 
-  final _LanguageRow row;
+  final AppUiLanguage row;
   final bool selected;
   final VoidCallback onTap;
 

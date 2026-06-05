@@ -1,4 +1,5 @@
 import 'package:lingola_buddy/Models/app_enums.dart';
+import 'package:lingola_buddy/Models/lesson_model.dart';
 
 class UserModel {
   const UserModel({
@@ -9,6 +10,8 @@ class UserModel {
     this.nativeLanguageCode,
     this.learnLanguageCode,
     this.proficiency,
+    this.cefrLevel,
+    this.currentLessonId,
     this.dailyGoal,
   });
 
@@ -19,6 +22,8 @@ class UserModel {
   final String? nativeLanguageCode;
   final String? learnLanguageCode;
   final ProficiencyLevel? proficiency;
+  final CefrLevel? cefrLevel;
+  final String? currentLessonId;
   final DailyGoalBucket? dailyGoal;
 
   UserModel copyWith({
@@ -30,6 +35,8 @@ class UserModel {
     String? nativeLanguageCode,
     String? learnLanguageCode,
     ProficiencyLevel? proficiency,
+    CefrLevel? cefrLevel,
+    String? currentLessonId,
     DailyGoalBucket? dailyGoal,
   }) {
     return UserModel(
@@ -40,6 +47,8 @@ class UserModel {
       nativeLanguageCode: nativeLanguageCode ?? this.nativeLanguageCode,
       learnLanguageCode: learnLanguageCode ?? this.learnLanguageCode,
       proficiency: proficiency ?? this.proficiency,
+      cefrLevel: cefrLevel ?? this.cefrLevel,
+      currentLessonId: currentLessonId ?? this.currentLessonId,
       dailyGoal: dailyGoal ?? this.dailyGoal,
     );
   }

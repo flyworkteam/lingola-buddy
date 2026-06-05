@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lingola_buddy/Riverpod/Providers/session_initial_state_provider.dart';
+import 'package:lingola_buddy/Services/session_local_storage.dart';
 
 class SessionState {
   const SessionState({
@@ -33,22 +35,36 @@ class SessionState {
 
 class SessionController extends Notifier<SessionState> {
   @override
-  SessionState build() => const SessionState();
+  SessionState build() => ref.watch(sessionInitialStateProvider);
 
-  void markIntroCarouselCompleted() {
+  Future<void> markIntroCarouselCompleted() async {
     state = state.copyWith(hasCompletedIntroCarousel: true);
+    await SessionLocalStorage.setIntroCarouselCompleted(true);
   }
 
-  void markPreferenceWizardCompleted() {
+  Future<void> markPreferenceWizardCompleted() async {
     state = state.copyWith(hasCompletedPreferenceWizard: true);
+    await SessionLocalStorage.setPreferenceWizardCompleted(true);
   }
 
-  void markPostCallUpsellCompleted() {
+  Future<void> markPostCallUpsellCompleted() async {
     state = state.copyWith(hasCompletedPostCallUpsell: true);
+    await SessionLocalStorage.setPostCallUpsellCompleted(true);
   }
 
   void markAuthenticated(bool value) {
     state = state.copyWith(isAuthenticated: value);
+  }
+
+  /// Çıkış: intro carousel cihazda kalır; yalnızca auth sıfırlanır.
+  Future<void> clearAuthSession() async {
+    await SessionLocalStorage.clearAuth();
+    state = SessionState(
+      hasCompletedIntroCarousel: state.hasCompletedIntroCarousel,
+      hasCompletedPreferenceWizard: state.hasCompletedPreferenceWizard,
+      hasCompletedPostCallUpsell: state.hasCompletedPostCallUpsell,
+      isAuthenticated: false,
+    );
   }
 
   void resetOnboardingDemo() {

@@ -1,0 +1,242 @@
+{
+  "dc_a1_01": {
+    "title": "아침 인사",
+    "subtitle": "하루 시작"
+  },
+  "dc_a1_02": {
+    "title": "오늘 하루 어땠어요?",
+    "subtitle": "일일 체크인"
+  },
+  "dc_a1_03": {
+    "title": "점심 수다",
+    "subtitle": "점심 휴식"
+  },
+  "dc_a1_04": {
+    "title": "좋아하는 음료",
+    "subtitle": "카페 스몰토크"
+  },
+  "dc_a1_05": {
+    "title": "지금 이 순간",
+    "subtitle": "현재 이야기"
+  },
+  "dc_a1_06": {
+    "title": "주말 계획",
+    "subtitle": "간단한 미래"
+  },
+  "dc_a1_07": {
+    "title": "감사와 작별",
+    "subtitle": "정중한 마무리"
+  },
+  "dc_a1_08": {
+    "title": "날씨 이야기",
+    "subtitle": "스몰토크"
+  },
+  "dc_a2_01": {
+    "title": "근황 톡",
+    "subtitle": "친구 업데이트"
+  },
+  "dc_a2_02": {
+    "title": "퇴근 후",
+    "subtitle": "저녁 휴식"
+  },
+  "dc_a2_03": {
+    "title": "쇼핑 이야기",
+    "subtitle": "일상 심부름"
+  },
+  "dc_a2_04": {
+    "title": "오늘 저녁 요리",
+    "subtitle": "주방 대화"
+  },
+  "dc_a2_05": {
+    "title": "여행 추억",
+    "subtitle": "지난 여행"
+  },
+  "dc_a2_06": {
+    "title": "음악과 기분",
+    "subtitle": "플레이리스트"
+  },
+  "dc_a2_07": {
+    "title": "이웃 이야기",
+    "subtitle": "동네 생활"
+  },
+  "dc_a2_08": {
+    "title": "폰 습관",
+    "subtitle": "일상 테크"
+  },
+  "dc_b1_01": {
+    "title": "커피 브레이크 토론",
+    "subtitle": "가벼운 의견"
+  },
+  "dc_b1_02": {
+    "title": "일과 삶의 균형",
+    "subtitle": "바쁜 한 주"
+  },
+  "dc_b1_03": {
+    "title": "모임 계획",
+    "subtitle": "계획 세우기"
+  },
+  "dc_b1_04": {
+    "title": "영어 배우기",
+    "subtitle": "동기"
+  },
+  "dc_b1_05": {
+    "title": "건강한 습관",
+    "subtitle": "웰니스"
+  },
+  "dc_b1_06": {
+    "title": "영화의 밤",
+    "subtitle": "추천"
+  },
+  "dc_b1_07": {
+    "title": "도시 생활",
+    "subtitle": "도시 대화"
+  },
+  "dc_b1_08": {
+    "title": "스트레스와 평온",
+    "subtitle": "감정"
+  },
+  "dc_b1_09": {
+    "title": "꿈의 여행",
+    "subtitle": "미래 대화"
+  },
+  "dc_b1_10": {
+    "title": "오늘의 뉴스",
+    "subtitle": "시사"
+  },
+  "dc_b2_01": {
+    "title": "재택 vs 사무실",
+    "subtitle": "직장 문화"
+  },
+  "dc_b2_02": {
+    "title": "관계",
+    "subtitle": "개인 생활"
+  },
+  "dc_b2_03": {
+    "title": "돈 마인드셋",
+    "subtitle": "재정 대화"
+  },
+  "dc_b2_04": {
+    "title": "문화와 관습",
+    "subtitle": "문화 간"
+  },
+  "dc_b2_05": {
+    "title": "커리어 전환",
+    "subtitle": "직업 경로"
+  },
+  "dc_b2_06": {
+    "title": "팟캐스트와 책",
+    "subtitle": "미디어"
+  },
+  "dc_b2_07": {
+    "title": "윤리적 선택",
+    "subtitle": "가치"
+  },
+  "dc_b2_08": {
+    "title": "멘토링",
+    "subtitle": "안내"
+  },
+  "dc_b2_09": {
+    "title": "창의성 막힘",
+    "subtitle": "생산성"
+  },
+  "dc_b2_10": {
+    "title": "AI의 미래",
+    "subtitle": "테크 사회"
+  },
+  "dc_c1_01": {
+    "title": "정체성과 소속",
+    "subtitle": "깊은 개인"
+  },
+  "dc_c1_02": {
+    "title": "설득의 순간",
+    "subtitle": "영향력"
+  },
+  "dc_c1_03": {
+    "title": "문화 간 유머",
+    "subtitle": "코믹 뉘앙스"
+  },
+  "dc_c1_04": {
+    "title": "리더십 순간",
+    "subtitle": "영향력"
+  },
+  "dc_c1_05": {
+    "title": "프라이버시와 신뢰",
+    "subtitle": "디지털 생활"
+  },
+  "dc_c1_06": {
+    "title": "기후 대화",
+    "subtitle": "큰 주제"
+  },
+  "dc_c1_07": {
+    "title": "마음을 움직인 예술",
+    "subtitle": "미학"
+  },
+  "dc_c1_08": {
+    "title": "협상 이야기",
+    "subtitle": "합의"
+  },
+  "dc_c1_09": {
+    "title": "멘토 경험",
+    "subtitle": "성장"
+  },
+  "dc_c1_10": {
+    "title": "언어와 사고",
+    "subtitle": "언어학"
+  },
+  "dc_c1_11": {
+    "title": "위험과 후회",
+    "subtitle": "인생 선택"
+  },
+  "dc_c1_12": {
+    "title": "커뮤니티 만들기",
+    "subtitle": "사회적 연결"
+  },
+  "dc_c2_01": {
+    "title": "커피와 철학",
+    "subtitle": "큰 질문"
+  },
+  "dc_c2_02": {
+    "title": "미디어의 수사",
+    "subtitle": "담론"
+  },
+  "dc_c2_03": {
+    "title": "권력과 윤리",
+    "subtitle": "제도"
+  },
+  "dc_c2_04": {
+    "title": "창의성과 AI",
+    "subtitle": "미래 직업"
+  },
+  "dc_c2_05": {
+    "title": "글로벌 영어",
+    "subtitle": "세계어"
+  },
+  "dc_c2_06": {
+    "title": "기억과 이야기",
+    "subtitle": "서사"
+  },
+  "dc_c2_07": {
+    "title": "경제와 삶",
+    "subtitle": "거시–미시"
+  },
+  "dc_c2_08": {
+    "title": "정의 토론",
+    "subtitle": "도덕 체계"
+  },
+  "dc_c2_09": {
+    "title": "과학과 사회",
+    "subtitle": "공공 이해"
+  },
+  "dc_c2_10": {
+    "title": "즉흥 마스터클래스",
+    "subtitle": "준비 없음"
+  },
+  "dc_c2_11": {
+    "title": "어조 놀이",
+    "subtitle": "스타일 전환"
+  },
+  "dc_c2_12": {
+    "title": "오픈 라운지",
+    "subtitle": "자유 대화"
+  }
+}

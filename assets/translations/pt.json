@@ -1,0 +1,913 @@
+{
+    "common": {
+        "app_name": "Lingola Buddy",
+        "continue": "Continuar",
+        "save_changes": "Salvar alterações",
+        "cancel": "Cancelar",
+        "back": "Voltar",
+        "copy": "Copiar",
+        "delete": "Excluir",
+        "edit": "Editar",
+        "link_open_failed": "Falha ao abrir o link"
+    },
+    "auth": {
+        "sign_in_failed": "Falha no login. Por favor, tente novamente."
+    },
+    "onboarding": {
+        "title1": "Você sabe inglês, mas não consegue falar",
+        "description1": "Não conseguir falar na vida real diminui a sua autoconfiança.",
+        "button1": "Quero falar inglês",
+        "title2": "Ninguém com quem conversar?",
+        "description2": "Fale quando e onde quiser. Pratique e melhore suas habilidades de fala sem esperar por ninguém.",
+        "button2": "Começar a praticar",
+        "title3": "Comece a aprender falando.",
+        "description3": "Pratique com diálogos reais, aumente sua autoconfiança e comece a usar o inglês no seu dia a dia.",
+        "button3": "Começar a falar",
+        "question1": "Qual idioma você quer praticar?",
+        "q1_desc": "Personalize sua jornada de aprendizado",
+        "option1": "Inglês",
+        "option2": "Alemão",
+        "option3": "Italiano",
+        "option4": "Francês",
+        "option5": "Turco",
+        "option6": "Japonês",
+        "option7": "Espanhol",
+        "option8": "Russo",
+        "option9": "Coreano",
+        "option10": "Hindi",
+        "option11": "Português",
+        "option12": "Chinês",
+        "see_more": "Ver mais",
+        "question2": "Qual é o seu nível de proficiência no idioma?",
+        "q2_desc": "Ajuste o conteúdo ao seu nível",
+        "option2_1": "Não consigo falar nada",
+        "option2_2": "Consigo falar o básico",
+        "option2_3": "Quero falar fluentemente",
+        "question3": "Quanto você quer praticar por dia?",
+        "q3_desc": "Defina sua meta de estudo diária",
+        "option3_1": "5 a 10 minutos por dia (progresso lento)",
+        "option3_2": "15 a 20 minutos por dia (recomendado)",
+        "option3_3": "30 minutos por dia (resultados rápidos)",
+        "button3_continue": "Vamos começar",
+        "plan_title": "Seu plano personalizado está sendo criado",
+        "plan_desc1": "Cenários de conversa personalizados estão sendo preparados para você",
+        "plan_desc2": "Diálogos adequados ao seu nível estão sendo criados",
+        "plan_desc3": "Sua primeira conversa está sendo preparada",
+        "plan_ready_title": "Seu plano está pronto",
+        "plan_ready_desc": "Você já pode falar",
+        "plan_ready_button": "Começar a falar",
+        "wizard_step_label": "Passo {current} de {total}"
+    },
+    "call": {
+        "title": "Sophie",
+        "desc": "{name} quer praticar com você",
+        "desc_with_lesson": "{name} quer praticar «{lesson}» com você",
+        "button": "Começar a falar",
+        "another_time": "Outra hora",
+        "desc_with_daily": "{name} quer conversar sobre «{topic}» com você"
+    },
+    "video_session": {
+        "title": "Chamada de vídeo",
+        "feedback_great": "Foi ótimo com {name}!",
+        "status_just_finished": "Acabou de terminar • {subject}",
+        "practice_subject": "Prática de inglês",
+        "next_topic_preview": "Diálogos de compras diárias",
+        "badge_free": "{current}/{total} grátis",
+        "badge_streak_fmt": "{days} dias de sequência",
+        "role_teacher": "{name} • Tutor",
+        "role_label_teacher": "Tutor",
+        "you": "Você",
+        "stat_duration": "Duração",
+        "stat_words": "Palavras",
+        "stat_fluency": "Fluência",
+        "session_score": "Pontuação da sessão",
+        "level_beginner": "Iniciante",
+        "cta_advanced": "Continuar para nível avançado",
+        "next_topic_chosen": "{name} escolheu o próximo tópico",
+        "next_topic_ready": "{topic} • Pronto e esperando por você",
+        "start_new_conversation": "Iniciar nova conversa",
+        "another_time": "Outra hora",
+        "lesson_completed_banner": "Lição concluída! A próxima lição foi desbloqueada.",
+        "level_advanced_banner_fmt": "Você concluiu {previous}! Agora você está no nível {new}."
+    },
+    "chat": {
+        "title": "Chat",
+        "title_with_tutor": "Chat: {tutor}",
+        "message_hint": "Digite uma mensagem...",
+        "message_hint_short": "Mensagem...",
+        "type_message": "Digite uma mensagem...",
+        "translation_prefix": "Tradução",
+        "translating": "Traduzindo…",
+        "recording": "Gravando",
+        "sent_voice": "Mensagem de voz",
+        "transcribing": "Transcrevendo voz para texto…",
+        "voice_too_short": "A gravação é muito curta. Fale mais um pouco e tente novamente.",
+        "voice_record_failed": "Falha ao iniciar a gravação. Verifique a permissão do microfone.",
+        "voice_tap_hint": "Mensagem de voz: toque no microfone, toque de novo ao terminar",
+        "voice_cancel": "Cancelar",
+        "voice_send": "Enviar",
+        "open_settings": "Abrir configurações",
+        "hold_to_record": "Toque no microfone para enviar mensagem de voz",
+        "attach_title": "Compartilhar",
+        "attach_subtitle": "Escolha o que você quer adicionar ao chat",
+        "attach_photo": "Foto",
+        "attach_document": "Documento",
+        "attach_subtitle_photo": "Escolher da galeria",
+        "attach_subtitle_document": "PDF, Word e mais",
+        "attach_cancel": "Cancelar",
+        "attach_error": "Falha ao selecionar arquivo",
+        "sent_photo": "Compartilhou uma foto.",
+        "sent_document_named": "Compartilhou um documento: {name}",
+        "api_missing": "Chave da OpenAI não definida. Execute o app com --dart-define=OPENAI_API_KEY=..."
+    },
+    "talk": {
+        "history_title": "Histórico de chat",
+        "quick_messages": "Mensagens rápidas",
+        "continue": "Continuar",
+        "empty_title": "Nenhuma conversa ainda",
+        "empty_desc": "Elas aparecerão aqui quando você começar a conversar com os tutores",
+        "delete_title": "Excluir conversa?",
+        "delete_message": "Excluir seu chat com {name}? Isso não pode ser desfeito.",
+        "delete_confirm": "Excluir conversa",
+        "time_am": "AM",
+        "time_pm": "PM"
+    },
+    "call_summary": {
+        "title": "Resumo da sessão",
+        "session_subtitle": "Sessão de prática",
+        "duration_label": "Duração",
+        "duration_value": "{minutes} min {seconds} seg",
+        "growth_stats": "Estatísticas de evolução",
+        "stat_word": "Palavra",
+        "stat_grammar": "Gramática",
+        "continue_conversation": "Continuar conversa"
+    },
+    "navigation": {
+        "home": "Início",
+        "tutor": "Tutor",
+        "talk": "Falar",
+        "profile": "Perfil"
+    },
+    "home": {
+        "greeting_morning": "Bom dia",
+        "greeting_afternoon": "Boa tarde",
+        "greeting_evening": "Boa noite",
+        "greeting_night": "Boa noite",
+        "welcome": "Bem-vindo",
+        "past_7_days": "Últimos 7 dias",
+        "streak_desc": "Crie uma ofensiva estudando todos os dias e crie um forte hábito de aprendizado.",
+        "mon": "Seg",
+        "tue": "Ter",
+        "wed": "Qua",
+        "thu": "Qui",
+        "fri": "Sex",
+        "sat": "Sáb",
+        "sun": "Dom",
+        "pick_up": "Continue de onde parou",
+        "lesson": "Lição",
+        "lesson_progress": "Lição 6 / 10",
+        "lesson_progress_fmt": "Lição {current} / {total}",
+        "level_subtitle_fmt": "{level} • {subtitle}",
+        "lessons_title": "Minhas lições",
+        "lessons_empty": "Nenhuma lição ainda",
+        "lesson_locked": "Bloqueado",
+        "lesson_in_progress": "Em andamento",
+        "lesson_completed": "Concluída",
+        "lesson_pass_rule": "Para passar de uma lição: conclua uma chamada de vídeo com seu tutor por pelo menos 2 minutos.",
+        "coffee_shop_title": "Na Cafeteria",
+        "level_daily_conversation": "B1 • Conversação diária",
+        "continue": "Continuar falando",
+        "character_label": "Personagens",
+        "view_all": "Ver tudo",
+        "start_talking": "Começar a falar",
+        "daily_conversation": "Conversação diária",
+        "today_topic": "Tópico de hoje",
+        "new": "Novo",
+        "suitable_for_your_level": "Adequado para o seu nível",
+        "making_plans_with_friends": "Fazendo planos com amigos",
+        "duration_estimate": "~5 min",
+        "start_conversation": "Iniciar conversa",
+        "progress_label": "Progresso",
+        "this_week": "Esta semana",
+        "word_label": "Palavra",
+        "accuracy_label": "Precisão",
+        "time_label": "Tempo",
+        "level_label": "Nível",
+        "word_value": "247",
+        "accuracy_value": "89%",
+        "time_value": "30 min",
+        "level_value": "B1",
+        "minutes_fmt": "{n} min",
+        "accuracy_fmt": "{n}%"
+    },
+    "notifications": {
+        "title": "Notificações",
+        "clear_all": "Limpar tudo",
+        "no_notifications": "Sem notificações",
+        "no_notifications_desc": "Você verá suas notificações aqui",
+        "sample_1_title": "Não vai levar nem 5 minutos",
+        "sample_1_desc": "Que tal tirar cinco minutos para fazer uma sessão de prática de vocabulário diária?",
+        "sample_2_title": "Exercício matinal",
+        "sample_2_desc": "O melhor momento para estudar é no início da manhã. Que tal fazer um exercício?"
+    },
+    "local_notifications": {
+        "channel_name": "Lembretes do Lingola",
+        "channel_desc": "Lembretes de lições, ofensiva e práticas",
+        "reminder_morning_title": "Prática rápida?",
+        "reminder_morning_body": "Cinco minutos de inglês mantêm a sua ofensiva viva.",
+        "reminder_afternoon_title": "Quase lá",
+        "reminder_afternoon_body": "Mais uma lição deixa você mais perto do objetivo de hoje.",
+        "reminder_evening_title": "Praticou hoje?",
+        "reminder_evening_body": "A noite é um ótimo momento para voltar aos estudos.",
+        "streak_title": "Não perca a sua ofensiva",
+        "streak_body": "Você está em uma ofensiva de {streak} dias — pratique hoje para mantê-la.",
+        "progress_title": "Belo progresso",
+        "progress_body": "{completed}/{total} lições feitas no seu nível ({percent}%).",
+        "unfinished_lesson_title": "Continue de onde parou",
+        "unfinished_lesson_body": "Termine \"{lesson}\" em apenas alguns minutos.",
+        "call_unfinished_title": "Você deixou uma sessão aberta",
+        "call_unfinished_body": "Volte e conclua sua prática de \"{lesson}\".",
+        "level_advanced_title": "Subiu de nível!",
+        "level_advanced_body_fmt": "Você concluiu todas as lições de {previous}. Agora você está no nível {new}."
+    },
+    "tudor": {
+        "title": "Selecione um tutor",
+        "description": "Escolha o personagem de quem você se sente mais próximo",
+        "search_tudor": "Buscar tutor...",
+        "no_tudors_found": "Nenhum tutor encontrado",
+        "no_tudors_found_desc": "Tente uma busca diferente",
+        "james": "James",
+        "sophie": "Sophie",
+        "emma": "Emma",
+        "clara": "Clara",
+        "jhon": "Jhon",
+        "seraphine": "Seraphine",
+        "lin": "Lin",
+        "frank": "Frank",
+        "annie": "Annie",
+        "lee": "Lee",
+        "nina": "Nina",
+        "aria": "Aria",
+        "brian": "Brian",
+        "elara": "Elara",
+        "lyra": "Lyra",
+        "max": "Max",
+        "mira": "Mira",
+        "native": "Nativo",
+        "start_talking": "Começar a falar",
+        "character_profile": "Perfil do personagem",
+        "character_profile_desc": "Ensinando inglês de um canto diferente do mundo a cada temporada, Sophie transforma cada lição em uma jornada cultural.",
+        "voice_call": "Chamada de voz",
+        "video_call": "Chamada de vídeo",
+        "text_message": "Mensagem de texto",
+        "signal_connecting": "Conectando sinal",
+        "signal_listening": "Ouvindo",
+        "signal_thinking": "Processando",
+        "signal_speaking": "Falando",
+        "signal_error": "Erro de conexão",
+        "bio_fallback": "A biografia para este tutor será adicionada em breve."
+    },
+    "profile": {
+        "title": "Perfil",
+        "edit_profile": "Editar perfil",
+        "section_general": "Configurações gerais",
+        "language": "Idioma",
+        "notifications": "Notificações",
+        "notifications_enabled": "Notificações ativadas",
+        "notifications_denied": "Permissão de notificação negada",
+        "notifications_disabled": "Notificações desativadas",
+        "premium": "Premium",
+        "share_friend": "Compartilhar com um amigo",
+        "progress": "Progresso",
+        "section_support": "Suporte",
+        "rate_us": "Avalie-nos",
+        "faq": "Perguntas frequentes",
+        "contact_us": "Fale conosco",
+        "section_legal": "Legal",
+        "privacy_policy": "Política de privacidade",
+        "terms_of_use": "Termos de uso",
+        "log_out": "Sair",
+        "restore_purchases": "Restaurar compras",
+        "premium_badge_pro": "Pro",
+        "premium_already_active": "Sua assinatura Pro está ativa."
+    },
+    "logout_dialog": {
+        "title": "Sair",
+        "message": "Tem certeza de que deseja sair da sua conta?",
+        "confirm": "Sair"
+    },
+    "delete_account_dialog": {
+        "title": "Excluir conta",
+        "message": "Sua conta e seus dados serão permanentemente excluídos. Esta ação não pode ser desfeita.",
+        "confirm": "Excluir conta",
+        "error_failed": "Falha ao excluir a conta. Por favor, tente novamente."
+    },
+    "profile_settings": {
+        "title": "Configurações do perfil",
+        "change_photo": "Alterar foto",
+        "photo_sheet_title": "Foto do perfil",
+        "from_gallery": "Escolher da galeria",
+        "from_camera": "Tirar com a câmera",
+        "remove_photo": "Remover foto",
+        "photo_updated": "Foto de perfil atualizada",
+        "photo_error": "Falha ao selecionar foto",
+        "name": "Nome",
+        "email": "E-mail",
+        "save_changes": "Salvar alterações",
+        "profile_saved": "Perfil atualizado",
+        "save_error": "Falha ao salvar as alterações",
+        "name_empty": "O nome não pode estar vazio",
+        "delete_account": "Excluir conta"
+    },
+    "profile_share": {
+        "title": "Compartilhar com um amigo",
+        "copy_link": "Copiar link",
+        "copy_success": "Link copiado para a área de transferência"
+    },
+    "profile_faq": {
+        "title": "Perguntas frequentes",
+        "q1": "O que é o Lingola Buddy?",
+        "q2": "Como o Lingola Buddy funciona?",
+        "q3": "Quais idiomas são suportados no app?",
+        "a1": "O Lingola Buddy é um aplicativo de prática de fala e aprendizado de idiomas com suporte de IA.",
+        "a2": "Você pratica diariamente conversando por voz, vídeo ou texto com tutores de IA no idioma que deseja aprender.",
+        "a3": "O Lingola Buddy suporta vários idiomas para permitir que os usuários pratiquem a fala em diferentes línguas. Os usuários podem escolher o idioma que querem aprender e conversar com personagens de inteligência artificial nesse idioma."
+    },
+    "profile_language": {
+        "title": "Idioma",
+        "save_changes": "Salvar alterações"
+    },
+    "languages": {
+        "en": "Inglês",
+        "de": "Alemão",
+        "it": "Italiano",
+        "fr": "Francês",
+        "tr": "Turco",
+        "ja": "Japonês",
+        "es": "Espanhol",
+        "ru": "Russo",
+        "ko": "Coreano",
+        "hi": "Hindi",
+        "pt": "Português",
+        "zh": "Chinês"
+    },
+    "profile_progress": {
+        "title": "Progresso",
+        "this_week": "Esta semana",
+        "mon": "SEG",
+        "tue": "TER",
+        "wed": "QUA",
+        "thu": "QUI",
+        "fri": "SEX",
+        "sat": "SÁB",
+        "sun": "DOM",
+        "word": "Palavra",
+        "accuracy": "Precisão",
+        "time": "Tempo",
+        "level": "Nível",
+        "word_value": "247",
+        "accuracy_value": "89%",
+        "time_value": "30 min",
+        "level_value": "B1",
+        "minutes_short": "min",
+        "minutes_fmt": "{n} min",
+        "accuracy_fmt": "{n}%",
+        "share_progress": "Compartilhar progresso",
+        "share_subject": "Meu progresso no Lingola Buddy",
+        "share_message_fmt": "Estou aprendendo inglês com o Lingola Buddy!\n\n🔥 Ofensiva: {streak} dias\n📚 Nível: {level}\n📖 Palavras nesta semana: {words}\n🎯 Precisão: {accuracy}\n⏱ Tempo: {time}\n\nJunte-se a mim: {link}",
+        "share_loading": "O progresso está carregando, por favor, aguarde.",
+        "share_failed": "Não foi possível abrir o compartilhamento."
+    },
+    "legal": {
+        "privacy_title": "Política de privacidade",
+        "terms_title": "Termos de uso",
+        "retry": "Tentar novamente"
+    },
+    "premium": {
+        "badge_pro": "Pro",
+        "offerings_failed": "Não foi possível carregar as opções de assinatura. Tente novamente.",
+        "paywall_failed": "Não foi possível abrir o paywall. Tente novamente.",
+        "purchased_success": "Bem-vindo ao Lingola Buddy Pro!",
+        "restored_success": "Sua assinatura foi restaurada.",
+        "restore_none": "Nenhuma assinatura ativa encontrada.",
+        "restore_failed": "Não foi possível restaurar as compras. Tente novamente.",
+        "restore_purchases": "Restaurar compras",
+        "already_active": "Sua assinatura Pro está ativa.",
+        "not_configured": "Assinaturas não estão disponíveis neste dispositivo."
+    },
+    "paywall": {
+        "headline": "Comece a Falar Hoje — Grátis",
+        "subheadline": "Melhore seu inglês com conversas reais",
+        "feature_unlimited": "Conversação ilimitada com IA",
+        "feature_scenarios": "Cenários de diálogos do dia a dia",
+        "feature_feedback": "Feedback instantâneo",
+        "three_days_free": "3 Dias Grátis",
+        "per_month_price": "US$ 15,99 por mês",
+        "free_trial_active": "Teste Grátis Ativo",
+        "payable_today": "A Pagar Hoje",
+        "three_days_free_charge": "3 Dias Grátis",
+        "amount_zero": "US$ 0,00",
+        "price_due": "US$ 15,99",
+        "payment_date_line": "Data de pagamento: 13 de março de 2026",
+        "cancel_anytime": "Cancele a qualquer momento",
+        "subscribe_now": "Assinar agora",
+        "continue_without_purchasing": "Continuar sem comprar"
+    },
+    "sign_up": {
+        "headline": "Cadastre-se para continuar",
+        "continue_google": "Continuar com o Google",
+        "continue_apple": "Continuar com a Apple",
+        "continue_guest": "Continuar como convidado",
+        "legal_part1": "Ao se cadastrar no Lingola Buddy, você concorda com os ",
+        "legal_terms": "Termos de Serviço",
+        "legal_part2": ". Para informações sobre o processamento de seus dados, você pode consultar nossa ",
+        "legal_privacy": "Política de Privacidade",
+        "legal_part3": " e ",
+        "legal_cookies": "Política de Cookies",
+        "legal_part4": "."
+    },
+    "lessons": {
+        "a1_01": {
+            "title": "Olá e Apresentações",
+            "subtitle": "Primeiro contato"
+        },
+        "a1_02": {
+            "title": "Números e Horas",
+            "subtitle": "Contagem e relógios"
+        },
+        "a1_03": {
+            "title": "No Café",
+            "subtitle": "Pedindo bebidas"
+        },
+        "a1_04": {
+            "title": "Família e Amigos",
+            "subtitle": "Pessoas que você conhece"
+        },
+        "a1_05": {
+            "title": "Pela Cidade",
+            "subtitle": "Direções"
+        },
+        "a1_06": {
+            "title": "Básico de Compras",
+            "subtitle": "Em uma loja"
+        },
+        "a1_07": {
+            "title": "Rotina Diária",
+            "subtitle": "Hábitos de todo dia"
+        },
+        "a1_08": {
+            "title": "Clima e Sentimentos",
+            "subtitle": "Como você se sente"
+        },
+        "a2_01": {
+            "title": "Último Fim de Semana",
+            "subtitle": "Passado simples"
+        },
+        "a2_02": {
+            "title": "No Médico",
+            "subtitle": "Visita de saúde"
+        },
+        "a2_03": {
+            "title": "Básico de Entrevista",
+            "subtitle": "Primeira entrevista"
+        },
+        "a2_04": {
+            "title": "Planos de Viagem",
+            "subtitle": "Planejando uma viagem"
+        },
+        "a2_05": {
+            "title": "Hobbies e Interesses",
+            "subtitle": "Tempo livre"
+        },
+        "a2_06": {
+            "title": "Jantar em Restaurante",
+            "subtitle": "Comendo fora"
+        },
+        "a2_07": {
+            "title": "Telefone e Mensagens",
+            "subtitle": "Chat a distância"
+        },
+        "a2_08": {
+            "title": "Casa e Tarefas",
+            "subtitle": "Afazeres domésticos"
+        },
+        "b1_01": {
+            "title": "Opiniões: Redes Sociais",
+            "subtitle": "Dar opiniões"
+        },
+        "b1_02": {
+            "title": "Problema no Trabalho",
+            "subtitle": "Questão no ambiente de trabalho"
+        },
+        "b1_03": {
+            "title": "Meio Ambiente",
+            "subtitle": "Hábitos ecológicos"
+        },
+        "b1_04": {
+            "title": "Choque Cultural",
+            "subtitle": "Morando no exterior"
+        },
+        "b1_05": {
+            "title": "Saúde e Boa Forma",
+            "subtitle": "Vida saudável"
+        },
+        "b1_06": {
+            "title": "Escolhas de Estudo",
+            "subtitle": "Jornada de aprendizado"
+        },
+        "b1_07": {
+            "title": "Tecnologia na Vida",
+            "subtitle": "Hábitos tecnológicos"
+        },
+        "b1_08": {
+            "title": "Descrevendo um Filme",
+            "subtitle": "Resumo da história"
+        },
+        "b1_09": {
+            "title": "Negociando",
+            "subtitle": "Um acordo justo"
+        },
+        "b1_10": {
+            "title": "Metas Futuras",
+            "subtitle": "Planos adiante"
+        },
+        "b2_01": {
+            "title": "Debate: Trabalho Remoto",
+            "subtitle": "Debate estruturado"
+        },
+        "b2_02": {
+            "title": "Resumo de Notícias",
+            "subtitle": "Tópico atual"
+        },
+        "b2_03": {
+            "title": "Situações Hipotéticas",
+            "subtitle": "E se…"
+        },
+        "b2_04": {
+            "title": "Tom de E-mail Formal",
+            "subtitle": "Escrita profissional"
+        },
+        "b2_05": {
+            "title": "Estilos de Liderança",
+            "subtitle": "Gerenciando pessoas"
+        },
+        "b2_06": {
+            "title": "Tendências Econômicas",
+            "subtitle": "Visão geral"
+        },
+        "b2_07": {
+            "title": "Arte e Criatividade",
+            "subtitle": "Conversa expressiva"
+        },
+        "b2_08": {
+            "title": "Ciência no Dia a Dia",
+            "subtitle": "Papo científico"
+        },
+        "b2_09": {
+            "title": "Dilema Ético",
+            "subtitle": "Escolha moral"
+        },
+        "b2_10": {
+            "title": "Habilidades de Apresentação",
+            "subtitle": "Minipalestra"
+        },
+        "c1_01": {
+            "title": "Expressões no Contexto",
+            "subtitle": "Frases naturais"
+        },
+        "c1_02": {
+            "title": "Ensaio Acadêmico",
+            "subtitle": "Estrutura do argumento"
+        },
+        "c1_03": {
+            "title": "Sarcasmo e Ironia",
+            "subtitle": "Tom sutil"
+        },
+        "c1_04": {
+            "title": "Linguagem Diplomática",
+            "subtitle": "Suavizando"
+        },
+        "c1_05": {
+            "title": "Análise Literária",
+            "subtitle": "Papo sobre textos"
+        },
+        "c1_06": {
+            "title": "Discussão de Políticas",
+            "subtitle": "Questões públicas"
+        },
+        "c1_07": {
+            "title": "Networking Profissional",
+            "subtitle": "Papo sobre carreira"
+        },
+        "c1_08": {
+            "title": "Comunicação Intercultural",
+            "subtitle": "Equipes globais"
+        },
+        "c1_09": {
+            "title": "Conceitos Abstratos",
+            "subtitle": "Grandes ideias"
+        },
+        "c1_10": {
+            "title": "Alfabetização Midiática",
+            "subtitle": "Visão crítica"
+        },
+        "c1_11": {
+            "title": "Negociação Avançada",
+            "subtitle": "Apostas altas"
+        },
+        "c1_12": {
+            "title": "Palestra Estilo TED",
+            "subtitle": "Discurso persuasivo"
+        },
+        "c2_01": {
+            "title": "Retórica e Persuasão",
+            "subtitle": "Argumento magistral"
+        },
+        "c2_02": {
+            "title": "Introdução ao Linguajar Jurídico",
+            "subtitle": "Contratos formais"
+        },
+        "c2_03": {
+            "title": "Sátira e Humor",
+            "subtitle": "Nuance cômica"
+        },
+        "c2_04": {
+            "title": "Debate Filosófico",
+            "subtitle": "Perguntas profundas"
+        },
+        "c2_05": {
+            "title": "Artigo Científico",
+            "subtitle": "Papo sobre pesquisa"
+        },
+        "c2_06": {
+            "title": "Fluência Nativa",
+            "subtitle": "Refinamento"
+        },
+        "c2_07": {
+            "title": "Subtexto na Literatura",
+            "subtitle": "Lendo nas entrelinhas"
+        },
+        "c2_08": {
+            "title": "Economia Global",
+            "subtitle": "Papo macro"
+        },
+        "c2_09": {
+            "title": "Mentoria em Inglês",
+            "subtitle": "Ensinar aos outros"
+        },
+        "c2_10": {
+            "title": "Discurso de Improviso",
+            "subtitle": "Sem preparação"
+        },
+        "c2_11": {
+            "title": "Mudança de Registro",
+            "subtitle": "Controle de estilo"
+        },
+        "c2_12": {
+            "title": "Revisão de Maestria",
+            "subtitle": "Prática livre"
+        }
+    },
+    "daily_conversations": {
+        "dc_a1_01": {
+            "title": "Bom Dia",
+            "subtitle": "Comece o dia"
+        },
+        "dc_a1_02": {
+            "title": "Como Foi o Seu Dia?",
+            "subtitle": "Check-in diário"
+        },
+        "dc_a1_03": {
+            "title": "Papo de Almoço",
+            "subtitle": "Pausa do meio-dia"
+        },
+        "dc_a1_04": {
+            "title": "Bebida Favorita",
+            "subtitle": "Papo furado no café"
+        },
+        "dc_a1_05": {
+            "title": "Agora Mesmo",
+            "subtitle": "Momento presente"
+        },
+        "dc_a1_06": {
+            "title": "Planos para o Fim de Semana",
+            "subtitle": "Futuro simples"
+        },
+        "dc_a1_07": {
+            "title": "Agradecimento e Despedida",
+            "subtitle": "Encerramento educado"
+        },
+        "dc_a1_08": {
+            "title": "Papo sobre o Clima",
+            "subtitle": "Papo furado"
+        },
+        "dc_a2_01": {
+            "title": "Colocando o Papo em Dia",
+            "subtitle": "Novidades do amigo"
+        },
+        "dc_a2_02": {
+            "title": "Depois do Trabalho",
+            "subtitle": "Relaxando à noite"
+        },
+        "dc_a2_03": {
+            "title": "História de Compras",
+            "subtitle": "Papo de tarefas"
+        },
+        "dc_a2_04": {
+            "title": "Cozinhando Hoje",
+            "subtitle": "Papo de cozinha"
+        },
+        "dc_a2_05": {
+            "title": "Lembrança de Viagem",
+            "subtitle": "Viagem passada"
+        },
+        "dc_a2_06": {
+            "title": "Música e Humor",
+            "subtitle": "Papo sobre playlist"
+        },
+        "dc_a2_07": {
+            "title": "Papo de Vizinho",
+            "subtitle": "Vida local"
+        },
+        "dc_a2_08": {
+            "title": "Hábitos no Celular",
+            "subtitle": "Tecnologia diária"
+        },
+        "dc_b1_01": {
+            "title": "Debate na Pausa pro Café",
+            "subtitle": "Opiniões leves"
+        },
+        "dc_b1_02": {
+            "title": "Equilíbrio Vida-Trabalho",
+            "subtitle": "Semana corrida"
+        },
+        "dc_b1_03": {
+            "title": "Planos Sociais",
+            "subtitle": "Fazendo planos"
+        },
+        "dc_b1_04": {
+            "title": "Aprendendo Inglês",
+            "subtitle": "Papo de motivação"
+        },
+        "dc_b1_05": {
+            "title": "Hábitos Saudáveis",
+            "subtitle": "Papo de bem-estar"
+        },
+        "dc_b1_06": {
+            "title": "Noite de Cinema",
+            "subtitle": "Recomendações"
+        },
+        "dc_b1_07": {
+            "title": "Vida na Cidade",
+            "subtitle": "Papo urbano"
+        },
+        "dc_b1_08": {
+            "title": "Estresse e Calma",
+            "subtitle": "Papo sobre sentimentos"
+        },
+        "dc_b1_09": {
+            "title": "Viagem dos Sonhos",
+            "subtitle": "Papo sobre o futuro"
+        },
+        "dc_b1_10": {
+            "title": "Notícias Diárias",
+            "subtitle": "Eventos atuais"
+        },
+        "dc_b2_01": {
+            "title": "Remoto vs Escritório",
+            "subtitle": "Cultura de trabalho"
+        },
+        "dc_b2_02": {
+            "title": "Relacionamentos",
+            "subtitle": "Vida pessoal"
+        },
+        "dc_b2_03": {
+            "title": "Mentalidade Financeira",
+            "subtitle": "Papo sobre finanças"
+        },
+        "dc_b2_04": {
+            "title": "Cultura e Costumes",
+            "subtitle": "Intercultural"
+        },
+        "dc_b2_05": {
+            "title": "Mudança de Carreira",
+            "subtitle": "Caminho profissional"
+        },
+        "dc_b2_06": {
+            "title": "Podcasts e Livros",
+            "subtitle": "Dieta midiática"
+        },
+        "dc_b2_07": {
+            "title": "Escolhas Éticas",
+            "subtitle": "Papo sobre valores"
+        },
+        "dc_b2_08": {
+            "title": "Maternidade/Paternidade",
+            "subtitle": "Papo de orientação"
+        },
+        "dc_b2_09": {
+            "title": "Bloqueio Criativo",
+            "subtitle": "Papo de criador"
+        },
+        "dc_b2_10": {
+            "title": "O Futuro da IA",
+            "subtitle": "Sociedade tecnológica"
+        },
+        "dc_c1_01": {
+            "title": "Identidade e Pertencimento",
+            "subtitle": "Pessoal e profundo"
+        },
+        "dc_c1_02": {
+            "title": "A Persuasão na Vida",
+            "subtitle": "Influência"
+        },
+        "dc_c1_03": {
+            "title": "O Humor nas Culturas",
+            "subtitle": "Nuances da comédia"
+        },
+        "dc_c1_04": {
+            "title": "Momentos de Liderança",
+            "subtitle": "Influência"
+        },
+        "dc_c1_05": {
+            "title": "Privacidade e Confiança",
+            "subtitle": "Vida digital"
+        },
+        "dc_c1_06": {
+            "title": "Conversas sobre Clima",
+            "subtitle": "Grande tópico"
+        },
+        "dc_c1_07": {
+            "title": "A Arte que te Tocou",
+            "subtitle": "Papo estético"
+        },
+        "dc_c1_08": {
+            "title": "História de Negociação",
+            "subtitle": "Fechando acordos"
+        },
+        "dc_c1_09": {
+            "title": "Mentoria",
+            "subtitle": "Crescimento"
+        },
+        "dc_c1_10": {
+            "title": "Linguagem e Pensamento",
+            "subtitle": "Linguística leve"
+        },
+        "dc_c1_11": {
+            "title": "Risco e Arrependimento",
+            "subtitle": "Escolhas de vida"
+        },
+        "dc_c1_12": {
+            "title": "Construção de Comunidade",
+            "subtitle": "Tecido social"
+        },
+        "dc_c2_01": {
+            "title": "Filosofia com Café",
+            "subtitle": "Grandes questões"
+        },
+        "dc_c2_02": {
+            "title": "Retórica na Mídia",
+            "subtitle": "Discurso"
+        },
+        "dc_c2_03": {
+            "title": "Poder e Ética",
+            "subtitle": "Instituições"
+        },
+        "dc_c2_04": {
+            "title": "Criatividade e IA",
+            "subtitle": "Ofício do futuro"
+        },
+        "dc_c2_05": {
+            "title": "Inglês Global",
+            "subtitle": "Língua mundial"
+        },
+        "dc_c2_06": {
+            "title": "Memória e História",
+            "subtitle": "Narrativa"
+        },
+        "dc_c2_07": {
+            "title": "Economia e Vida",
+            "subtitle": "Macro e micro"
+        },
+        "dc_c2_08": {
+            "title": "Debate sobre a Justiça",
+            "subtitle": "Sistemas morais"
+        },
+        "dc_c2_09": {
+            "title": "Ciência e Sociedade",
+            "subtitle": "Compreensão pública"
+        },
+        "dc_c2_10": {
+            "title": "Masterclass de Improviso",
+            "subtitle": "Sem preparação"
+        },
+        "dc_c2_11": {
+            "title": "Jogo de Registros",
+            "subtitle": "Mudança de estilo"
+        },
+        "dc_c2_12": {
+            "title": "Lounge Aberto",
+            "subtitle": "Papo livre"
+        }
+    }
+}

@@ -45,7 +45,11 @@ final class MicrophonePermissionPlugin: NSObject, FlutterPlugin {
   private static func configurePlaybackSession() {
     let session = AVAudioSession.sharedInstance()
     try? session.setActive(false, options: .notifyOthersOnDeactivation)
-    try? session.setCategory(.playback, mode: .default, options: [.defaultToSpeaker])
+    try? session.setCategory(
+      .playback,
+      mode: .spokenAudio,
+      options: [.mixWithOthers]
+    )
     try? session.setActive(true)
   }
 

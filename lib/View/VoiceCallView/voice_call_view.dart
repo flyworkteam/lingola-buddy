@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
@@ -6,9 +7,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
+import 'package:lingola_buddy/Core/Utils/realtime_auth_token.dart';
 import 'package:lingola_buddy/Models/app_enums.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
+import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
+import 'package:lingola_buddy/Services/local_notification_scheduler.dart';
+import 'package:lingola_buddy/Services/realtime_call_engine.dart';
+import 'package:lingola_buddy/Services/session_local_storage.dart';
 
 /// Sesli arama — bağlanıyor: bulanık portre, ortada avatar, alt kontroller.
 class VoiceCallView extends ConsumerStatefulWidget {
@@ -25,8 +32,14 @@ class VoiceCallView extends ConsumerStatefulWidget {
 }
 
 class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
-  bool _speakerOn = true;
+  RealtimeCallEngine? _engine;
+  bool _speakerOn = false;
   bool _micMuted = false;
+  RealtimeCallPhase _phase = RealtimeCallPhase.connecting;
+  int _elapsedSeconds = 0;
+  Timer? _durationTimer;
+  DateTime? _callStartedAt;
+  bool _durationStarted = false;
 
   static const ColorFilter _whiteIcon = ColorFilter.mode(
     Colors.white,
@@ -36,11 +49,125 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(callSessionControllerProvider.notifier)
-          .bindTutor(widget.tutorId, kind: CallKind.voice);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _bootstrap());
+  }
+
+  @override
+  void dispose() {
+    _durationTimer?.cancel();
+    unawaited(_engine?.end());
+    super.dispose();
+  }
+
+  Future<void> _bootstrap() async {
+    final lessonId = ref.read(callSessionControllerProvider).activeLessonId;
+    ref
+        .read(callSessionControllerProvider.notifier)
+        .bindTutor(widget.tutorId, kind: CallKind.voice, lessonId: lessonId);
+
+    final lang = ref.read(userProfileControllerProvider).uiLanguageCode;
+    final engine = RealtimeCallEngine(
+      tutorId: widget.tutorId,
+      languageCode: lang,
+      lessonId: lessonId,
+      getAuthToken: () => ensureRealtimeAuthToken(ref),
+      onPhaseChanged: (p) {
+        if (!mounted) return;
+        setState(() => _phase = p);
+      },
+      onServerEnded: () {
+        if (!mounted) return;
+        Navigator.of(context).pop();
+      },
+    );
+    engine.onUserSpeechStarted = _startCallDuration;
+    engine.onConnectionReady = () {
+      if (!mounted) return;
+      setState(() => _speakerOn = engine.isSpeakerOn);
+    };
+    _engine = engine;
+    await engine.start();
+    if (!mounted) return;
+    setState(() {
+      _speakerOn = engine.isSpeakerOn;
+      _micMuted = engine.isMuted;
     });
+  }
+
+  String _statusLabel() {
+    switch (_phase) {
+      case RealtimeCallPhase.connecting:
+        return AppTranslations.section('tudor', 'signal_connecting');
+      case RealtimeCallPhase.listening:
+        return AppTranslations.section('tudor', 'signal_listening');
+      case RealtimeCallPhase.thinking:
+        return AppTranslations.section('tudor', 'signal_thinking');
+      case RealtimeCallPhase.speaking:
+        return AppTranslations.section('tudor', 'signal_speaking');
+      case RealtimeCallPhase.error:
+        return AppTranslations.section('tudor', 'signal_error');
+    }
+  }
+
+  void _startCallDuration() {
+    if (_durationStarted) return;
+    _durationStarted = true;
+    _callStartedAt = DateTime.now();
+    _elapsedSeconds = 0;
+    _durationTimer?.cancel();
+    _durationTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted || _callStartedAt == null) return;
+      setState(() {
+        _elapsedSeconds = DateTime.now().difference(_callStartedAt!).inSeconds;
+      });
+    });
+  }
+
+  Future<void> _endCall() async {
+    _durationTimer?.cancel();
+    final elapsed = _durationStarted ? _elapsedSeconds : 0;
+    final session = ref.read(callSessionControllerProvider);
+    final words = _engine?.userWordsSpoken ?? 0;
+    final score = RealtimeCallEngine.computeSessionScore(
+      durationSeconds: elapsed,
+      words: words,
+    );
+    final lessonCompleted = session.activeLessonId != null &&
+        session.activeLessonId!.isNotEmpty &&
+        elapsed >= 120;
+    ref.read(callSessionControllerProvider.notifier).endCall(
+          durationSeconds: elapsed,
+          wordsSpoken: words,
+          sessionScorePercent: score,
+          lessonCompleted: lessonCompleted,
+        );
+    final lessonId = session.activeLessonId;
+    if (!lessonCompleted &&
+        lessonId != null &&
+        lessonId.isNotEmpty) {
+      final title = lessonId.startsWith('dc_')
+          ? AppTranslations.dailyConversationField(
+              lessonId,
+              'title',
+              fallback: lessonId,
+            )
+          : AppTranslations.lessonField(
+              lessonId,
+              'title',
+              fallback: lessonId,
+            );
+      unawaited(
+        LocalNotificationScheduler.instance.scheduleCallFollowUp(
+          lessonId: lessonId,
+          lessonTitle: title,
+        ),
+      );
+    } else {
+      unawaited(SessionLocalStorage.clearCallReminder());
+      unawaited(LocalNotificationScheduler.instance.clearCallFollowUp());
+    }
+    await _engine?.end();
+    if (mounted) Navigator.of(context).maybePop();
   }
 
   Widget _roundControl({
@@ -74,12 +201,10 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
 
   @override
   Widget build(BuildContext context) {
-    final tutors = ref.watch(tutorsCatalogProvider);
-    final matches = tutors.where((t) => t.id == widget.tutorId);
-    final tutor = matches.isEmpty ? tutors.first : matches.first;
-    final displayName = AppTranslations.section('tudor', tutor.id);
-    final avatarPath = tutor.avatarAssetPath ?? 'assets/images/avatar_4.png';
-    final status = AppTranslations.section('tudor', 'signal_connecting');
+    final tutor = ref.watch(tutorByIdProvider(widget.tutorId)) ??
+        ref.watch(tutorsCatalogProvider).first;
+    final displayName = tutor.localizedDisplayName;
+    final status = _statusLabel();
 
     final avatarSize = (MediaQuery.sizeOf(context).width * 0.52).clamp(
       200.0,
@@ -99,12 +224,13 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
               ),
               child: Transform.scale(
                 scale: 1.15,
-                child: Image.asset(
-                  avatarPath,
+                child: TutorAvatarImage(
+                  tutor: tutor,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: double.infinity,
                   alignment: Alignment.center,
+                  fallbackAsset: 'assets/images/avatar_4.png',
                 ),
               ),
             ),
@@ -162,12 +288,12 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
                           color: Colors.white,
                         ),
                         child: ClipOval(
-                          child: Image.asset(
-                            avatarPath,
+                          child: TutorAvatarImage(
+                            tutor: tutor,
                             width: avatarSize,
                             height: avatarSize,
-                            fit: BoxFit.cover,
                             alignment: const Alignment(0, -0.15),
+                            fallbackAsset: 'assets/images/avatar_4.png',
                           ),
                         ),
                       ),
@@ -182,21 +308,29 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
                           asset: _speakerOn
                               ? 'assets/icons/volume.svg'
                               : 'assets/icons/volume_slash.svg',
-                          onTap: () => setState(() => _speakerOn = !_speakerOn),
-                          iconOpacity: _speakerOn ? 1 : 1,
+                          onTap: () async {
+                            final next = !_speakerOn;
+                            setState(() => _speakerOn = next);
+                            await _engine?.setSpeakerOn(next);
+                          },
+                          iconOpacity: _speakerOn ? 1 : 0.45,
                         ),
                         const SizedBox(width: VoiceCallView._controlGap),
                         _roundControl(
                           asset: _micMuted
                               ? 'assets/icons/microphone_slash.svg'
                               : 'assets/icons/microphone.svg',
-                          onTap: () => setState(() => _micMuted = !_micMuted),
-                          iconOpacity: _micMuted ? 1 : 1,
+                          onTap: () {
+                            final next = !_micMuted;
+                            setState(() => _micMuted = next);
+                            _engine?.setMuted(next);
+                          },
+                          iconOpacity: _micMuted ? 0.45 : 1,
                         ),
                         const SizedBox(width: VoiceCallView._controlGap),
                         _roundControl(
                           asset: 'assets/icons/call_end_slash.svg',
-                          onTap: () => Navigator.of(context).maybePop(),
+                          onTap: _endCall,
                           backgroundColor: AppColors.activeCallEndHangup,
                         ),
                       ],

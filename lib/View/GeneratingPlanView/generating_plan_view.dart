@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
-import 'package:lingola_buddy/Core/Routes/app_routes.dart';
+import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/app_primary_button.dart';
 import 'package:lingola_buddy/Core/Widgets/brand_aura_backdrop.dart';
-import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 
 /// Kişiselleştirilmiş plan animasyonu: aura, checklist illüstrasyonu, sırayla tamamlanan maddeler, hazır CTA.
 class GeneratingPlanView extends ConsumerStatefulWidget {
@@ -195,10 +195,7 @@ class _GeneratingPlanViewState extends ConsumerState<GeneratingPlanView> {
                       minimumHeight: 60,
                       icon: _ctaArrowIcon(),
                       onPressed: () {
-                        ref
-                            .read(callSessionControllerProvider.notifier)
-                            .bindTutor('sophie');
-                        Navigator.pushNamed(context, AppRoutes.callPreview);
+                        CallNavigation.pushGuestPreview(context, ref);
                       },
                     ),
                   ],

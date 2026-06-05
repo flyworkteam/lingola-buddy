@@ -1,0 +1,242 @@
+{
+  "dc_a1_01": {
+    "title": "Morgengruß",
+    "subtitle": "Tag starten"
+  },
+  "dc_a1_02": {
+    "title": "Wie war dein Tag?",
+    "subtitle": "Täglicher Check-in"
+  },
+  "dc_a1_03": {
+    "title": "Mittagsplausch",
+    "subtitle": "Mittagspause"
+  },
+  "dc_a1_04": {
+    "title": "Lieblingsgetränk",
+    "subtitle": "Café-Smalltalk"
+  },
+  "dc_a1_05": {
+    "title": "Gerade jetzt",
+    "subtitle": "Im Moment"
+  },
+  "dc_a1_06": {
+    "title": "Wochenendpläne",
+    "subtitle": "Einfache Zukunft"
+  },
+  "dc_a1_07": {
+    "title": "Danke & Tschüss",
+    "subtitle": "Höflicher Abschluss"
+  },
+  "dc_a1_08": {
+    "title": "Wettergespräch",
+    "subtitle": "Smalltalk"
+  },
+  "dc_a2_01": {
+    "title": "Was gibt's Neues?",
+    "subtitle": "Freundesupdate"
+  },
+  "dc_a2_02": {
+    "title": "Nach der Arbeit",
+    "subtitle": "Abendentspannung"
+  },
+  "dc_a2_03": {
+    "title": "Einkaufsgeschichte",
+    "subtitle": "Alltagsbesorgungen"
+  },
+  "dc_a2_04": {
+    "title": "Kochen heute Abend",
+    "subtitle": "Küchengespräch"
+  },
+  "dc_a2_05": {
+    "title": "Reiseerinnerung",
+    "subtitle": "Frühere Reise"
+  },
+  "dc_a2_06": {
+    "title": "Musik & Stimmung",
+    "subtitle": "Playlist"
+  },
+  "dc_a2_07": {
+    "title": "Nachbarschaftsgespräch",
+    "subtitle": "Lokales Leben"
+  },
+  "dc_a2_08": {
+    "title": "Handygewohnheiten",
+    "subtitle": "Technik im Alltag"
+  },
+  "dc_b1_01": {
+    "title": "Kaffeepausendebatte",
+    "subtitle": "Leichte Meinungen"
+  },
+  "dc_b1_02": {
+    "title": "Work-Life-Balance",
+    "subtitle": "Volle Woche"
+  },
+  "dc_b1_03": {
+    "title": "Soziale Pläne",
+    "subtitle": "Planung"
+  },
+  "dc_b1_04": {
+    "title": "Englisch lernen",
+    "subtitle": "Motivation"
+  },
+  "dc_b1_05": {
+    "title": "Gesunde Gewohnheiten",
+    "subtitle": "Wellness"
+  },
+  "dc_b1_06": {
+    "title": "Filmabend",
+    "subtitle": "Empfehlungen"
+  },
+  "dc_b1_07": {
+    "title": "Stadtleben",
+    "subtitle": "Urbanes Gespräch"
+  },
+  "dc_b1_08": {
+    "title": "Stress & Ruhe",
+    "subtitle": "Gefühle"
+  },
+  "dc_b1_09": {
+    "title": "Traumreise",
+    "subtitle": "Zukunftschat"
+  },
+  "dc_b1_10": {
+    "title": "Tagesnachrichten",
+    "subtitle": "Aktuelles"
+  },
+  "dc_b2_01": {
+    "title": "Remote vs. Büro",
+    "subtitle": "Arbeitskultur"
+  },
+  "dc_b2_02": {
+    "title": "Beziehungen",
+    "subtitle": "Privatleben"
+  },
+  "dc_b2_03": {
+    "title": "Geld-Mindset",
+    "subtitle": "Finanzgespräch"
+  },
+  "dc_b2_04": {
+    "title": "Kultur & Bräuche",
+    "subtitle": "Interkulturell"
+  },
+  "dc_b2_05": {
+    "title": "Karrierewechsel",
+    "subtitle": "Berufsweg"
+  },
+  "dc_b2_06": {
+    "title": "Podcasts & Bücher",
+    "subtitle": "Medienkonsum"
+  },
+  "dc_b2_07": {
+    "title": "Ethische Entscheidungen",
+    "subtitle": "Werte"
+  },
+  "dc_b2_08": {
+    "title": "Mentoring",
+    "subtitle": "Begleitung"
+  },
+  "dc_b2_09": {
+    "title": "Kreativitätsblock",
+    "subtitle": "Produktivität"
+  },
+  "dc_b2_10": {
+    "title": "Zukunft der KI",
+    "subtitle": "Tech-Gesellschaft"
+  },
+  "dc_c1_01": {
+    "title": "Identität & Zugehörigkeit",
+    "subtitle": "Tiefgreifend persönlich"
+  },
+  "dc_c1_02": {
+    "title": "Überzeugung im Leben",
+    "subtitle": "Einfluss"
+  },
+  "dc_c1_03": {
+    "title": "Humor über Kulturen",
+    "subtitle": "Komische Nuancen"
+  },
+  "dc_c1_04": {
+    "title": "Führungsmomente",
+    "subtitle": "Einfluss"
+  },
+  "dc_c1_05": {
+    "title": "Privatsphäre & Vertrauen",
+    "subtitle": "Digitales Leben"
+  },
+  "dc_c1_06": {
+    "title": "Klimagespräche",
+    "subtitle": "Großes Thema"
+  },
+  "dc_c1_07": {
+    "title": "Kunst, die bewegte",
+    "subtitle": "Ästhetik"
+  },
+  "dc_c1_08": {
+    "title": "Verhandlungsgeschichte",
+    "subtitle": "Deal-making"
+  },
+  "dc_c1_09": {
+    "title": "Mentoring-Erfahrung",
+    "subtitle": "Wachstum"
+  },
+  "dc_c1_10": {
+    "title": "Sprache & Denken",
+    "subtitle": "Sprachwissenschaft"
+  },
+  "dc_c1_11": {
+    "title": "Risiko & Reue",
+    "subtitle": "Lebensentscheidungen"
+  },
+  "dc_c1_12": {
+    "title": "Gemeinschaft aufbauen",
+    "subtitle": "Soziales Gefüge"
+  },
+  "dc_c2_01": {
+    "title": "Philosophie beim Kaffee",
+    "subtitle": "Große Fragen"
+  },
+  "dc_c2_02": {
+    "title": "Rhetorik in den Medien",
+    "subtitle": "Diskurs"
+  },
+  "dc_c2_03": {
+    "title": "Macht & Ethik",
+    "subtitle": "Institutionen"
+  },
+  "dc_c2_04": {
+    "title": "Kreativität & KI",
+    "subtitle": "Zukunft des Handwerks"
+  },
+  "dc_c2_05": {
+    "title": "Globales Englisch",
+    "subtitle": "Weltsprache"
+  },
+  "dc_c2_06": {
+    "title": "Erinnerung & Geschichte",
+    "subtitle": "Erzählung"
+  },
+  "dc_c2_07": {
+    "title": "Wirtschaft & Leben",
+    "subtitle": "Makro–Mikro"
+  },
+  "dc_c2_08": {
+    "title": "Gerechtigkeitsdebatte",
+    "subtitle": "Moralsysteme"
+  },
+  "dc_c2_09": {
+    "title": "Wissenschaft & Gesellschaft",
+    "subtitle": "Öffentliches Verständnis"
+  },
+  "dc_c2_10": {
+    "title": "Improvisationsmeisterkurs",
+    "subtitle": "Ohne Vorbereitung"
+  },
+  "dc_c2_11": {
+    "title": "Register-Spiel",
+    "subtitle": "Stilwechsel"
+  },
+  "dc_c2_12": {
+    "title": "Offene Lounge",
+    "subtitle": "Freier Chat"
+  }
+}

@@ -1,25 +1,29 @@
 {
     "common": {
         "app_name": "Lingola Buddy",
-        "continue": "Devam",
+        "continue": "Devam et",
         "save_changes": "Değişiklikleri kaydet",
-        "cancel": "Vazgeç",
+        "cancel": "İptal",
         "back": "Geri",
         "copy": "Kopyala",
         "delete": "Sil",
-        "edit": "Düzenle"
+        "edit": "Düzenle",
+        "link_open_failed": "Bağlantı açılamadı"
+    },
+    "auth": {
+        "sign_in_failed": "Giriş başarısız oldu. Lütfen tekrar deneyin."
     },
     "onboarding": {
         "title1": "İngilizce biliyorsun ama konuşamıyorsun",
         "description1": "Gerçek hayatta konuşamamak özgüvenini düşürür.",
         "button1": "İngilizce konuşmak istiyorum",
         "title2": "Konuşacak kimse yok mu?",
-        "description2": "İstediğin zaman ve istediğin yerde konuş. Kimseyi beklemeden pratik yap ve konuşma becerilerini geliştir.",
-        "button2": "Pratiğe başla",
+        "description2": "İstediğin zaman, istediğin yerde konuş. Kimseyi beklemeden konuşma becerilerini geliştir ve pratik yap.",
+        "button2": "Pratik yapmaya başla",
         "title3": "Konuşarak öğrenmeye başla.",
-        "description3": "Gerçek diyaloglarla pratik yap, özgüvenini artır ve günlük hayatında İngilizceyi kullanmaya başla.",
+        "description3": "Gerçek diyaloglarla pratik yap, özgüvenini artır ve günlük hayatında İngilizce kullanmaya başla.",
         "button3": "Konuşmaya başla",
-        "question1": "Hangi dili pratik etmek istersin?",
+        "question1": "Hangi dili pratik yapmak istiyorsun?",
         "q1_desc": "Öğrenme yolunu kişiselleştir",
         "option1": "İngilizce",
         "option2": "Almanca",
@@ -33,18 +37,18 @@
         "option10": "Hintçe",
         "option11": "Portekizce",
         "option12": "Çince",
-        "see_more": "Daha fazlasını gör",
+        "see_more": "Daha fazla",
         "question2": "Dil yeterlilik seviyen nedir?",
         "q2_desc": "İçeriği seviyene göre ayarla",
         "option2_1": "Hiç konuşamıyorum",
-        "option2_2": "Basit konuşabiliyorum",
+        "option2_2": "Temel seviyede konuşabiliyorum",
         "option2_3": "Akıcı konuşmak istiyorum",
-        "question3": "Her gün ne kadar pratik yapmak istersin?",
+        "question3": "Her gün ne kadar pratik yapmak istiyorsun?",
         "q3_desc": "Günlük çalışma hedefini belirle",
         "option3_1": "Günde 5–10 dakika (yavaş ilerleme)",
         "option3_2": "Günde 15–20 dakika (önerilen)",
-        "option3_3": "Günde 30 dakika (hızlı sonuç)",
-        "button3_continue": "Başlayalım",
+        "option3_3": "Günde 30 dakika (hızlı sonuçlar)",
+        "button3_continue": "Hadi başlayalım",
         "plan_title": "Kişiselleştirilmiş planın oluşturuluyor",
         "plan_desc1": "Senin için özel konuşma senaryoları hazırlanıyor",
         "plan_desc2": "Seviyene uygun diyaloglar oluşturuluyor",
@@ -52,95 +56,106 @@
         "plan_ready_title": "Planın hazır",
         "plan_ready_desc": "Artık konuşabilirsin",
         "plan_ready_button": "Konuşmaya başla",
-        "wizard_step_label": "{total} adımdan {current}"
+        "wizard_step_label": "Adım {current} / {total}"
     },
     "call": {
         "title": "Sophie",
-        "desc": "seninle pratik yapmak istiyor",
+        "desc": "{name} seninle pratik yapmak istiyor",
+        "desc_with_lesson": "{name} seninle «{lesson}» pratiği yapmak istiyor",
         "button": "Konuşmaya başla",
-        "another_time": "Başka zaman"
+        "another_time": "Başka zaman",
+        "desc_with_daily": "{name} seninle «{topic}» hakkında sohbet etmek istiyor"
     },
     "video_session": {
         "title": "Görüntülü arama",
-        "feedback_great": "{name} ile harika geçti!",
+        "feedback_great": "{name} ile harikaydı!",
         "status_just_finished": "Az önce bitti • {subject}",
-        "practice_subject": "İngilizce pratik",
+        "practice_subject": "İngilizce pratiği",
         "next_topic_preview": "Günlük alışveriş diyalogları",
         "badge_free": "{current}/{total} ücretsiz",
+        "badge_streak_fmt": "{days} gün seri",
         "role_teacher": "{name} • Eğitmen",
         "role_label_teacher": "Eğitmen",
         "you": "Sen",
         "stat_duration": "Süre",
-        "stat_words": "Kelimeler",
+        "stat_words": "Kelime",
         "stat_fluency": "Akıcılık",
-        "session_score": "Oturum skoru",
+        "session_score": "Oturum puanı",
         "level_beginner": "Başlangıç",
         "cta_advanced": "İleri seviye için devam et",
         "next_topic_chosen": "{name} bir sonraki konuyu seçti",
         "next_topic_ready": "{topic} • Hazır ve seni bekliyor",
-        "start_new_conversation": "Yeni konuşma başlat",
-        "another_time": "Başka zaman"
+        "start_new_conversation": "Yeni sohbet başlat",
+        "another_time": "Başka zaman",
+        "lesson_completed_banner": "Ders tamamlandı! Bir sonraki dersin kilidi açıldı.",
+        "level_advanced_banner_fmt": "{previous} dersini tamamladın! Artık {new} seviyesindesin."
     },
     "chat": {
         "title": "Sohbet",
         "title_with_tutor": "Sohbet: {tutor}",
-        "message_hint": "Bir mesaj yazın...",
-        "message_hint_short": "Mesaj yazın...",
-        "type_message": "Bir mesaj yazın...",
+        "message_hint": "Bir mesaj yaz...",
+        "message_hint_short": "Mesaj yaz...",
+        "type_message": "Bir mesaj yaz...",
         "translation_prefix": "Çeviri",
         "translating": "Çevriliyor…",
-        "recording": "Kayıt",
+        "recording": "Kaydediliyor",
         "sent_voice": "Sesli mesaj",
-        "transcribing": "Ses metne çevriliyor…",
+        "transcribing": "Ses metne dönüştürülüyor…",
         "voice_too_short": "Kayıt çok kısa. Biraz daha konuşup tekrar dene.",
         "voice_record_failed": "Kayıt başlatılamadı. Mikrofon iznini kontrol et.",
         "voice_tap_hint": "Sesli mesaj: mikrofona dokun, bitince tekrar dokun",
         "voice_cancel": "İptal",
         "voice_send": "Gönder",
         "open_settings": "Ayarları aç",
-        "hold_to_record": "Sesli mesaj için mikrofona dokun",
+        "hold_to_record": "Sesli mesaj göndermek için mikrofona dokun",
         "attach_title": "Paylaş",
-        "attach_subtitle": "Sohbete eklemek istediğini seç",
+        "attach_subtitle": "Sohbete eklemek istediğin şeyi seç",
         "attach_photo": "Fotoğraf",
         "attach_document": "Belge",
         "attach_subtitle_photo": "Galeriden seç",
         "attach_subtitle_document": "PDF, Word ve daha fazlası",
-        "attach_cancel": "Vazgeç",
+        "attach_cancel": "İptal",
         "attach_error": "Dosya seçilemedi",
-        "sent_photo": "Bir fotoğraf paylaştım.",
-        "sent_document_named": "Belge paylaştım: {name}",
-        "api_missing": "OpenAI anahtarı tanımlı değil. Uygulamayı --dart-define=OPENAI_API_KEY=... ile çalıştırın."
+        "sent_photo": "Bir fotoğraf paylaştı.",
+        "sent_document_named": "Bir belge paylaştı: {name}",
+        "api_missing": "OpenAI anahtarı tanımlanmamış. Uygulamayı --dart-define=OPENAI_API_KEY=... ile çalıştırın"
     },
     "talk": {
         "history_title": "Sohbet geçmişi",
         "quick_messages": "Hızlı mesajlar",
-        "continue": "Devam",
+        "continue": "Devam et",
         "empty_title": "Henüz konuşma yok",
-        "empty_desc": "Eğitmenlerle sohbet etmeye başladığında burada görünecek"
+        "empty_desc": "Eğitmenlerle sohbet etmeye başladığında burada görünecek",
+        "delete_title": "Konuşma silinsin mi?",
+        "delete_message": "{name} ile olan sohbetini silmek istiyor musun? Bu işlem geri alınamaz.",
+        "delete_confirm": "Konuşmayı sil",
+        "time_am": "ÖÖ",
+        "time_pm": "ÖS"
     },
     "call_summary": {
-        "title": "Seans özeti",
-        "session_subtitle": "Pratik seansı",
+        "title": "Oturum özeti",
+        "session_subtitle": "Pratik oturumu",
         "duration_label": "Süre",
         "duration_value": "{minutes} dk {seconds} sn",
         "growth_stats": "Gelişim istatistikleri",
         "stat_word": "Kelime",
-        "stat_grammar": "Dil bilgisi",
+        "stat_grammar": "Dilbilgisi",
         "continue_conversation": "Konuşmaya devam et"
     },
     "navigation": {
-        "home": "Ana sayfa",
+        "home": "Ana Sayfa",
         "tutor": "Eğitmen",
-        "talk": "Sohbet",
+        "talk": "Konuş",
         "profile": "Profil"
     },
     "home": {
         "greeting_morning": "Günaydın",
         "greeting_afternoon": "İyi günler",
         "greeting_evening": "İyi akşamlar",
+        "greeting_night": "İyi geceler",
         "welcome": "Hoş geldin",
         "past_7_days": "Son 7 gün",
-        "streak_desc": "Her gün çalışarak seri oluştur ve güçlü bir öğrenme alışkanlığı edin.",
+        "streak_desc": "Her gün çalışarak bir seri oluştur ve güçlü bir öğrenme alışkanlığı kazan.",
         "mon": "Pzt",
         "tue": "Sal",
         "wed": "Çar",
@@ -151,46 +166,76 @@
         "pick_up": "Kaldığın yerden devam et",
         "lesson": "Ders",
         "lesson_progress": "Ders 6 / 10",
-        "coffee_shop_title": "At The Coffee Shop",
+        "lesson_progress_fmt": "Ders {current} / {total}",
+        "level_subtitle_fmt": "{level} • {subtitle}",
+        "lessons_title": "Derslerim",
+        "lessons_empty": "Henüz ders yok",
+        "lesson_locked": "Kilitli",
+        "lesson_in_progress": "Devam ediyor",
+        "lesson_completed": "Tamamlandı",
+        "lesson_pass_rule": "Bir dersi geçmek için: Eğitmeninizle en az 2 dakikalık bir görüntülü aramayı tamamla.",
+        "coffee_shop_title": "Kafede",
         "level_daily_conversation": "B1 • Günlük konuşma",
         "continue": "Konuşmaya devam et",
         "character_label": "Karakterler",
         "view_all": "Tümünü gör",
         "start_talking": "Konuşmaya başla",
         "daily_conversation": "Günlük konuşma",
-        "today_topic": "Bugünün konusu",
+        "today_topic": "Günün konusu",
         "new": "Yeni",
         "suitable_for_your_level": "Seviyene uygun",
-        "making_plans_with_friends": "Arkadaşlarla plan yapma",
+        "making_plans_with_friends": "Arkadaşlarla plan yapmak",
         "duration_estimate": "~5 dk",
-        "start_conversation": "Konuşmayı başlat",
+        "start_conversation": "Sohbeti başlat",
         "progress_label": "İlerleme",
         "this_week": "Bu hafta",
         "word_label": "Kelime",
         "accuracy_label": "Doğruluk",
-        "time_label": "Süre",
+        "time_label": "Zaman",
         "level_label": "Seviye",
         "word_value": "247",
         "accuracy_value": "%89",
         "time_value": "30 dk",
-        "level_value": "B1"
+        "level_value": "B1",
+        "minutes_fmt": "{n} dk",
+        "accuracy_fmt": "%{n}"
     },
     "notifications": {
         "title": "Bildirimler",
         "clear_all": "Tümünü temizle",
         "no_notifications": "Bildirim yok",
         "no_notifications_desc": "Bildirimlerini burada göreceksin",
-        "sample_1_title": "5 dakika bile sürmeyecek",
-        "sample_1_desc": "Günlük kelime pratiği seansı yapmak için beş dakikanızı ayırmaya ne dersiniz?",
+        "sample_1_title": "5 dakikanı bile almayacak",
+        "sample_1_desc": "Günlük kelime pratiği yapmak için beş dakikanı ayırmaya ne dersin?",
         "sample_2_title": "Sabah egzersizi",
-        "sample_2_desc": "Ders çalışmak için en iyi zaman sabahın erken saatleridir. Egzersiz yapmaya ne dersiniz?"
+        "sample_2_desc": "Çalışmak için en iyi zaman sabahın erken saatleridir. Bir egzersiz yapmaya ne dersin?"
+    },
+    "local_notifications": {
+        "channel_name": "Lingola hatırlatıcıları",
+        "channel_desc": "Ders, seri ve pratik hatırlatıcıları",
+        "reminder_morning_title": "Hızlı bir pratik?",
+        "reminder_morning_body": "Beş dakikalık İngilizce serini canlı tutar.",
+        "reminder_afternoon_title": "Az kaldı",
+        "reminder_afternoon_body": "Bir ders daha seni bugünün hedefine yaklaştıracak.",
+        "reminder_evening_title": "Bugün pratik yaptın mı?",
+        "reminder_evening_body": "Akşam saatleri kaldığın yerden devam etmek için harika bir zamandır.",
+        "streak_title": "Serini bozma",
+        "streak_body": "{streak} günlük bir seridesin — bunu sürdürmek için bugün pratik yap.",
+        "progress_title": "Harika ilerleme",
+        "progress_body": "Seviyendeki {completed}/{total} ders tamamlandı (%{percent}).",
+        "unfinished_lesson_title": "Kaldığın yerden devam et",
+        "unfinished_lesson_body": "\"{lesson}\" dersini sadece birkaç dakika içinde bitir.",
+        "call_unfinished_title": "Açık bir oturum bıraktın",
+        "call_unfinished_body": "Geri dön ve \"{lesson}\" pratiğini tamamla.",
+        "level_advanced_title": "Seviye atladın!",
+        "level_advanced_body_fmt": "{previous} derslerini tamamladın. Artık {new} seviyesindesin."
     },
     "tudor": {
-        "title": "Eğitmen seç",
+        "title": "Bir eğitmen seç",
         "description": "Kendine en yakın hissettiğin karakteri seç",
         "search_tudor": "Eğitmen ara...",
         "no_tudors_found": "Eğitmen bulunamadı",
-        "no_tudors_found_desc": "Farklı bir arama dene",
+        "no_tudors_found_desc": "Farklı bir arama yapmayı dene",
         "james": "James",
         "sophie": "Sophie",
         "emma": "Emma",
@@ -202,15 +247,25 @@
         "annie": "Annie",
         "lee": "Lee",
         "nina": "Nina",
-        "native": "Ana dil",
+        "aria": "Aria",
+        "brian": "Brian",
+        "elara": "Elara",
+        "lyra": "Lyra",
+        "max": "Max",
+        "mira": "Mira",
+        "native": "Ana Dil",
         "start_talking": "Konuşmaya başla",
         "character_profile": "Karakter profili",
-        "character_profile_desc": "Her sezon dünyanın farklı bir köşesinden İngilizce öğreten Sophie, her dersi kültürel bir yolculuğa dönüştürür.",
+        "character_profile_desc": "Her sezon dünyanın farklı bir köşesinden İngilizce öğreten Sophie, her dersi kültürel bir yolculuğa dönüştürüyor.",
         "voice_call": "Sesli arama",
         "video_call": "Görüntülü arama",
-        "text_message": "Metin mesajı",
+        "text_message": "Kısa mesaj",
         "signal_connecting": "Sinyal bağlanıyor",
-        "bio_fallback": "Bu eğitmen için biyografi yakında eklenecek."
+        "signal_listening": "Dinliyor",
+        "signal_thinking": "İşliyor",
+        "signal_speaking": "Konuşuyor",
+        "signal_error": "Bağlantı hatası",
+        "bio_fallback": "Bu eğitmenin biyografisi yakında eklenecek."
     },
     "profile": {
         "title": "Profil",
@@ -218,34 +273,54 @@
         "section_general": "Genel ayarlar",
         "language": "Dil",
         "notifications": "Bildirimler",
+        "notifications_enabled": "Bildirimler açık",
+        "notifications_denied": "Bildirim izni reddedildi",
+        "notifications_disabled": "Bildirimler kapalı",
         "premium": "Premium",
-        "share_friend": "Arkadaşına paylaş",
+        "share_friend": "Arkadaşınla paylaş",
         "progress": "İlerleme",
         "section_support": "Destek",
         "rate_us": "Bizi değerlendir",
         "faq": "Sıkça sorulan sorular",
-        "contact_us": "Bizimle iletişim",
+        "contact_us": "Bize ulaşın",
         "section_legal": "Yasal",
         "privacy_policy": "Gizlilik politikası",
-        "terms_of_use": "Kullanım şartları",
-        "log_out": "Çıkış yap"
+        "terms_of_use": "Kullanım koşulları",
+        "log_out": "Çıkış yap",
+        "restore_purchases": "Satın alımları geri yükle",
+        "premium_badge_pro": "Pro",
+        "premium_already_active": "Pro aboneliğin aktif."
+    },
+    "logout_dialog": {
+        "title": "Çıkış yap",
+        "message": "Hesabından çıkış yapmak istediğine emin misin?",
+        "confirm": "Çıkış yap"
+    },
+    "delete_account_dialog": {
+        "title": "Hesabı sil",
+        "message": "Hesabın ve verilerin kalıcı olarak silinecek. Bu işlem geri alınamaz.",
+        "confirm": "Hesabı sil",
+        "error_failed": "Hesap silinemedi. Lütfen tekrar dene."
     },
     "profile_settings": {
         "title": "Profil ayarları",
         "change_photo": "Fotoğrafı değiştir",
         "photo_sheet_title": "Profil fotoğrafı",
         "from_gallery": "Galeriden seç",
-        "from_camera": "Kamera ile çek",
+        "from_camera": "Kamerayla çek",
         "remove_photo": "Fotoğrafı kaldır",
         "photo_updated": "Profil fotoğrafı güncellendi",
         "photo_error": "Fotoğraf seçilemedi",
-        "name": "Ad",
+        "name": "İsim",
         "email": "E-posta",
         "save_changes": "Değişiklikleri kaydet",
+        "profile_saved": "Profil güncellendi",
+        "save_error": "Değişiklikler kaydedilemedi",
+        "name_empty": "İsim boş olamaz",
         "delete_account": "Hesabı sil"
     },
     "profile_share": {
-        "title": "Arkadaşına paylaş",
+        "title": "Arkadaşınla paylaş",
         "copy_link": "Bağlantıyı kopyala",
         "copy_success": "Bağlantı panoya kopyalandı"
     },
@@ -253,10 +328,10 @@
         "title": "Sıkça sorulan sorular",
         "q1": "Lingola Buddy nedir?",
         "q2": "Lingola Buddy nasıl çalışır?",
-        "q3": "Uygulamada hangi diller desteklenmektedir?",
-        "a1": "Lingola Buddy, yapay zekâ destekli bir dil öğrenme ve konuşma pratiği uygulamasıdır.",
-        "a2": "Öğrenmek istediğiniz dilde AI tutorlarla sesli, görüntülü veya yazılı sohbet ederek günlük pratik yaparsınız.",
-        "a3": "Lingola Buddy, kullanıcıların farklı dillerde konuşma pratiği yapabilmelerini sağlamak için birçok dili destekler. Kullanıcılar öğrenmek istedikleri dili seçerek o dilde yapay zekâ karakterlerle sohbet edebilir."
+        "q3": "Uygulamada hangi diller destekleniyor?",
+        "a1": "Lingola Buddy, yapay zeka destekli bir dil öğrenme ve konuşma pratiği uygulamasıdır.",
+        "a2": "Öğrenmek istediğin dilde yapay zeka eğitmenleriyle sesli, görüntülü veya yazılı sohbet ederek her gün pratik yaparsın.",
+        "a3": "Lingola Buddy, kullanıcıların farklı dillerde konuşma pratiği yapmalarını sağlamak için birçok dili destekler. Kullanıcılar öğrenmek istedikleri dili seçip o dilde yapay zeka karakterleriyle sohbet edebilirler."
     },
     "profile_language": {
         "title": "Dil",
@@ -288,49 +363,551 @@
         "sun": "PAZ",
         "word": "Kelime",
         "accuracy": "Doğruluk",
-        "time": "Süre",
+        "time": "Zaman",
         "level": "Seviye",
         "word_value": "247",
         "accuracy_value": "%89",
         "time_value": "30 dk",
         "level_value": "B1",
         "minutes_short": "dk",
-        "share_progress": "İlerlemeyi paylaş"
+        "minutes_fmt": "{n} dk",
+        "accuracy_fmt": "%{n}",
+        "share_progress": "İlerlemeyi paylaş",
+        "share_subject": "Lingola Buddy ilerlemem",
+        "share_message_fmt": "Lingola Buddy ile İngilizce öğreniyorum!\n\n🔥 Seri: {streak} gün\n📚 Seviye: {level}\n📖 Bu haftaki kelimeler: {words}\n🎯 Doğruluk: {accuracy}\n⏱ Zaman: {time}\n\nBana katıl: {link}",
+        "share_loading": "İlerleme yükleniyor, lütfen bekle.",
+        "share_failed": "Paylaşım açılamadı."
     },
     "legal": {
         "privacy_title": "Gizlilik politikası",
-        "terms_title": "Kullanım şartları",
+        "terms_title": "Kullanım koşulları",
         "retry": "Yeniden dene"
     },
+    "premium": {
+        "badge_pro": "Pro",
+        "offerings_failed": "Abonelik seçenekleri yüklenemedi. Lütfen tekrar deneyin.",
+        "paywall_failed": "Paywall açılamadı. Lütfen tekrar deneyin.",
+        "purchased_success": "Lingola Buddy Pro'ya hoş geldin!",
+        "restored_success": "Aboneliğin geri yüklendi.",
+        "restore_none": "Aktif abonelik bulunamadı.",
+        "restore_failed": "Satın alımlar geri yüklenemedi. Lütfen tekrar deneyin.",
+        "restore_purchases": "Satın alımları geri yükle",
+        "already_active": "Pro aboneliğin aktif.",
+        "not_configured": "Bu cihazda abonelik kullanılamıyor."
+    },
     "paywall": {
-        "headline": "Bugün Konuşmaya Başla — Ücretsiz",
-        "subheadline": "Gerçek Konuşmalarla İngilizceni Geliştir",
-        "feature_unlimited": "Yapay zekâ ile sınırsız konuşma",
+        "headline": "Konuşmaya Bugün Başla — Ücretsiz",
+        "subheadline": "Gerçek Sohbetlerle İngilizceni Geliştir",
+        "feature_unlimited": "Yapay zeka ile sınırsız sohbet",
         "feature_scenarios": "Gerçek hayat diyalog senaryoları",
         "feature_feedback": "Anında geri bildirim",
         "three_days_free": "3 Gün Ücretsiz",
-        "per_month_price": "Ayda 15,99 $",
+        "per_month_price": "Aylık 15.99 $",
         "free_trial_active": "Ücretsiz Deneme Aktif",
         "payable_today": "Bugün Ödenecek",
         "three_days_free_charge": "3 Gün Ücretsiz",
-        "amount_zero": "0,00 $",
-        "price_due": "15,99 $",
+        "amount_zero": "0.00 $",
+        "price_due": "15.99 $",
         "payment_date_line": "Ödeme tarihi: 13 Mart 2026",
         "cancel_anytime": "İstediğin zaman iptal et",
         "subscribe_now": "Şimdi abone ol",
         "continue_without_purchasing": "Satın almadan devam et"
     },
     "sign_up": {
-        "headline": "Devam edebilmek için kayıt ol",
+        "headline": "Devam etmek için üye ol",
         "continue_google": "Google ile devam et",
         "continue_apple": "Apple ile devam et",
         "continue_guest": "Misafir olarak devam et",
         "legal_part1": "Lingola Buddy'ye kaydolarak ",
         "legal_terms": "Hizmet Şartları",
-        "legal_part2": "'nı kabul etmiş olursun. Verilerinin işlenmesi hakkında bilgi için ",
-        "legal_privacy": "Gizlilik Politikası",
+        "legal_part2": "'nı kabul etmiş olursun. Verilerinin işlenmesi hakkında bilgi almak için ",
+        "legal_privacy": "Gizlilik Politikamızı",
         "legal_part3": " ve ",
-        "legal_cookies": "Çerez Politikası",
-        "legal_part4": " belgelerimize göz atabilirsin."
+        "legal_cookies": "Çerez Politikamızı",
+        "legal_part4": " inceleyebilirsin."
+    },
+    "lessons": {
+        "a1_01": {
+            "title": "Merhaba & Tanışma",
+            "subtitle": "İlk temas"
+        },
+        "a1_02": {
+            "title": "Sayılar & Zaman",
+            "subtitle": "Sayma & saatler"
+        },
+        "a1_03": {
+            "title": "Kafede",
+            "subtitle": "İçecek siparişi"
+        },
+        "a1_04": {
+            "title": "Aile & Arkadaşlar",
+            "subtitle": "Tanıdığın insanlar"
+        },
+        "a1_05": {
+            "title": "Şehirde",
+            "subtitle": "Yol tarifi"
+        },
+        "a1_06": {
+            "title": "Alışveriş Temelleri",
+            "subtitle": "Bir mağazada"
+        },
+        "a1_07": {
+            "title": "Günlük Rutin",
+            "subtitle": "Günlük alışkanlıklar"
+        },
+        "a1_08": {
+            "title": "Hava Durumu & Hisler",
+            "subtitle": "Nasıl hissediyorsun"
+        },
+        "a2_01": {
+            "title": "Geçen Hafta Sonu",
+            "subtitle": "Geçmiş zaman"
+        },
+        "a2_02": {
+            "title": "Doktorda",
+            "subtitle": "Sağlık ziyareti"
+        },
+        "a2_03": {
+            "title": "İş Görüşmesi Temelleri",
+            "subtitle": "İlk görüşme"
+        },
+        "a2_04": {
+            "title": "Seyahat Planları",
+            "subtitle": "Bir seyahat planlamak"
+        },
+        "a2_05": {
+            "title": "Hobiler & İlgi Alanları",
+            "subtitle": "Boş zaman"
+        },
+        "a2_06": {
+            "title": "Restoranda Yemek",
+            "subtitle": "Dışarıda yemek"
+        },
+        "a2_07": {
+            "title": "Telefon & Mesajlar",
+            "subtitle": "Uzaktan sohbet"
+        },
+        "a2_08": {
+            "title": "Ev & Ev İşleri",
+            "subtitle": "Ev hayatı"
+        },
+        "b1_01": {
+            "title": "Fikirler: Sosyal Medya",
+            "subtitle": "Fikir beyan etme"
+        },
+        "b1_02": {
+            "title": "İşteki Sorun",
+            "subtitle": "İş yeri sorunu"
+        },
+        "b1_03": {
+            "title": "Çevre",
+            "subtitle": "Çevreci alışkanlıklar"
+        },
+        "b1_04": {
+            "title": "Kültür Şoku",
+            "subtitle": "Yurtdışında yaşamak"
+        },
+        "b1_05": {
+            "title": "Sağlık & Zindelik",
+            "subtitle": "Sağlıklı yaşam"
+        },
+        "b1_06": {
+            "title": "Eğitim Seçimleri",
+            "subtitle": "Öğrenme yolu"
+        },
+        "b1_07": {
+            "title": "Hayatımızdaki Teknoloji",
+            "subtitle": "Teknoloji alışkanlıkları"
+        },
+        "b1_08": {
+            "title": "Bir Filmi Anlatmak",
+            "subtitle": "Hikaye özeti"
+        },
+        "b1_09": {
+            "title": "Pazarlık Yapmak",
+            "subtitle": "Adil bir anlaşma"
+        },
+        "b1_10": {
+            "title": "Gelecek Hedefleri",
+            "subtitle": "Gelecek planları"
+        },
+        "b2_01": {
+            "title": "Münazara: Uzaktan Çalışma",
+            "subtitle": "Yapılandırılmış tartışma"
+        },
+        "b2_02": {
+            "title": "Haber Özeti",
+            "subtitle": "Güncel konu"
+        },
+        "b2_03": {
+            "title": "Varsayımlar",
+            "subtitle": "Ya şöyle olursa…"
+        },
+        "b2_04": {
+            "title": "Resmi E-posta Dili",
+            "subtitle": "Profesyonel yazışma"
+        },
+        "b2_05": {
+            "title": "Liderlik Stilleri",
+            "subtitle": "İnsanları yönetmek"
+        },
+        "b2_06": {
+            "title": "Ekonomik Eğilimler",
+            "subtitle": "Büyük resim"
+        },
+        "b2_07": {
+            "title": "Sanat & Yaratıcılık",
+            "subtitle": "Etkili konuşma"
+        },
+        "b2_08": {
+            "title": "Günlük Hayatta Bilim",
+            "subtitle": "Bilim konuşması"
+        },
+        "b2_09": {
+            "title": "Etik İkilem",
+            "subtitle": "Ahlaki seçim"
+        },
+        "b2_10": {
+            "title": "Sunum Becerileri",
+            "subtitle": "Kısa konuşma"
+        },
+        "c1_01": {
+            "title": "Bağlam İçinde Deyimler",
+            "subtitle": "Doğal ifadeler"
+        },
+        "c1_02": {
+            "title": "Akademik Makale",
+            "subtitle": "Argüman yapısı"
+        },
+        "c1_03": {
+            "title": "Sarkazm & İroni",
+            "subtitle": "İnce ton"
+        },
+        "c1_04": {
+            "title": "Diplomatik Dil",
+            "subtitle": "Yumuşatma"
+        },
+        "c1_05": {
+            "title": "Edebi Analiz",
+            "subtitle": "Metin konuşması"
+        },
+        "c1_06": {
+            "title": "Politika Tartışması",
+            "subtitle": "Kamu meseleleri"
+        },
+        "c1_07": {
+            "title": "Profesyonel İletişim Ağı",
+            "subtitle": "Kariyer sohbeti"
+        },
+        "c1_08": {
+            "title": "Kültürlerarası İletişim",
+            "subtitle": "Küresel ekipler"
+        },
+        "c1_09": {
+            "title": "Soyut Kavramlar",
+            "subtitle": "Büyük fikirler"
+        },
+        "c1_10": {
+            "title": "Medya Okuryazarlığı",
+            "subtitle": "Eleştirel izleme"
+        },
+        "c1_11": {
+            "title": "İleri Düzey Müzakere",
+            "subtitle": "Yüksek riskler"
+        },
+        "c1_12": {
+            "title": "TED Tarzı Konuşma",
+            "subtitle": "İkna edici konuşma"
+        },
+        "c2_01": {
+            "title": "Retorik & İkna",
+            "subtitle": "Usta işi argüman"
+        },
+        "c2_02": {
+            "title": "Hukuk Diline Giriş",
+            "subtitle": "Resmi sözleşmeler"
+        },
+        "c2_03": {
+            "title": "Satir & Mizah",
+            "subtitle": "Komik nüans"
+        },
+        "c2_04": {
+            "title": "Felsefe Tartışması",
+            "subtitle": "Derin sorular"
+        },
+        "c2_05": {
+            "title": "Bilimsel Makale",
+            "subtitle": "Araştırma konuşması"
+        },
+        "c2_06": {
+            "title": "Ana Dil Akıcılığı",
+            "subtitle": "İnce ayar"
+        },
+        "c2_07": {
+            "title": "Edebiyatta Alt Metin",
+            "subtitle": "Satır aralarını okumak"
+        },
+        "c2_08": {
+            "title": "Küresel Ekonomi",
+            "subtitle": "Makro konuşma"
+        },
+        "c2_09": {
+            "title": "İngilizce Mentorluk",
+            "subtitle": "Başkalarına öğretmek"
+        },
+        "c2_10": {
+            "title": "Doğaçlama Konuşma",
+            "subtitle": "Hazırlık yok"
+        },
+        "c2_11": {
+            "title": "Dil Kadamesi Değiştirme",
+            "subtitle": "Stil kontrolü"
+        },
+        "c2_12": {
+            "title": "Ustalık İncelemesi",
+            "subtitle": "Serbest pratik"
+        }
+    },
+    "daily_conversations": {
+        "dc_a1_01": {
+            "title": "Sabah Merhabası",
+            "subtitle": "Güne başla"
+        },
+        "dc_a1_02": {
+            "title": "Günün Nasıl Geçti?",
+            "subtitle": "Günlük kontrol"
+        },
+        "dc_a1_03": {
+            "title": "Öğle Arası Sohbeti",
+            "subtitle": "Öğle molası"
+        },
+        "dc_a1_04": {
+            "title": "Favori İçecek",
+            "subtitle": "Kafe muhabbeti"
+        },
+        "dc_a1_05": {
+            "title": "Şu Anda",
+            "subtitle": "Şu anki an"
+        },
+        "dc_a1_06": {
+            "title": "Hafta Sonu Planları",
+            "subtitle": "Gelecek zaman"
+        },
+        "dc_a1_07": {
+            "title": "Teşekkürler & Hoşçakal",
+            "subtitle": "Kibar kapanış"
+        },
+        "dc_a1_08": {
+            "title": "Hava Durumu Sohbeti",
+            "subtitle": "Havadan sudan konuşmak"
+        },
+        "dc_a2_01": {
+            "title": "Arayı Kapatmak",
+            "subtitle": "Arkadaştan haberler"
+        },
+        "dc_a2_02": {
+            "title": "İş Çıkışı",
+            "subtitle": "Akşam rahatlaması"
+        },
+        "dc_a2_03": {
+            "title": "Alışveriş Hikayesi",
+            "subtitle": "Günlük işler sohbeti"
+        },
+        "dc_a2_04": {
+            "title": "Bu Gece Yemekte",
+            "subtitle": "Mutfak muhabbeti"
+        },
+        "dc_a2_05": {
+            "title": "Seyahat Anısı",
+            "subtitle": "Geçmişteki gezi"
+        },
+        "dc_a2_06": {
+            "title": "Müzik & Ruh Hali",
+            "subtitle": "Çalma listesi sohbeti"
+        },
+        "dc_a2_07": {
+            "title": "Komşu Sohbeti",
+            "subtitle": "Yerel yaşam"
+        },
+        "dc_a2_08": {
+            "title": "Telefon Alışkanlıkları",
+            "subtitle": "Günlük teknoloji"
+        },
+        "dc_b1_01": {
+            "title": "Kahve Molası Tartışması",
+            "subtitle": "Hafif fikirler"
+        },
+        "dc_b1_02": {
+            "title": "İş-Yaşam Dengesi",
+            "subtitle": "Yoğun hafta"
+        },
+        "dc_b1_03": {
+            "title": "Sosyal Planlar",
+            "subtitle": "Plan yapmak"
+        },
+        "dc_b1_04": {
+            "title": "İngilizce Öğrenmek",
+            "subtitle": "Motivasyon konuşması"
+        },
+        "dc_b1_05": {
+            "title": "Sağlıklı Alışkanlıklar",
+            "subtitle": "Zindelik sohbeti"
+        },
+        "dc_b1_06": {
+            "title": "Film Gecesi",
+            "subtitle": "Öneriler"
+        },
+        "dc_b1_07": {
+            "title": "Şehir Hayatı",
+            "subtitle": "Kent sohbeti"
+        },
+        "dc_b1_08": {
+            "title": "Stres & Sakinlik",
+            "subtitle": "Duygu sohbeti"
+        },
+        "dc_b1_09": {
+            "title": "Hayaldeki Seyahat",
+            "subtitle": "Gelecek sohbeti"
+        },
+        "dc_b1_10": {
+            "title": "Günlük Haberler",
+            "subtitle": "Güncel olaylar"
+        },
+        "dc_b2_01": {
+            "title": "Uzaktan vs Ofis",
+            "subtitle": "Çalışma kültürü"
+        },
+        "dc_b2_02": {
+            "title": "İlişkiler",
+            "subtitle": "Kişisel yaşam"
+        },
+        "dc_b2_03": {
+            "title": "Para Zihniyeti",
+            "subtitle": "Finans sohbeti"
+        },
+        "dc_b2_04": {
+            "title": "Kültür & Gelenekler",
+            "subtitle": "Kültürlerarası"
+        },
+        "dc_b2_05": {
+            "title": "Kariyer Değişikliği",
+            "subtitle": "Profesyonel yol"
+        },
+        "dc_b2_06": {
+            "title": "Podcast & Kitaplar",
+            "subtitle": "Medya diyeti"
+        },
+        "dc_b2_07": {
+            "title": "Etik Seçimler",
+            "subtitle": "Değerler konuşması"
+        },
+        "dc_b2_08": {
+            "title": "Ebeveynlik / Mentorluk",
+            "subtitle": "Rehberlik sohbeti"
+        },
+        "dc_b2_09": {
+            "title": "Yaratıcılık Tıkanması",
+            "subtitle": "Üretici sohbeti"
+        },
+        "dc_b2_10": {
+            "title": "Yapay Zekanın Geleceği",
+            "subtitle": "Teknoloji toplumu"
+        },
+        "dc_c1_01": {
+            "title": "Kimlik & Aidiyet",
+            "subtitle": "Derin kişisel"
+        },
+        "dc_c1_02": {
+            "title": "Hayatta İkna",
+            "subtitle": "Etki"
+        },
+        "dc_c1_03": {
+            "title": "Kültürlerarası Mizah",
+            "subtitle": "Komedi nüansı"
+        },
+        "dc_c1_04": {
+            "title": "Liderlik Anları",
+            "subtitle": "Etki"
+        },
+        "dc_c1_05": {
+            "title": "Gizlilik & Güven",
+            "subtitle": "Dijital yaşam"
+        },
+        "dc_c1_06": {
+            "title": "İklim Konuşmaları",
+            "subtitle": "Büyük konu"
+        },
+        "dc_c1_07": {
+            "title": "Seni Etkileyen Sanat",
+            "subtitle": "Estetik konuşma"
+        },
+        "dc_c1_08": {
+            "title": "Müzakere Hikayesi",
+            "subtitle": "Anlaşma sağlama"
+        },
+        "dc_c1_09": {
+            "title": "Mentorluk",
+            "subtitle": "Büyüme"
+        },
+        "dc_c1_10": {
+            "title": "Dil & Düşünce",
+            "subtitle": "Hafif dilbilim"
+        },
+        "dc_c1_11": {
+            "title": "Risk & Pişmanlık",
+            "subtitle": "Hayat seçimleri"
+        },
+        "dc_c1_12": {
+            "title": "Topluluk İnşası",
+            "subtitle": "Sosyal doku"
+        },
+        "dc_c2_01": {
+            "title": "Kahve Eşliğinde Felsefe",
+            "subtitle": "Büyük sorular"
+        },
+        "dc_c2_02": {
+            "title": "Medyada Retorik",
+            "subtitle": "Söylem"
+        },
+        "dc_c2_03": {
+            "title": "Güç & Etik",
+            "subtitle": "Kurumlar"
+        },
+        "dc_c2_04": {
+            "title": "Yaratıcılık & Yapay Zeka",
+            "subtitle": "Geleceğin zanaatı"
+        },
+        "dc_c2_05": {
+            "title": "Küresel İngilizce",
+            "subtitle": "Dünya dili"
+        },
+        "dc_c2_06": {
+            "title": "Hafıza & Hikaye",
+            "subtitle": "Anlatı"
+        },
+        "dc_c2_07": {
+            "title": "Ekonomi & Hayat",
+            "subtitle": "Makro mikro"
+        },
+        "dc_c2_08": {
+            "title": "Adalet Tartışması",
+            "subtitle": "Ahlaki sistemler"
+        },
+        "dc_c2_09": {
+            "title": "Bilim & Toplum",
+            "subtitle": "Kamu anlayışı"
+        },
+        "dc_c2_10": {
+            "title": "Doğaçlama Ustalık Sınıfı",
+            "subtitle": "Hazırlık yok"
+        },
+        "dc_c2_11": {
+            "title": "Dil Kademesi Oyunu",
+            "subtitle": "Stil değişimi"
+        },
+        "dc_c2_12": {
+            "title": "Açık Salon",
+            "subtitle": "Serbest sohbet"
+        }
     }
 }

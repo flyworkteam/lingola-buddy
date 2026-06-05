@@ -8,20 +8,32 @@ import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Utils/duration_format.dart';
+import 'package:lingola_buddy/Core/Widgets/app_snackbar.dart';
 import 'package:lingola_buddy/Core/Widgets/chat_attachment_sheet.dart';
+import 'package:lingola_buddy/Core/Widgets/chat_messages_shimmer.dart';
 import 'package:lingola_buddy/Core/Widgets/chat_voice_message_bubble.dart';
+import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Core/Widgets/voice_waveform_bars.dart';
 import 'package:lingola_buddy/Core/Widgets/word_shimmer.dart';
 import 'package:lingola_buddy/Models/chat_message_model.dart';
+import 'package:lingola_buddy/Models/tutor_model.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/ChatController/chat_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 import 'package:lingola_buddy/Services/chat_attachment_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatView extends ConsumerStatefulWidget {
-  const ChatView({super.key, required this.tutorId});
+  const ChatView({
+    super.key,
+    required this.tutorId,
+    this.showHistoryShimmer = false,
+  });
 
   final String tutorId;
+  final bool showHistoryShimmer;
+
+  ChatSessionKey get _sessionKey =>
+      (tutorId: tutorId, showHistoryShimmer: showHistoryShimmer);
 
   @override
   ConsumerState<ChatView> createState() => _ChatViewState();
@@ -30,12 +42,46 @@ class ChatView extends ConsumerStatefulWidget {
 class _ChatViewState extends ConsumerState<ChatView> {
   final _inputController = TextEditingController();
   final _scrollController = ScrollController();
+  ProviderSubscription<ChatState>? _chatSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _chatSubscription = ref.listenManual(
+      chatControllerProvider(widget._sessionKey),
+      (prev, next) {
+        if (prev?.messages.length != next.messages.length ||
+            prev?.isTyping != next.isTyping) {
+          _scrollToBottom();
+        }
+        if (next.error != null && next.error != prev?.error) {
+          AppSnackBar.error(
+            next.error!,
+            context: context,
+            actionLabel: next.errorOpenSettings
+                ? AppTranslations.section('chat', 'open_settings')
+                : null,
+            onAction: next.errorOpenSettings ? openAppSettings : null,
+          );
+        }
+      },
+    );
+  }
 
   @override
   void dispose() {
+    _chatSubscription?.close();
     _inputController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _leaveChat() {
+    ref
+        .read(chatControllerProvider(widget._sessionKey).notifier)
+        .prepareToLeave();
+    if (!mounted) return;
+    Navigator.of(context).pop();
   }
 
   void _scrollToBottom() {
@@ -54,7 +100,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
     if (text.isEmpty) return;
     _inputController.clear();
     ref
-        .read(chatControllerProvider(widget.tutorId).notifier)
+        .read(chatControllerProvider(widget._sessionKey).notifier)
         .sendUserMessage(text);
     _scrollToBottom();
   }
@@ -63,7 +109,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
     required Future<ChatAttachmentPickResult?> Function() pick,
   }) async {
     final controller = ref.read(
-      chatControllerProvider(widget.tutorId).notifier,
+      chatControllerProvider(widget._sessionKey).notifier,
     );
     try {
       final pickResult = await pick();
@@ -72,18 +118,16 @@ class _ChatViewState extends ConsumerState<ChatView> {
       _scrollToBottom();
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppTranslations.section('chat', 'attach_error')),
-          behavior: SnackBarBehavior.floating,
-        ),
+      AppSnackBar.error(
+        AppTranslations.section('chat', 'attach_error'),
+        context: context,
       );
     }
   }
 
   void _openAttachmentSheet() {
     final controller = ref.read(
-      chatControllerProvider(widget.tutorId).notifier,
+      chatControllerProvider(widget._sessionKey).notifier,
     );
     ChatAttachmentSheet.show(
       context,
@@ -96,105 +140,95 @@ class _ChatViewState extends ConsumerState<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    final chat = ref.watch(chatControllerProvider(widget.tutorId));
+    final chat = ref.watch(chatControllerProvider(widget._sessionKey));
     final controller = ref.read(
-      chatControllerProvider(widget.tutorId).notifier,
+      chatControllerProvider(widget._sessionKey).notifier,
     );
-    final tutors = ref.watch(tutorsCatalogProvider);
     final tutor =
-        tutors.where((t) => t.id == widget.tutorId).firstOrNull ??
-        (tutors.isNotEmpty ? tutors.first : null);
-    final avatarPath = tutor?.avatarAssetPath ?? 'assets/images/avatar_1.png';
+        ref.watch(tutorByIdProvider(widget.tutorId)) ??
+        ref.watch(tutorsCatalogProvider).firstOrNull;
 
-    ref.listen(chatControllerProvider(widget.tutorId), (prev, next) {
-      if (prev?.messages.length != next.messages.length ||
-          prev?.isTyping != next.isTyping) {
-        _scrollToBottom();
-      }
-      if (next.error != null && next.error != prev?.error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.error!),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 4),
-            action: next.errorOpenSettings
-                ? SnackBarAction(
-                    label: AppTranslations.section('chat', 'open_settings'),
-                    onPressed: openAppSettings,
-                  )
-                : null,
-          ),
-        );
-      }
-    });
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _ChatHeader(
-              title: controller.tutorDisplayName,
-              onBack: () => Navigator.of(context).maybePop(),
-            ),
-            Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                itemCount: chat.messages.length + (chat.isTyping ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index >= chat.messages.length) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: _TypingIndicatorRow(avatarPath: avatarPath),
-                    );
-                  }
-                  final message = chat.messages[index];
-                  if (message.isUser) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: _UserMessageRow(message: message),
-                    );
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: _TutorMessageRow(
-                      message: message,
-                      avatarPath: avatarPath,
-                      selection: chat.selection,
-                      wordTranslations:
-                          chat.translationsFor(message.id) ?? const {},
-                      isTranslating: chat.isTranslating,
-                      onWordTap: (word) => controller.selectWord(
-                        messageId: message.id,
-                        word: word,
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) {
+          ref
+              .read(chatControllerProvider(widget._sessionKey).notifier)
+              .prepareToLeave();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _ChatHeader(
+                title: controller.tutorDisplayName,
+                onBack: _leaveChat,
+              ),
+              Expanded(
+                child: chat.isLoadingHistory && chat.showHistoryShimmer
+                    ? const ChatMessagesShimmerList()
+                    : ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                        addAutomaticKeepAlives: false,
+                        addRepaintBoundaries: true,
+                        itemCount:
+                            chat.messages.length + (chat.isTyping ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index >= chat.messages.length) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: _TypingIndicatorRow(tutor: tutor),
+                            );
+                          }
+                          final message = chat.messages[index];
+                          if (message.isUser) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: _UserMessageRow(message: message),
+                            );
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: _TutorMessageRow(
+                              message: message,
+                              tutor: tutor,
+                              selection: chat.selection,
+                              wordTranslations:
+                                  chat.translationsFor(message.id) ?? const {},
+                              isTranslating: chat.isTranslating,
+                              onWordTap: (word) => controller.selectWord(
+                                messageId: message.id,
+                                word: word,
+                              ),
+                              onTranslate: controller.translateSelection,
+                              onSpeak: controller.speakSelection,
+                            ),
+                          );
+                        },
                       ),
-                      onTranslate: controller.translateSelection,
-                      onSpeak: controller.speakSelection,
-                    ),
-                  );
-                },
               ),
-            ),
-            if (chat.isRecording)
-              _VoiceStatusBar(
-                voiceLevel: chat.voiceLevel,
-                recordingDuration: chat.recordingDuration,
-                onCancel: () => controller.cancelVoiceRecording(),
+              if (chat.isRecording)
+                _VoiceStatusBar(
+                  voiceLevel: chat.voiceLevel,
+                  recordingDuration: chat.recordingDuration,
+                  onCancel: () => controller.cancelVoiceRecording(),
+                ),
+              _ChatInputBar(
+                controller: _inputController,
+                sendEnabled: !chat.isTyping && !chat.isTranscribing,
+                isRecording: chat.isRecording,
+                isTranscribing: chat.isTranscribing,
+                isTyping: chat.isTyping,
+                onSend: chat.isRecording
+                    ? () => controller.finishVoiceRecording()
+                    : _send,
+                onPlusTap: _openAttachmentSheet,
+                onMicTap: () => controller.toggleVoiceRecording(),
               ),
-            _ChatInputBar(
-              controller: _inputController,
-              sendEnabled: !chat.isTyping && !chat.isTranscribing,
-              isRecording: chat.isRecording,
-              isTranscribing: chat.isTranscribing,
-              isTyping: chat.isTyping,
-              onSend: chat.isRecording
-                  ? () => controller.finishVoiceRecording()
-                  : _send,
-              onPlusTap: _openAttachmentSheet,
-              onMicTap: () => controller.toggleVoiceRecording(),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -251,7 +285,7 @@ class _ChatHeader extends StatelessWidget {
 class _TutorMessageRow extends StatelessWidget {
   const _TutorMessageRow({
     required this.message,
-    required this.avatarPath,
+    required this.tutor,
     required this.selection,
     required this.wordTranslations,
     required this.isTranslating,
@@ -261,7 +295,7 @@ class _TutorMessageRow extends StatelessWidget {
   });
 
   final ChatMessage message;
-  final String avatarPath;
+  final TutorModel? tutor;
   final ChatSelection? selection;
   final Map<String, String> wordTranslations;
   final bool isTranslating;
@@ -277,7 +311,7 @@ class _TutorMessageRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _ChatAvatar(path: avatarPath),
+        _ChatAvatar(tutor: tutor),
         const SizedBox(width: 8),
         Expanded(
           child: Row(
@@ -593,18 +627,20 @@ class _SelectableTutorText extends StatelessWidget {
 }
 
 class _ChatAvatar extends StatelessWidget {
-  const _ChatAvatar({required this.path});
+  const _ChatAvatar({this.tutor});
 
-  final String path;
+  final TutorModel? tutor;
 
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: 18,
       backgroundColor: const Color(0xFFF0F0F0),
-      backgroundImage: AssetImage(path),
-      onBackgroundImageError: (_, __) {},
-      child: path.isEmpty ? const Icon(Icons.person, size: 20) : null,
+      child: tutor != null
+          ? ClipOval(
+              child: TutorAvatarImage(tutor: tutor!, width: 36, height: 36),
+            )
+          : const Icon(Icons.person_rounded, size: 20),
     );
   }
 }
@@ -648,16 +684,16 @@ class _ChatActionButton extends StatelessWidget {
 }
 
 class _TypingIndicatorRow extends StatelessWidget {
-  const _TypingIndicatorRow({required this.avatarPath});
+  const _TypingIndicatorRow({required this.tutor});
 
-  final String avatarPath;
+  final TutorModel? tutor;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _ChatAvatar(path: avatarPath),
+        _ChatAvatar(tutor: tutor),
         const SizedBox(width: 8),
         const _TypingBubble(),
       ],

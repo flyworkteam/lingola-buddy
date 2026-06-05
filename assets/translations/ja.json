@@ -1,0 +1,913 @@
+{
+    "common": {
+        "app_name": "Lingola Buddy",
+        "continue": "続ける",
+        "save_changes": "変更を保存",
+        "cancel": "キャンセル",
+        "back": "戻る",
+        "copy": "コピー",
+        "delete": "削除",
+        "edit": "編集",
+        "link_open_failed": "リンクを開けませんでした"
+    },
+    "auth": {
+        "sign_in_failed": "サインインに失敗しました。もう一度お試しください。"
+    },
+    "onboarding": {
+        "title1": "英語はわかるけど話せない",
+        "description1": "実生活で話せないと、自信がなくなってしまいます。",
+        "button1": "英語を話したい",
+        "title2": "話す相手がいない？",
+        "description2": "いつでもどこでも話せます。誰かを待つことなく、スピーキングスキルを練習して向上させましょう。",
+        "button2": "練習を始める",
+        "title3": "話して学び始めましょう。",
+        "description3": "リアルな対話で練習し、自信をつけて、日常生活で英語を使い始めましょう。",
+        "button3": "話し始める",
+        "question1": "どの言語を練習したいですか？",
+        "q1_desc": "学習パスをカスタマイズする",
+        "option1": "英語",
+        "option2": "ドイツ語",
+        "option3": "イタリア語",
+        "option4": "フランス語",
+        "option5": "トルコ語",
+        "option6": "日本語",
+        "option7": "スペイン語",
+        "option8": "ロシア語",
+        "option9": "韓国語",
+        "option10": "ヒンディー語",
+        "option11": "ポルトガル語",
+        "option12": "中国語",
+        "see_more": "もっと見る",
+        "question2": "あなたの語学レベルはどのくらいですか？",
+        "q2_desc": "レベルに合わせてコンテンツを調整する",
+        "option2_1": "全く話せない",
+        "option2_2": "基礎的なことは話せる",
+        "option2_3": "流暢に話したい",
+        "question3": "毎日どのくらい練習したいですか？",
+        "q3_desc": "毎日の学習目標を設定する",
+        "option3_1": "1日5～10分（ゆっくり上達）",
+        "option3_2": "1日15～20分（おすすめ）",
+        "option3_3": "1日30分（早く結果を出す）",
+        "button3_continue": "始めましょう",
+        "plan_title": "パーソナライズされたプランを作成中です",
+        "plan_desc1": "あなた専用の会話シナリオを準備しています",
+        "plan_desc2": "レベルに合った対話を作成しています",
+        "plan_desc3": "最初の会話の準備をしています",
+        "plan_ready_title": "プランの準備ができました",
+        "plan_ready_desc": "今すぐ話せます",
+        "plan_ready_button": "話し始める",
+        "wizard_step_label": "ステップ {current} / {total}"
+    },
+    "call": {
+        "title": "ソフィー",
+        "desc": "{name}があなたと練習したがっています",
+        "desc_with_lesson": "{name}があなたと「{lesson}」を練習したがっています",
+        "button": "話し始める",
+        "another_time": "また今度",
+        "desc_with_daily": "{name}があなたと「{topic}」について話したがっています"
+    },
+    "video_session": {
+        "title": "ビデオ通話",
+        "feedback_great": "{name}との通話は素晴らしかったです！",
+        "status_just_finished": "終了しました • {subject}",
+        "practice_subject": "英語の練習",
+        "next_topic_preview": "日常の買い物の対話",
+        "badge_free": "{current}/{total} 無料",
+        "badge_streak_fmt": "{days}日連続",
+        "role_teacher": "{name} • チューター",
+        "role_label_teacher": "チューター",
+        "you": "あなた",
+        "stat_duration": "時間",
+        "stat_words": "単語数",
+        "stat_fluency": "流暢さ",
+        "session_score": "セッションスコア",
+        "level_beginner": "初心者",
+        "cta_advanced": "上級レベルへ進む",
+        "next_topic_chosen": "{name}が次のトピックを選びました",
+        "next_topic_ready": "{topic} • 準備が完了し、あなたを待っています",
+        "start_new_conversation": "新しい会話を始める",
+        "another_time": "また今度",
+        "lesson_completed_banner": "レッスン完了！次のレッスンがロック解除されました。",
+        "level_advanced_banner_fmt": "{previous}を完了しました！あなたは現在{new}レベルです。"
+    },
+    "chat": {
+        "title": "チャット",
+        "title_with_tutor": "チャット: {tutor}",
+        "message_hint": "メッセージを入力...",
+        "message_hint_short": "メッセージ...",
+        "type_message": "メッセージを入力...",
+        "translation_prefix": "翻訳",
+        "translating": "翻訳中…",
+        "recording": "録音中",
+        "sent_voice": "ボイスメッセージ",
+        "transcribing": "音声をテキストに変換中…",
+        "voice_too_short": "録音が短すぎます。もう少し話してからもう一度お試しください。",
+        "voice_record_failed": "録音を開始できませんでした。マイクの権限を確認してください。",
+        "voice_tap_hint": "ボイスメッセージ: マイクをタップし、終わったらもう一度タップします",
+        "voice_cancel": "キャンセル",
+        "voice_send": "送信",
+        "open_settings": "設定を開く",
+        "hold_to_record": "マイクをタップしてボイスメッセージを送信",
+        "attach_title": "共有",
+        "attach_subtitle": "チャットに追加するものを選んでください",
+        "attach_photo": "写真",
+        "attach_document": "ドキュメント",
+        "attach_subtitle_photo": "ギャラリーから選択",
+        "attach_subtitle_document": "PDF、Wordなど",
+        "attach_cancel": "キャンセル",
+        "attach_error": "ファイルの選択に失敗しました",
+        "sent_photo": "写真を共有しました。",
+        "sent_document_named": "ドキュメントを共有しました: {name}",
+        "api_missing": "OpenAIキーが定義されていません。--dart-define=OPENAI_API_KEY=...でアプリを実行してください"
+    },
+    "talk": {
+        "history_title": "チャット履歴",
+        "quick_messages": "クイックメッセージ",
+        "continue": "続ける",
+        "empty_title": "まだ会話がありません",
+        "empty_desc": "チューターとチャットを始めるとここに表示されます",
+        "delete_title": "会話を削除しますか？",
+        "delete_message": "{name}とのチャットを削除しますか？この操作は元に戻せません。",
+        "delete_confirm": "会話を削除",
+        "time_am": "午前",
+        "time_pm": "午後"
+    },
+    "call_summary": {
+        "title": "セッションの概要",
+        "session_subtitle": "練習セッション",
+        "duration_label": "時間",
+        "duration_value": "{minutes}分{seconds}秒",
+        "growth_stats": "成長統計",
+        "stat_word": "単語",
+        "stat_grammar": "文法",
+        "continue_conversation": "会話を続ける"
+    },
+    "navigation": {
+        "home": "ホーム",
+        "tutor": "チューター",
+        "talk": "トーク",
+        "profile": "プロフィール"
+    },
+    "home": {
+        "greeting_morning": "おはようございます",
+        "greeting_afternoon": "こんにちは",
+        "greeting_evening": "こんばんは",
+        "greeting_night": "おやすみなさい",
+        "welcome": "ようこそ",
+        "past_7_days": "過去7日間",
+        "streak_desc": "毎日勉強してストリークを作り、強力な学習習慣を身につけましょう。",
+        "mon": "月",
+        "tue": "火",
+        "wed": "水",
+        "thu": "木",
+        "fri": "金",
+        "sat": "土",
+        "sun": "日",
+        "pick_up": "中断したところから再開",
+        "lesson": "レッスン",
+        "lesson_progress": "レッスン 6 / 10",
+        "lesson_progress_fmt": "レッスン {current} / {total}",
+        "level_subtitle_fmt": "{level} • {subtitle}",
+        "lessons_title": "マイレッスン",
+        "lessons_empty": "まだレッスンはありません",
+        "lesson_locked": "ロック中",
+        "lesson_in_progress": "進行中",
+        "lesson_completed": "完了",
+        "lesson_pass_rule": "レッスンをクリアするには、チューターと2分以上ビデオ通話を行ってください。",
+        "coffee_shop_title": "コーヒーショップにて",
+        "level_daily_conversation": "B1 • 日常会話",
+        "continue": "会話を続ける",
+        "character_label": "キャラクター",
+        "view_all": "すべて見る",
+        "start_talking": "話し始める",
+        "daily_conversation": "日常会話",
+        "today_topic": "今日のトピック",
+        "new": "新着",
+        "suitable_for_your_level": "あなたのレベルに最適",
+        "making_plans_with_friends": "友達と予定を立てる",
+        "duration_estimate": "約5分",
+        "start_conversation": "会話を始める",
+        "progress_label": "進捗状況",
+        "this_week": "今週",
+        "word_label": "単語",
+        "accuracy_label": "正確さ",
+        "time_label": "時間",
+        "level_label": "レベル",
+        "word_value": "247",
+        "accuracy_value": "89%",
+        "time_value": "30分",
+        "level_value": "B1",
+        "minutes_fmt": "{n}分",
+        "accuracy_fmt": "{n}%"
+    },
+    "notifications": {
+        "title": "通知",
+        "clear_all": "すべてクリア",
+        "no_notifications": "通知はありません",
+        "no_notifications_desc": "ここに通知が表示されます",
+        "sample_1_title": "5分もかかりません",
+        "sample_1_desc": "5分だけ時間を取って、毎日の語彙練習セッションをしませんか？",
+        "sample_2_title": "朝のエクササイズ",
+        "sample_2_desc": "勉強に最適な時間は早朝です。エクササイズをしませんか？"
+    },
+    "local_notifications": {
+        "channel_name": "Lingola リマインダー",
+        "channel_desc": "レッスン、ストリーク、練習のリマインダー",
+        "reminder_morning_title": "さくっと練習しませんか？",
+        "reminder_morning_body": "5分間の英語学習でストリークを維持しましょう。",
+        "reminder_afternoon_title": "あともう少し",
+        "reminder_afternoon_body": "あと1回のレッスンで今日の目標に近づきます。",
+        "reminder_evening_title": "今日は練習しましたか？",
+        "reminder_evening_body": "夜は学習を再開するのに最適な時間です。",
+        "streak_title": "ストリークを途切れさせないで",
+        "streak_body": "現在{streak}日連続です。今日も練習して記録を伸ばしましょう。",
+        "progress_title": "順調です",
+        "progress_body": "現在のレベルで{completed}/{total}のレッスンが完了しました（{percent}%）。",
+        "unfinished_lesson_title": "中断したところから再開",
+        "unfinished_lesson_body": "ほんの数分で「{lesson}」を完了させましょう。",
+        "call_unfinished_title": "セッションが開いたままです",
+        "call_unfinished_body": "戻って「{lesson}」の練習を完了させましょう。",
+        "level_advanced_title": "レベルアップ！",
+        "level_advanced_body_fmt": "{previous}のレッスンをすべて完了しました。{new}レベルになりました。"
+    },
+    "tudor": {
+        "title": "チューターを選択",
+        "description": "最も親しみを感じるキャラクターを選んでください",
+        "search_tudor": "チューターを検索...",
+        "no_tudors_found": "チューターが見つかりません",
+        "no_tudors_found_desc": "別の検索語をお試しください",
+        "james": "ジェームズ",
+        "sophie": "ソフィー",
+        "emma": "エマ",
+        "clara": "クララ",
+        "jhon": "ジョン",
+        "seraphine": "セラフィン",
+        "lin": "リン",
+        "frank": "フランク",
+        "annie": "アニー",
+        "lee": "リー",
+        "nina": "ニーナ",
+        "aria": "アリア",
+        "brian": "ブライアン",
+        "elara": "エララ",
+        "lyra": "ライラ",
+        "max": "マックス",
+        "mira": "ミラ",
+        "native": "ネイティブ",
+        "start_talking": "話し始める",
+        "character_profile": "キャラクタープロフィール",
+        "character_profile_desc": "シーズンごとに世界の様々な場所から英語を教えるソフィーは、すべてのレッスンを文化的な旅に変えます。",
+        "voice_call": "音声通話",
+        "video_call": "ビデオ通話",
+        "text_message": "テキストメッセージ",
+        "signal_connecting": "接続中",
+        "signal_listening": "リスニング中",
+        "signal_thinking": "処理中",
+        "signal_speaking": "スピーキング中",
+        "signal_error": "接続エラー",
+        "bio_fallback": "このチューターのプロフィールはまもなく追加されます。"
+    },
+    "profile": {
+        "title": "プロフィール",
+        "edit_profile": "プロフィールを編集",
+        "section_general": "一般設定",
+        "language": "言語",
+        "notifications": "通知",
+        "notifications_enabled": "通知オン",
+        "notifications_denied": "通知の許可が拒否されました",
+        "notifications_disabled": "通知オフ",
+        "premium": "プレミアム",
+        "share_friend": "友達にシェア",
+        "progress": "進捗状況",
+        "section_support": "サポート",
+        "rate_us": "評価する",
+        "faq": "よくある質問",
+        "contact_us": "お問い合わせ",
+        "section_legal": "法的情報",
+        "privacy_policy": "プライバシーポリシー",
+        "terms_of_use": "利用規約",
+        "log_out": "ログアウト",
+        "restore_purchases": "購入を復元",
+        "premium_badge_pro": "Pro",
+        "premium_already_active": "Proサブスクリプションは有効です。"
+    },
+    "logout_dialog": {
+        "title": "ログアウト",
+        "message": "アカウントからログアウトしてもよろしいですか？",
+        "confirm": "ログアウト"
+    },
+    "delete_account_dialog": {
+        "title": "アカウントを削除",
+        "message": "アカウントとデータは完全に削除されます。この操作は元に戻せません。",
+        "confirm": "アカウントを削除",
+        "error_failed": "アカウントの削除に失敗しました。もう一度お試しください。"
+    },
+    "profile_settings": {
+        "title": "プロフィール設定",
+        "change_photo": "写真を変更",
+        "photo_sheet_title": "プロフィール写真",
+        "from_gallery": "ギャラリーから選択",
+        "from_camera": "カメラで撮影",
+        "remove_photo": "写真を削除",
+        "photo_updated": "プロフィール写真を更新しました",
+        "photo_error": "写真の選択に失敗しました",
+        "name": "名前",
+        "email": "メールアドレス",
+        "save_changes": "変更を保存",
+        "profile_saved": "プロフィールを更新しました",
+        "save_error": "変更の保存に失敗しました",
+        "name_empty": "名前は空にできません",
+        "delete_account": "アカウントを削除"
+    },
+    "profile_share": {
+        "title": "友達にシェア",
+        "copy_link": "リンクをコピー",
+        "copy_success": "リンクをクリップボードにコピーしました"
+    },
+    "profile_faq": {
+        "title": "よくある質問",
+        "q1": "Lingola Buddyとは何ですか？",
+        "q2": "Lingola Buddyはどのように機能しますか？",
+        "q3": "アプリでサポートされている言語は何ですか？",
+        "a1": "Lingola Buddyは、AIを活用した言語学習およびスピーキング練習アプリです。",
+        "a2": "学習したい言語のAIチューターと音声、ビデオ、テキストでチャットして、毎日練習します。",
+        "a3": "Lingola Buddyは多くの言語をサポートしており、ユーザーは様々な言語でスピーキングの練習ができます。学習したい言語を選び、その言語のAIキャラクターとチャットできます。"
+    },
+    "profile_language": {
+        "title": "言語",
+        "save_changes": "変更を保存"
+    },
+    "languages": {
+        "en": "英語",
+        "de": "ドイツ語",
+        "it": "イタリア語",
+        "fr": "フランス語",
+        "tr": "トルコ語",
+        "ja": "日本語",
+        "es": "スペイン語",
+        "ru": "ロシア語",
+        "ko": "韓国語",
+        "hi": "ヒンディー語",
+        "pt": "ポルトガル語",
+        "zh": "中国語"
+    },
+    "profile_progress": {
+        "title": "進捗状況",
+        "this_week": "今週",
+        "mon": "月",
+        "tue": "火",
+        "wed": "水",
+        "thu": "木",
+        "fri": "金",
+        "sat": "土",
+        "sun": "日",
+        "word": "単語",
+        "accuracy": "正確さ",
+        "time": "時間",
+        "level": "レベル",
+        "word_value": "247",
+        "accuracy_value": "89%",
+        "time_value": "30分",
+        "level_value": "B1",
+        "minutes_short": "分",
+        "minutes_fmt": "{n}分",
+        "accuracy_fmt": "{n}%",
+        "share_progress": "進捗をシェア",
+        "share_subject": "私のLingola Buddyの進捗",
+        "share_message_fmt": "Lingola Buddyで英語を勉強しています！\n\n🔥 ストリーク: {streak}日\n📚 レベル: {level}\n📖 今週の単語: {words}\n🎯 正確さ: {accuracy}\n⏱ 時間: {time}\n\n一緒にやりましょう: {link}",
+        "share_loading": "進捗を読み込んでいます。お待ちください。",
+        "share_failed": "共有を開けませんでした。"
+    },
+    "legal": {
+        "privacy_title": "プライバシーポリシー",
+        "terms_title": "利用規約",
+        "retry": "再試行"
+    },
+    "premium": {
+        "badge_pro": "Pro",
+        "offerings_failed": "サブスクリプションオプションを読み込めませんでした。もう一度お試しください。",
+        "paywall_failed": "ペイウォールを開けませんでした。もう一度お試しください。",
+        "purchased_success": "Lingola Buddy Proへようこそ！",
+        "restored_success": "サブスクリプションが復元されました。",
+        "restore_none": "有効なサブスクリプションが見つかりませんでした。",
+        "restore_failed": "購入を復元できませんでした。もう一度お試しください。",
+        "restore_purchases": "購入を復元",
+        "already_active": "Proサブスクリプションは有効です。",
+        "not_configured": "このデバイスではサブスクリプションを利用できません。"
+    },
+    "paywall": {
+        "headline": "今日から話し始めましょう — 無料",
+        "subheadline": "リアルな会話で英語を上達させる",
+        "feature_unlimited": "AIとの無制限の会話",
+        "feature_scenarios": "実生活の対話シナリオ",
+        "feature_feedback": "インスタントフィードバック",
+        "three_days_free": "3日間無料",
+        "per_month_price": "月額 15.99ドル",
+        "free_trial_active": "無料トライアル有効",
+        "payable_today": "本日のお支払い",
+        "three_days_free_charge": "3日間無料",
+        "amount_zero": "0.00ドル",
+        "price_due": "15.99ドル",
+        "payment_date_line": "お支払い日: 2026年3月13日",
+        "cancel_anytime": "いつでもキャンセル可能",
+        "subscribe_now": "今すぐ購読する",
+        "continue_without_purchasing": "購入せずに続ける"
+    },
+    "sign_up": {
+        "headline": "サインアップして続行",
+        "continue_google": "Googleで続行",
+        "continue_apple": "Appleで続行",
+        "continue_guest": "ゲストとして続行",
+        "legal_part1": "Lingola Buddyに登録することで、",
+        "legal_terms": "利用規約",
+        "legal_part2": "に同意したことになります。データの取り扱いに関する情報については、",
+        "legal_privacy": "プライバシーポリシー",
+        "legal_part3": "および",
+        "legal_cookies": "Cookieポリシー",
+        "legal_part4": "をご確認ください。"
+    },
+    "lessons": {
+        "a1_01": {
+            "title": "挨拶と自己紹介",
+            "subtitle": "最初の接触"
+        },
+        "a1_02": {
+            "title": "数字と時間",
+            "subtitle": "数えることと時計"
+        },
+        "a1_03": {
+            "title": "カフェにて",
+            "subtitle": "飲み物の注文"
+        },
+        "a1_04": {
+            "title": "家族と友達",
+            "subtitle": "知り合い"
+        },
+        "a1_05": {
+            "title": "街の案内",
+            "subtitle": "道案内"
+        },
+        "a1_06": {
+            "title": "買い物の基礎",
+            "subtitle": "お店で"
+        },
+        "a1_07": {
+            "title": "日課",
+            "subtitle": "毎日の習慣"
+        },
+        "a1_08": {
+            "title": "天気と気分",
+            "subtitle": "気分はどうですか"
+        },
+        "a2_01": {
+            "title": "先週末のこと",
+            "subtitle": "過去形"
+        },
+        "a2_02": {
+            "title": "病院にて",
+            "subtitle": "健康診断"
+        },
+        "a2_03": {
+            "title": "面接の基礎",
+            "subtitle": "初めての面接"
+        },
+        "a2_04": {
+            "title": "旅行の計画",
+            "subtitle": "旅行の計画を立てる"
+        },
+        "a2_05": {
+            "title": "趣味と興味",
+            "subtitle": "自由時間"
+        },
+        "a2_06": {
+            "title": "レストランでの食事",
+            "subtitle": "外食"
+        },
+        "a2_07": {
+            "title": "電話とメッセージ",
+            "subtitle": "リモートチャット"
+        },
+        "a2_08": {
+            "title": "家と家事",
+            "subtitle": "家事"
+        },
+        "b1_01": {
+            "title": "意見: ソーシャルメディア",
+            "subtitle": "意見を言う"
+        },
+        "b1_02": {
+            "title": "仕事での問題",
+            "subtitle": "職場の問題"
+        },
+        "b1_03": {
+            "title": "環境",
+            "subtitle": "エコな習慣"
+        },
+        "b1_04": {
+            "title": "カルチャーショック",
+            "subtitle": "海外生活"
+        },
+        "b1_05": {
+            "title": "健康とフィットネス",
+            "subtitle": "健康的な生活"
+        },
+        "b1_06": {
+            "title": "教育の選択肢",
+            "subtitle": "学習の道"
+        },
+        "b1_07": {
+            "title": "生活の中のテクノロジー",
+            "subtitle": "テクノロジーの習慣"
+        },
+        "b1_08": {
+            "title": "映画の説明",
+            "subtitle": "ストーリーの要約"
+        },
+        "b1_09": {
+            "title": "交渉",
+            "subtitle": "公正な取引"
+        },
+        "b1_10": {
+            "title": "将来の目標",
+            "subtitle": "今後の計画"
+        },
+        "b2_01": {
+            "title": "討論: リモートワーク",
+            "subtitle": "構造化された討論"
+        },
+        "b2_02": {
+            "title": "ニュースの要約",
+            "subtitle": "現在のトピック"
+        },
+        "b2_03": {
+            "title": "仮説",
+            "subtitle": "もしも…"
+        },
+        "b2_04": {
+            "title": "フォーマルなEメール",
+            "subtitle": "ビジネスライティング"
+        },
+        "b2_05": {
+            "title": "リーダーシップのスタイル",
+            "subtitle": "人を管理する"
+        },
+        "b2_06": {
+            "title": "経済動向",
+            "subtitle": "全体像"
+        },
+        "b2_07": {
+            "title": "芸術と創造性",
+            "subtitle": "表現力豊かな会話"
+        },
+        "b2_08": {
+            "title": "日常生活における科学",
+            "subtitle": "科学の話題"
+        },
+        "b2_09": {
+            "title": "倫理的ジレンマ",
+            "subtitle": "道徳的選択"
+        },
+        "b2_10": {
+            "title": "プレゼンテーションスキル",
+            "subtitle": "ミニスピーチ"
+        },
+        "c1_01": {
+            "title": "文脈の中のイディオム",
+            "subtitle": "自然なフレーズ"
+        },
+        "c1_02": {
+            "title": "学術エッセイ",
+            "subtitle": "議論の構造"
+        },
+        "c1_03": {
+            "title": "皮肉と反語",
+            "subtitle": "微妙なニュアンス"
+        },
+        "c1_04": {
+            "title": "外交的な言葉遣い",
+            "subtitle": "表現を和らげる"
+        },
+        "c1_05": {
+            "title": "文学分析",
+            "subtitle": "テキストについての対話"
+        },
+        "c1_06": {
+            "title": "政策論争",
+            "subtitle": "公共の問題"
+        },
+        "c1_07": {
+            "title": "プロフェッショナルネットワーキング",
+            "subtitle": "キャリアチャット"
+        },
+        "c1_08": {
+            "title": "異文化コミュニケーション",
+            "subtitle": "グローバルチーム"
+        },
+        "c1_09": {
+            "title": "抽象的概念",
+            "subtitle": "大きなアイデア"
+        },
+        "c1_10": {
+            "title": "メディアリテラシー",
+            "subtitle": "批判的視聴"
+        },
+        "c1_11": {
+            "title": "高度な交渉術",
+            "subtitle": "リスクの高い交渉"
+        },
+        "c1_12": {
+            "title": "TEDスタイルのスピーチ",
+            "subtitle": "説得力のあるスピーチ"
+        },
+        "c2_01": {
+            "title": "修辞学と説得力",
+            "subtitle": "見事な議論"
+        },
+        "c2_02": {
+            "title": "法律用語入門",
+            "subtitle": "正式な契約"
+        },
+        "c2_03": {
+            "title": "風刺とユーモア",
+            "subtitle": "コミカルなニュアンス"
+        },
+        "c2_04": {
+            "title": "哲学論争",
+            "subtitle": "深い疑問"
+        },
+        "c2_05": {
+            "title": "科学論文",
+            "subtitle": "研究に関する対話"
+        },
+        "c2_06": {
+            "title": "ネイティブ並みの流暢さ",
+            "subtitle": "微調整"
+        },
+        "c2_07": {
+            "title": "文学におけるサブテキスト",
+            "subtitle": "行間を読む"
+        },
+        "c2_08": {
+            "title": "グローバル経済",
+            "subtitle": "マクロな話題"
+        },
+        "c2_09": {
+            "title": "英語でのメンタリング",
+            "subtitle": "他人に教える"
+        },
+        "c2_10": {
+            "title": "即興スピーチ",
+            "subtitle": "準備なし"
+        },
+        "c2_11": {
+            "title": "レジスターの切り替え",
+            "subtitle": "スタイルコントロール"
+        },
+        "c2_12": {
+            "title": "マスターレビュー",
+            "subtitle": "自由な練習"
+        }
+    },
+    "daily_conversations": {
+        "dc_a1_01": {
+            "title": "朝の挨拶",
+            "subtitle": "一日を始める"
+        },
+        "dc_a1_02": {
+            "title": "今日はどうだった？",
+            "subtitle": "毎日の確認"
+        },
+        "dc_a1_03": {
+            "title": "ランチの会話",
+            "subtitle": "昼休憩"
+        },
+        "dc_a1_04": {
+            "title": "お気に入りの飲み物",
+            "subtitle": "カフェでの雑談"
+        },
+        "dc_a1_05": {
+            "title": "今、この瞬間",
+            "subtitle": "現在の瞬間"
+        },
+        "dc_a1_06": {
+            "title": "週末の予定",
+            "subtitle": "単純未来"
+        },
+        "dc_a1_07": {
+            "title": "感謝と別れ",
+            "subtitle": "丁寧な締めくくり"
+        },
+        "dc_a1_08": {
+            "title": "天気の話題",
+            "subtitle": "雑談"
+        },
+        "dc_a2_01": {
+            "title": "近況報告",
+            "subtitle": "友達の近況"
+        },
+        "dc_a2_02": {
+            "title": "仕事の後",
+            "subtitle": "夜のリラックス"
+        },
+        "dc_a2_03": {
+            "title": "買い物の話",
+            "subtitle": "お使いのチャット"
+        },
+        "dc_a2_04": {
+            "title": "今夜の料理",
+            "subtitle": "キッチンの話題"
+        },
+        "dc_a2_05": {
+            "title": "旅行の思い出",
+            "subtitle": "過去の旅行"
+        },
+        "dc_a2_06": {
+            "title": "音楽と気分",
+            "subtitle": "プレイリストの話題"
+        },
+        "dc_a2_07": {
+            "title": "近所の人との会話",
+            "subtitle": "地元の生活"
+        },
+        "dc_a2_08": {
+            "title": "スマホの習慣",
+            "subtitle": "日常のテクノロジー"
+        },
+        "dc_b1_01": {
+            "title": "コーヒーブレイクでの議論",
+            "subtitle": "軽い意見交換"
+        },
+        "dc_b1_02": {
+            "title": "ワークライフバランス",
+            "subtitle": "忙しい一週間"
+        },
+        "dc_b1_03": {
+            "title": "社交的な予定",
+            "subtitle": "予定を立てる"
+        },
+        "dc_b1_04": {
+            "title": "英語学習",
+            "subtitle": "モチベーションの話"
+        },
+        "dc_b1_05": {
+            "title": "健康的な習慣",
+            "subtitle": "ウェルネスチャット"
+        },
+        "dc_b1_06": {
+            "title": "映画の夜",
+            "subtitle": "おすすめ"
+        },
+        "dc_b1_07": {
+            "title": "都市生活",
+            "subtitle": "都市の話題"
+        },
+        "dc_b1_08": {
+            "title": "ストレスと落ち着き",
+            "subtitle": "感情について話す"
+        },
+        "dc_b1_09": {
+            "title": "夢の旅行",
+            "subtitle": "未来のチャット"
+        },
+        "dc_b1_10": {
+            "title": "毎日のニュース",
+            "subtitle": "現在の出来事"
+        },
+        "dc_b2_01": {
+            "title": "リモート 対 オフィス",
+            "subtitle": "労働文化"
+        },
+        "dc_b2_02": {
+            "title": "人間関係",
+            "subtitle": "私生活"
+        },
+        "dc_b2_03": {
+            "title": "お金に関する考え方",
+            "subtitle": "お金の話"
+        },
+        "dc_b2_04": {
+            "title": "文化と習慣",
+            "subtitle": "異文化"
+        },
+        "dc_b2_05": {
+            "title": "キャリアの転換",
+            "subtitle": "プロフェッショナルな道"
+        },
+        "dc_b2_06": {
+            "title": "ポッドキャストと本",
+            "subtitle": "メディアダイエット"
+        },
+        "dc_b2_07": {
+            "title": "倫理的な選択",
+            "subtitle": "価値観の話"
+        },
+        "dc_b2_08": {
+            "title": "子育て・メンタリング",
+            "subtitle": "ガイダンスチャット"
+        },
+        "dc_b2_09": {
+            "title": "クリエイティビティのブロック",
+            "subtitle": "クリエイターの話"
+        },
+        "dc_b2_10": {
+            "title": "AIの未来",
+            "subtitle": "テクノロジー社会"
+        },
+        "dc_c1_01": {
+            "title": "アイデンティティと帰属意識",
+            "subtitle": "深い個人的な話題"
+        },
+        "dc_c1_02": {
+            "title": "人生における説得力",
+            "subtitle": "影響力"
+        },
+        "dc_c1_03": {
+            "title": "文化を超えたユーモア",
+            "subtitle": "コメディのニュアンス"
+        },
+        "dc_c1_04": {
+            "title": "リーダーシップの瞬間",
+            "subtitle": "影響力"
+        },
+        "dc_c1_05": {
+            "title": "プライバシーと信頼",
+            "subtitle": "デジタルライフ"
+        },
+        "dc_c1_06": {
+            "title": "気候に関する対話",
+            "subtitle": "大きなトピック"
+        },
+        "dc_c1_07": {
+            "title": "心を動かされた芸術",
+            "subtitle": "美的な話題"
+        },
+        "dc_c1_08": {
+            "title": "交渉の話",
+            "subtitle": "取引"
+        },
+        "dc_c1_09": {
+            "title": "メンターシップ",
+            "subtitle": "成長"
+        },
+        "dc_c1_10": {
+            "title": "言語と思考",
+            "subtitle": "言語学入門"
+        },
+        "dc_c1_11": {
+            "title": "リスクと後悔",
+            "subtitle": "人生の選択"
+        },
+        "dc_c1_12": {
+            "title": "コミュニティ構築",
+            "subtitle": "社会の構造"
+        },
+        "dc_c2_01": {
+            "title": "コーヒーを飲みながらの哲学",
+            "subtitle": "大きな疑問"
+        },
+        "dc_c2_02": {
+            "title": "メディアにおける修辞学",
+            "subtitle": "言説"
+        },
+        "dc_c2_03": {
+            "title": "権力と倫理",
+            "subtitle": "制度"
+        },
+        "dc_c2_04": {
+            "title": "創造性とAI",
+            "subtitle": "未来のクラフト"
+        },
+        "dc_c2_05": {
+            "title": "グローバル英語",
+            "subtitle": "世界の言語"
+        },
+        "dc_c2_06": {
+            "title": "記憶と物語",
+            "subtitle": "物語性"
+        },
+        "dc_c2_07": {
+            "title": "経済と生活",
+            "subtitle": "マクロとミクロ"
+        },
+        "dc_c2_08": {
+            "title": "正義の議論",
+            "subtitle": "道徳システム"
+        },
+        "dc_c2_09": {
+            "title": "科学と社会",
+            "subtitle": "一般の理解"
+        },
+        "dc_c2_10": {
+            "title": "即興マスタークラス",
+            "subtitle": "準備なし"
+        },
+        "dc_c2_11": {
+            "title": "レジスターの遊び",
+            "subtitle": "スタイルの切り替え"
+        },
+        "dc_c2_12": {
+            "title": "オープンラウンジ",
+            "subtitle": "フリートーク"
+        }
+    }
+}

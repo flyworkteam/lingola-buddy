@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "768085789416",
+    "project_id": "lingolabuddy",
+    "storage_bucket": "lingolabuddy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768085789416:android:e15e7961a47436671ad75d",
+        "android_client_info": {
+          "package_name": "com.flywork.lingolabuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768085789416-a4jnr9ms6c857j9joqferofdiceas29h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk6gpu2PaarLJTHfCv0UKM1AJtDsycEQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768085789416-a4jnr9ms6c857j9joqferofdiceas29h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

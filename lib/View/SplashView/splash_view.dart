@@ -5,9 +5,15 @@ import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/brand_aura_backdrop.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/PremiumController/premium_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/SessionController/session_controller.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
+import 'package:lingola_buddy/Riverpod/Providers/auth_repository_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/user_scoped_providers.dart';
+import 'package:lingola_buddy/Services/local_notification_scheduler.dart';
+import 'package:lingola_buddy/Services/session_local_storage.dart';
+import 'package:lingola_buddy/Services/revenuecat_service.dart';
 
-/// PNG, `app_icon.svg` içindeki gömülü rastır; `flutter_svg` pattern+image çizmediği için ayrı dosyada tutulur ([tool/extract_svg_png.py] ile üretilebilir).
 const String _splashIconPng = 'assets/images/splash_app_icon.png';
 
 /// Açılış ekranı: marka gösterimi sonrasında oturum durumuna göre yönlenme
@@ -26,14 +32,39 @@ class _SplashViewState extends ConsumerState<SplashView> {
   }
 
   Future<void> _bootstrap() async {
-    await Future<void>.delayed(const Duration(milliseconds: 900));
-    if (!mounted) return;
+    var session = ref.read(sessionControllerProvider);
 
-    final session = ref.read(sessionControllerProvider);
     if (session.isAuthenticated) {
-      Navigator.pushReplacementNamed(context, AppRoutes.bottomNav);
-      return;
+      try {
+        final restored = await ref
+            .read(authRepositoryProvider)
+            .restoreSession()
+            .timeout(const Duration(seconds: 5));
+        if (!mounted) return;
+        if (restored != null) {
+          await RevenueCatService.instance.syncUserIdentity(restored.user.id);
+          if (!mounted) return;
+          resetUserScopedAppState(ref);
+          ref
+              .read(userProfileControllerProvider.notifier)
+              .setAuthenticatedUser(restored.user);
+          ref.read(sessionControllerProvider.notifier).markAuthenticated(true);
+          final notifOn = await SessionLocalStorage.getNotificationsEnabled();
+          if (notifOn) {
+            await LocalNotificationScheduler.instance.syncEnabled(enabled: true);
+          }
+          await ref.read(premiumControllerProvider.notifier).refresh();
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, AppRoutes.bottomNav);
+          return;
+        }
+      } catch (_) {}
+
+      await ref.read(sessionControllerProvider.notifier).clearAuthSession();
+      if (!mounted) return;
+      session = ref.read(sessionControllerProvider);
     }
+
     if (!session.hasCompletedIntroCarousel) {
       Navigator.pushReplacementNamed(context, AppRoutes.onboardingCarousel);
       return;
@@ -42,10 +73,13 @@ class _SplashViewState extends ConsumerState<SplashView> {
       Navigator.pushReplacementNamed(context, AppRoutes.onboardingLanguage);
       return;
     }
+    if (!session.isAuthenticated) {
+      Navigator.pushReplacementNamed(context, AppRoutes.signUp);
+      return;
+    }
     Navigator.pushReplacementNamed(context, AppRoutes.generatingPlan);
   }
 
-  /// Figma Frame 2: mor kutu içi dikey gradient
   static const LinearGradient _splashIconCardGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,

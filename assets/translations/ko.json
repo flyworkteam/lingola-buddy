@@ -1,0 +1,913 @@
+{
+    "common": {
+        "app_name": "Lingola Buddy",
+        "continue": "계속",
+        "save_changes": "변경 사항 저장",
+        "cancel": "취소",
+        "back": "뒤로",
+        "copy": "복사",
+        "delete": "삭제",
+        "edit": "편집",
+        "link_open_failed": "링크를 열지 못했습니다"
+    },
+    "auth": {
+        "sign_in_failed": "로그인에 실패했습니다. 다시 시도해 주세요."
+    },
+    "onboarding": {
+        "title1": "영어는 알지만 말하지는 못해요",
+        "description1": "실생활에서 말하지 못하면 자신감이 떨어집니다.",
+        "button1": "영어로 말하고 싶어요",
+        "title2": "대화할 사람이 없나요?",
+        "description2": "언제 어디서나 원할 때 말하세요. 아무도 기다리지 않고 말하기 실력을 연습하고 향상시키세요.",
+        "button2": "연습 시작하기",
+        "title3": "말하기로 학습을 시작하세요.",
+        "description3": "실제 대화로 연습하고, 자신감을 높이고, 일상 생활에서 영어를 사용하기 시작하세요.",
+        "button3": "말하기 시작",
+        "question1": "어떤 언어를 연습하고 싶나요?",
+        "q1_desc": "학습 경로 맞춤 설정",
+        "option1": "영어",
+        "option2": "독일어",
+        "option3": "이탈리아어",
+        "option4": "프랑스어",
+        "option5": "튀르키예어",
+        "option6": "일본어",
+        "option7": "스페인어",
+        "option8": "러시아어",
+        "option9": "한국어",
+        "option10": "힌디어",
+        "option11": "포르투갈어",
+        "option12": "중국어",
+        "see_more": "더 보기",
+        "question2": "언어 능숙도 레벨은 어느 정도인가요?",
+        "q2_desc": "레벨에 맞게 콘텐츠 조정",
+        "option2_1": "전혀 말할 수 없어요",
+        "option2_2": "기본적인 말은 할 수 있어요",
+        "option2_3": "유창하게 말하고 싶어요",
+        "question3": "매일 얼마나 연습하고 싶나요?",
+        "q3_desc": "일일 학습 목표 설정",
+        "option3_1": "하루 5–10분 (느린 진행)",
+        "option3_2": "하루 15–20분 (권장)",
+        "option3_3": "하루 30분 (빠른 결과)",
+        "button3_continue": "시작하기",
+        "plan_title": "맞춤형 플랜이 생성되고 있습니다",
+        "plan_desc1": "사용자를 위한 맞춤형 대화 시나리오가 준비되고 있습니다",
+        "plan_desc2": "레벨에 맞는 대화가 생성되고 있습니다",
+        "plan_desc3": "첫 번째 대화가 준비되고 있습니다",
+        "plan_ready_title": "플랜이 준비되었습니다",
+        "plan_ready_desc": "이제 말할 수 있습니다",
+        "plan_ready_button": "말하기 시작",
+        "wizard_step_label": "{total}단계 중 {current}단계"
+    },
+    "call": {
+        "title": "소피",
+        "desc": "{name} 님이 함께 연습하고 싶어 합니다",
+        "desc_with_lesson": "{name} 님이 «{lesson}»을(를) 함께 연습하고 싶어 합니다",
+        "button": "말하기 시작",
+        "another_time": "다음에",
+        "desc_with_daily": "{name} 님이 «{topic}»에 대해 이야기하고 싶어 합니다"
+    },
+    "video_session": {
+        "title": "화상 통화",
+        "feedback_great": "{name} 님과 함께해서 좋았어요!",
+        "status_just_finished": "방금 종료 • {subject}",
+        "practice_subject": "영어 연습",
+        "next_topic_preview": "일상 쇼핑 대화",
+        "badge_free": "{current}/{total}회 무료",
+        "badge_streak_fmt": "{days}일 연속",
+        "role_teacher": "{name} • 튜터",
+        "role_label_teacher": "튜터",
+        "you": "나",
+        "stat_duration": "소요 시간",
+        "stat_words": "단어 수",
+        "stat_fluency": "유창성",
+        "session_score": "세션 점수",
+        "level_beginner": "초급",
+        "cta_advanced": "고급 레벨로 계속",
+        "next_topic_chosen": "{name} 님이 다음 주제를 선택했습니다",
+        "next_topic_ready": "{topic} • 준비 완료, 대기 중입니다",
+        "start_new_conversation": "새 대화 시작",
+        "another_time": "다음에",
+        "lesson_completed_banner": "레슨 완료! 다음 레슨이 잠금 해제되었습니다.",
+        "level_advanced_banner_fmt": "{previous}을(를) 완료했습니다! 이제 {new} 레벨입니다."
+    },
+    "chat": {
+        "title": "채팅",
+        "title_with_tutor": "채팅: {tutor}",
+        "message_hint": "메시지 입력...",
+        "message_hint_short": "메시지...",
+        "type_message": "메시지 입력...",
+        "translation_prefix": "번역",
+        "translating": "번역 중…",
+        "recording": "녹음 중",
+        "sent_voice": "음성 메시지",
+        "transcribing": "음성을 텍스트로 변환 중…",
+        "voice_too_short": "녹음이 너무 짧습니다. 조금 더 길게 말하고 다시 시도하세요.",
+        "voice_record_failed": "녹음을 시작하지 못했습니다. 마이크 권한을 확인하세요.",
+        "voice_tap_hint": "음성 메시지: 마이크를 탭하고 완료되면 다시 탭하세요",
+        "voice_cancel": "취소",
+        "voice_send": "보내기",
+        "open_settings": "설정 열기",
+        "hold_to_record": "음성 메시지를 남기려면 마이크를 탭하세요",
+        "attach_title": "공유",
+        "attach_subtitle": "채팅에 추가할 항목을 선택하세요",
+        "attach_photo": "사진",
+        "attach_document": "문서",
+        "attach_subtitle_photo": "갤러리에서 선택",
+        "attach_subtitle_document": "PDF, Word 등",
+        "attach_cancel": "취소",
+        "attach_error": "파일을 선택하지 못했습니다",
+        "sent_photo": "사진을 공유했습니다.",
+        "sent_document_named": "문서를 공유했습니다: {name}",
+        "api_missing": "OpenAI 키가 정의되지 않았습니다. --dart-define=OPENAI_API_KEY=... 로 앱을 실행하세요"
+    },
+    "talk": {
+        "history_title": "채팅 내역",
+        "quick_messages": "빠른 메시지",
+        "continue": "계속",
+        "empty_title": "아직 대화가 없습니다",
+        "empty_desc": "튜터와 대화를 시작하면 여기에 표시됩니다",
+        "delete_title": "대화를 삭제하시겠습니까?",
+        "delete_message": "{name} 님과의 채팅을 삭제하시겠습니까? 이 작업은 실행 취소할 수 없습니다.",
+        "delete_confirm": "대화 삭제",
+        "time_am": "오전",
+        "time_pm": "오후"
+    },
+    "call_summary": {
+        "title": "세션 요약",
+        "session_subtitle": "연습 세션",
+        "duration_label": "소요 시간",
+        "duration_value": "{minutes}분 {seconds}초",
+        "growth_stats": "성장 통계",
+        "stat_word": "단어",
+        "stat_grammar": "문법",
+        "continue_conversation": "대화 계속하기"
+    },
+    "navigation": {
+        "home": "홈",
+        "tutor": "튜터",
+        "talk": "토크",
+        "profile": "프로필"
+    },
+    "home": {
+        "greeting_morning": "좋은 아침입니다",
+        "greeting_afternoon": "좋은 오후입니다",
+        "greeting_evening": "좋은 저녁입니다",
+        "greeting_night": "안녕히 주무세요",
+        "welcome": "환영합니다",
+        "past_7_days": "지난 7일",
+        "streak_desc": "매일 공부하여 연속 기록을 달성하고 훌륭한 학습 습관을 만드세요.",
+        "mon": "월",
+        "tue": "화",
+        "wed": "수",
+        "thu": "목",
+        "fri": "금",
+        "sat": "토",
+        "sun": "일",
+        "pick_up": "중단한 부분부터 다시 시작",
+        "lesson": "레슨",
+        "lesson_progress": "레슨 6 / 10",
+        "lesson_progress_fmt": "레슨 {current} / {total}",
+        "level_subtitle_fmt": "{level} • {subtitle}",
+        "lessons_title": "내 레슨",
+        "lessons_empty": "아직 레슨이 없습니다",
+        "lesson_locked": "잠김",
+        "lesson_in_progress": "진행 중",
+        "lesson_completed": "완료",
+        "lesson_pass_rule": "레슨을 통과하려면 튜터와 최소 2분 동안 화상 통화를 완료하세요.",
+        "coffee_shop_title": "커피숍에서",
+        "level_daily_conversation": "B1 • 일상 대화",
+        "continue": "계속 말하기",
+        "character_label": "캐릭터",
+        "view_all": "모두 보기",
+        "start_talking": "말하기 시작",
+        "daily_conversation": "일상 대화",
+        "today_topic": "오늘의 주제",
+        "new": "새로운",
+        "suitable_for_your_level": "내 레벨에 적합",
+        "making_plans_with_friends": "친구들과 약속 잡기",
+        "duration_estimate": "약 5분",
+        "start_conversation": "대화 시작",
+        "progress_label": "진행 상황",
+        "this_week": "이번 주",
+        "word_label": "단어",
+        "accuracy_label": "정확도",
+        "time_label": "시간",
+        "level_label": "레벨",
+        "word_value": "247",
+        "accuracy_value": "89%",
+        "time_value": "30분",
+        "level_value": "B1",
+        "minutes_fmt": "{n}분",
+        "accuracy_fmt": "{n}%"
+    },
+    "notifications": {
+        "title": "알림",
+        "clear_all": "모두 지우기",
+        "no_notifications": "알림 없음",
+        "no_notifications_desc": "알림이 여기에 표시됩니다",
+        "sample_1_title": "5분도 채 걸리지 않아요",
+        "sample_1_desc": "5분만 시간을 내어 매일 어휘 연습 세션을 하는 건 어떨까요?",
+        "sample_2_title": "아침 연습",
+        "sample_2_desc": "공부하기 가장 좋은 시간은 이른 아침입니다. 연습 한번 해보시겠어요?"
+    },
+    "local_notifications": {
+        "channel_name": "Lingola 미리 알림",
+        "channel_desc": "레슨, 연속 기록 및 연습 미리 알림",
+        "reminder_morning_title": "잠깐 연습할까요?",
+        "reminder_morning_body": "5분 동안의 영어 연습으로 연속 기록을 이어가세요.",
+        "reminder_afternoon_title": "거의 다 왔어요",
+        "reminder_afternoon_body": "레슨 하나만 더 하면 오늘의 목표에 도달합니다.",
+        "reminder_evening_title": "오늘 연습했나요?",
+        "reminder_evening_body": "저녁은 다시 시작하기 좋은 시간입니다.",
+        "streak_title": "연속 기록을 끊지 마세요",
+        "streak_body": "현재 {streak}일째입니다. 연속 기록을 유지하려면 오늘 연습하세요.",
+        "progress_title": "순조로운 진행",
+        "progress_body": "해당 레벨의 레슨 {completed}/{total}개를 완료했습니다 ({percent}%).",
+        "unfinished_lesson_title": "중단한 부분부터 다시 시작",
+        "unfinished_lesson_body": "단 몇 분 만에 \"{lesson}\"을(를) 완료하세요.",
+        "call_unfinished_title": "세션을 열어 두셨습니다",
+        "call_unfinished_body": "돌아와서 \"{lesson}\" 연습을 완료하세요.",
+        "level_advanced_title": "레벨 업!",
+        "level_advanced_body_fmt": "{previous} 레슨을 모두 완료했습니다. 이제 {new} 레벨입니다."
+    },
+    "tudor": {
+        "title": "튜터 선택",
+        "description": "가장 친근하게 느껴지는 캐릭터를 선택하세요",
+        "search_tudor": "튜터 검색...",
+        "no_tudors_found": "튜터를 찾을 수 없습니다",
+        "no_tudors_found_desc": "다른 검색어로 시도해 보세요",
+        "james": "제임스",
+        "sophie": "소피",
+        "emma": "엠마",
+        "clara": "클라라",
+        "jhon": "존",
+        "seraphine": "세라핀",
+        "lin": "린",
+        "frank": "프랭크",
+        "annie": "애니",
+        "lee": "리",
+        "nina": "니나",
+        "aria": "아리아",
+        "brian": "브라이언",
+        "elara": "엘라라",
+        "lyra": "라이라",
+        "max": "맥스",
+        "mira": "미라",
+        "native": "원어민",
+        "start_talking": "말하기 시작",
+        "character_profile": "캐릭터 프로필",
+        "character_profile_desc": "매 시즌 세계 각지에서 영어를 가르치는 소피는 모든 레슨을 문화 여행으로 만듭니다.",
+        "voice_call": "음성 통화",
+        "video_call": "화상 통화",
+        "text_message": "텍스트 메시지",
+        "signal_connecting": "연결 중",
+        "signal_listening": "듣는 중",
+        "signal_thinking": "처리 중",
+        "signal_speaking": "말하는 중",
+        "signal_error": "연결 오류",
+        "bio_fallback": "이 튜터의 소개가 곧 추가될 예정입니다."
+    },
+    "profile": {
+        "title": "프로필",
+        "edit_profile": "프로필 편집",
+        "section_general": "일반 설정",
+        "language": "언어",
+        "notifications": "알림",
+        "notifications_enabled": "알림 켜짐",
+        "notifications_denied": "알림 권한 거부됨",
+        "notifications_disabled": "알림 꺼짐",
+        "premium": "프리미엄",
+        "share_friend": "친구와 공유",
+        "progress": "진행 상황",
+        "section_support": "고객 지원",
+        "rate_us": "평가하기",
+        "faq": "자주 묻는 질문",
+        "contact_us": "문의하기",
+        "section_legal": "법적 정보",
+        "privacy_policy": "개인정보 처리방침",
+        "terms_of_use": "이용약관",
+        "log_out": "로그아웃",
+        "restore_purchases": "구매 복원",
+        "premium_badge_pro": "Pro",
+        "premium_already_active": "Pro 구독이 활성화되어 있습니다."
+    },
+    "logout_dialog": {
+        "title": "로그아웃",
+        "message": "계정에서 로그아웃하시겠습니까?",
+        "confirm": "로그아웃"
+    },
+    "delete_account_dialog": {
+        "title": "계정 삭제",
+        "message": "계정과 데이터가 영구적으로 삭제됩니다. 이 작업은 실행 취소할 수 없습니다.",
+        "confirm": "계정 삭제",
+        "error_failed": "계정을 삭제하지 못했습니다. 다시 시도해 주세요."
+    },
+    "profile_settings": {
+        "title": "프로필 설정",
+        "change_photo": "사진 변경",
+        "photo_sheet_title": "프로필 사진",
+        "from_gallery": "갤러리에서 선택",
+        "from_camera": "카메라로 촬영",
+        "remove_photo": "사진 삭제",
+        "photo_updated": "프로필 사진 업데이트됨",
+        "photo_error": "사진을 선택하지 못했습니다",
+        "name": "이름",
+        "email": "이메일",
+        "save_changes": "변경 사항 저장",
+        "profile_saved": "프로필 업데이트됨",
+        "save_error": "변경 사항을 저장하지 못했습니다",
+        "name_empty": "이름은 비워둘 수 없습니다",
+        "delete_account": "계정 삭제"
+    },
+    "profile_share": {
+        "title": "친구와 공유",
+        "copy_link": "링크 복사",
+        "copy_success": "링크가 클립보드에 복사되었습니다"
+    },
+    "profile_faq": {
+        "title": "자주 묻는 질문",
+        "q1": "Lingola Buddy가 무엇인가요?",
+        "q2": "Lingola Buddy는 어떻게 작동하나요?",
+        "q3": "앱에서 지원되는 언어는 무엇인가요?",
+        "a1": "Lingola Buddy는 AI가 지원하는 언어 학습 및 말하기 연습 애플리케이션입니다.",
+        "a2": "배우고 싶은 언어의 AI 튜터와 음성, 화상 또는 텍스트를 통해 채팅하며 매일 연습합니다.",
+        "a3": "Lingola Buddy는 사용자가 여러 언어로 말하기 연습을 할 수 있도록 다양한 언어를 지원합니다. 사용자는 배우고자 하는 언어를 선택하고 해당 언어로 인공 지능 캐릭터와 채팅할 수 있습니다."
+    },
+    "profile_language": {
+        "title": "언어",
+        "save_changes": "변경 사항 저장"
+    },
+    "languages": {
+        "en": "영어",
+        "de": "독일어",
+        "it": "이탈리아어",
+        "fr": "프랑스어",
+        "tr": "튀르키예어",
+        "ja": "일본어",
+        "es": "스페인어",
+        "ru": "러시아어",
+        "ko": "한국어",
+        "hi": "힌디어",
+        "pt": "포르투갈어",
+        "zh": "중국어"
+    },
+    "profile_progress": {
+        "title": "진행 상황",
+        "this_week": "이번 주",
+        "mon": "월",
+        "tue": "화",
+        "wed": "수",
+        "thu": "목",
+        "fri": "금",
+        "sat": "토",
+        "sun": "일",
+        "word": "단어",
+        "accuracy": "정확도",
+        "time": "시간",
+        "level": "레벨",
+        "word_value": "247",
+        "accuracy_value": "89%",
+        "time_value": "30분",
+        "level_value": "B1",
+        "minutes_short": "분",
+        "minutes_fmt": "{n}분",
+        "accuracy_fmt": "{n}%",
+        "share_progress": "진행 상황 공유",
+        "share_subject": "나의 Lingola Buddy 진행 상황",
+        "share_message_fmt": "Lingola Buddy와 함께 영어를 공부하고 있어요!\n\n🔥 연속 기록: {streak}일\n📚 레벨: {level}\n📖 이번 주 단어: {words}\n🎯 정확도: {accuracy}\n⏱ 시간: {time}\n\n함께 해요: {link}",
+        "share_loading": "진행 상황을 불러오는 중입니다. 잠시만 기다려 주세요.",
+        "share_failed": "공유를 열 수 없습니다."
+    },
+    "legal": {
+        "privacy_title": "개인정보 처리방침",
+        "terms_title": "이용약관",
+        "retry": "다시 시도"
+    },
+    "premium": {
+        "badge_pro": "Pro",
+        "offerings_failed": "구독 옵션을 불러올 수 없습니다. 다시 시도해 주세요.",
+        "paywall_failed": "페이월을 열 수 없습니다. 다시 시도해 주세요.",
+        "purchased_success": "Lingola Buddy Pro에 오신 것을 환영합니다!",
+        "restored_success": "구독이 복원되었습니다.",
+        "restore_none": "활성 구독을 찾을 수 없습니다.",
+        "restore_failed": "구매를 복원할 수 없습니다. 다시 시도해 주세요.",
+        "restore_purchases": "구매 복원",
+        "already_active": "Pro 구독이 활성화되어 있습니다.",
+        "not_configured": "이 기기에서는 구독을 사용할 수 없습니다."
+    },
+    "paywall": {
+        "headline": "오늘부터 말하기 시작하세요 — 무료",
+        "subheadline": "실제 대화로 영어 실력을 향상시키세요",
+        "feature_unlimited": "AI와 무제한 대화",
+        "feature_scenarios": "실제 대화 시나리오",
+        "feature_feedback": "즉각적인 피드백",
+        "three_days_free": "3일 무료",
+        "per_month_price": "월 $15.99",
+        "free_trial_active": "무료 체험 진행 중",
+        "payable_today": "오늘 결제 금액",
+        "three_days_free_charge": "3일 무료",
+        "amount_zero": "$0.00",
+        "price_due": "$15.99",
+        "payment_date_line": "결제일: 2026년 3월 13일",
+        "cancel_anytime": "언제든지 취소 가능",
+        "subscribe_now": "지금 구독하기",
+        "continue_without_purchasing": "구매하지 않고 계속"
+    },
+    "sign_up": {
+        "headline": "계속하려면 가입하세요",
+        "continue_google": "Google로 계속",
+        "continue_apple": "Apple로 계속",
+        "continue_guest": "게스트로 계속",
+        "legal_part1": "Lingola Buddy에 가입하면 ",
+        "legal_terms": "서비스 약관",
+        "legal_part2": "에 동의하는 것입니다. 데이터 처리에 대한 자세한 내용은 ",
+        "legal_privacy": "개인정보 처리방침",
+        "legal_part3": " 및 ",
+        "legal_cookies": "쿠키 정책",
+        "legal_part4": "을 확인하세요."
+    },
+    "lessons": {
+        "a1_01": {
+            "title": "인사 및 소개",
+            "subtitle": "첫 만남"
+        },
+        "a1_02": {
+            "title": "숫자와 시간",
+            "subtitle": "세기와 시계"
+        },
+        "a1_03": {
+            "title": "카페에서",
+            "subtitle": "음료 주문하기"
+        },
+        "a1_04": {
+            "title": "가족과 친구",
+            "subtitle": "아는 사람들"
+        },
+        "a1_05": {
+            "title": "동네 둘러보기",
+            "subtitle": "길 찾기"
+        },
+        "a1_06": {
+            "title": "쇼핑 기초",
+            "subtitle": "가게에서"
+        },
+        "a1_07": {
+            "title": "일상 루틴",
+            "subtitle": "매일의 습관"
+        },
+        "a1_08": {
+            "title": "날씨와 감정",
+            "subtitle": "기분 묻기"
+        },
+        "a2_01": {
+            "title": "지난 주말",
+            "subtitle": "단순 과거"
+        },
+        "a2_02": {
+            "title": "병원에서",
+            "subtitle": "병원 방문"
+        },
+        "a2_03": {
+            "title": "면접 기초",
+            "subtitle": "첫 면접"
+        },
+        "a2_04": {
+            "title": "여행 계획",
+            "subtitle": "여행 계획하기"
+        },
+        "a2_05": {
+            "title": "취미와 관심사",
+            "subtitle": "여가 시간"
+        },
+        "a2_06": {
+            "title": "레스토랑 식사",
+            "subtitle": "외식하기"
+        },
+        "a2_07": {
+            "title": "전화와 메시지",
+            "subtitle": "원격 채팅"
+        },
+        "a2_08": {
+            "title": "집과 집안일",
+            "subtitle": "가사"
+        },
+        "b1_01": {
+            "title": "의견: 소셜 미디어",
+            "subtitle": "의견 말하기"
+        },
+        "b1_02": {
+            "title": "직장에서의 문제",
+            "subtitle": "직장 문제"
+        },
+        "b1_03": {
+            "title": "환경",
+            "subtitle": "친환경 습관"
+        },
+        "b1_04": {
+            "title": "문화 충격",
+            "subtitle": "해외 생활"
+        },
+        "b1_05": {
+            "title": "건강과 피트니스",
+            "subtitle": "건강한 삶"
+        },
+        "b1_06": {
+            "title": "교육적 선택",
+            "subtitle": "학습 경로"
+        },
+        "b1_07": {
+            "title": "생활 속 기술",
+            "subtitle": "기술 습관"
+        },
+        "b1_08": {
+            "title": "영화 설명하기",
+            "subtitle": "줄거리 요약"
+        },
+        "b1_09": {
+            "title": "협상",
+            "subtitle": "공정한 거래"
+        },
+        "b1_10": {
+            "title": "미래 목표",
+            "subtitle": "앞으로의 계획"
+        },
+        "b2_01": {
+            "title": "토론: 원격 근무",
+            "subtitle": "체계적인 토론"
+        },
+        "b2_02": {
+            "title": "뉴스 요약",
+            "subtitle": "최신 주제"
+        },
+        "b2_03": {
+            "title": "가상 상황",
+            "subtitle": "만약에…"
+        },
+        "b2_04": {
+            "title": "공식 이메일 어조",
+            "subtitle": "비즈니스 글쓰기"
+        },
+        "b2_05": {
+            "title": "리더십 스타일",
+            "subtitle": "사람 관리하기"
+        },
+        "b2_06": {
+            "title": "경제 동향",
+            "subtitle": "큰 그림"
+        },
+        "b2_07": {
+            "title": "예술과 창의성",
+            "subtitle": "풍부한 표현의 대화"
+        },
+        "b2_08": {
+            "title": "일상생활 속 과학",
+            "subtitle": "과학 이야기"
+        },
+        "b2_09": {
+            "title": "윤리적 딜레마",
+            "subtitle": "도덕적 선택"
+        },
+        "b2_10": {
+            "title": "프레젠테이션 기술",
+            "subtitle": "미니 강연"
+        },
+        "c1_01": {
+            "title": "문맥 속 관용구",
+            "subtitle": "자연스러운 표현"
+        },
+        "c1_02": {
+            "title": "학술 에세이",
+            "subtitle": "논증 구조"
+        },
+        "c1_03": {
+            "title": "풍자와 반어법",
+            "subtitle": "미묘한 어조"
+        },
+        "c1_04": {
+            "title": "외교적 언어",
+            "subtitle": "부드러운 표현"
+        },
+        "c1_05": {
+            "title": "문학 분석",
+            "subtitle": "텍스트 대화"
+        },
+        "c1_06": {
+            "title": "정책 토론",
+            "subtitle": "공공 문제"
+        },
+        "c1_07": {
+            "title": "전문적 네트워킹",
+            "subtitle": "커리어 채팅"
+        },
+        "c1_08": {
+            "title": "이문화 커뮤니케이션",
+            "subtitle": "글로벌 팀"
+        },
+        "c1_09": {
+            "title": "추상적 개념",
+            "subtitle": "큰 아이디어"
+        },
+        "c1_10": {
+            "title": "미디어 리터러시",
+            "subtitle": "비판적 시청"
+        },
+        "c1_11": {
+            "title": "고급 협상",
+            "subtitle": "중요한 협상"
+        },
+        "c1_12": {
+            "title": "TED 스타일 강연",
+            "subtitle": "설득력 있는 연설"
+        },
+        "c2_01": {
+            "title": "수사학과 설득",
+            "subtitle": "뛰어난 논증"
+        },
+        "c2_02": {
+            "title": "법률 용어 입문",
+            "subtitle": "공식 계약"
+        },
+        "c2_03": {
+            "title": "풍자와 유머",
+            "subtitle": "코믹한 뉘앙스"
+        },
+        "c2_04": {
+            "title": "철학 토론",
+            "subtitle": "깊은 질문"
+        },
+        "c2_05": {
+            "title": "과학 논문",
+            "subtitle": "연구 대화"
+        },
+        "c2_06": {
+            "title": "원어민 수준의 유창성",
+            "subtitle": "미세 조정"
+        },
+        "c2_07": {
+            "title": "문학의 행간 의미",
+            "subtitle": "행간 읽기"
+        },
+        "c2_08": {
+            "title": "글로벌 경제",
+            "subtitle": "거시적 이야기"
+        },
+        "c2_09": {
+            "title": "영어로 멘토링하기",
+            "subtitle": "다른 사람 가르치기"
+        },
+        "c2_10": {
+            "title": "즉흥 연설",
+            "subtitle": "준비 없이 말하기"
+        },
+        "c2_11": {
+            "title": "사용역 전환",
+            "subtitle": "스타일 제어"
+        },
+        "c2_12": {
+            "title": "마스터 리뷰",
+            "subtitle": "자유 연습"
+        }
+    },
+    "daily_conversations": {
+        "dc_a1_01": {
+            "title": "아침 인사",
+            "subtitle": "하루 시작하기"
+        },
+        "dc_a1_02": {
+            "title": "오늘 하루 어땠어요?",
+            "subtitle": "매일 확인하기"
+        },
+        "dc_a1_03": {
+            "title": "점심시간 채팅",
+            "subtitle": "한낮의 휴식"
+        },
+        "dc_a1_04": {
+            "title": "가장 좋아하는 음료",
+            "subtitle": "카페 스몰 토크"
+        },
+        "dc_a1_05": {
+            "title": "바로 지금",
+            "subtitle": "현재 순간"
+        },
+        "dc_a1_06": {
+            "title": "주말 계획",
+            "subtitle": "단순 미래"
+        },
+        "dc_a1_07": {
+            "title": "감사와 작별 인사",
+            "subtitle": "정중한 마무리"
+        },
+        "dc_a1_08": {
+            "title": "날씨 이야기",
+            "subtitle": "스몰 토크"
+        },
+        "dc_a2_01": {
+            "title": "오랜만의 만남",
+            "subtitle": "친구 소식"
+        },
+        "dc_a2_02": {
+            "title": "퇴근 후",
+            "subtitle": "저녁 휴식"
+        },
+        "dc_a2_03": {
+            "title": "쇼핑 이야기",
+            "subtitle": "심부름 채팅"
+        },
+        "dc_a2_04": {
+            "title": "오늘 밤 요리",
+            "subtitle": "주방 이야기"
+        },
+        "dc_a2_05": {
+            "title": "여행의 추억",
+            "subtitle": "과거 여행"
+        },
+        "dc_a2_06": {
+            "title": "음악과 기분",
+            "subtitle": "플레이리스트 채팅"
+        },
+        "dc_a2_07": {
+            "title": "이웃과의 대화",
+            "subtitle": "동네 생활"
+        },
+        "dc_a2_08": {
+            "title": "휴대폰 습관",
+            "subtitle": "일상 기술"
+        },
+        "dc_b1_01": {
+            "title": "커피 브레이크 토론",
+            "subtitle": "가벼운 의견 교환"
+        },
+        "dc_b1_02": {
+            "title": "워라밸",
+            "subtitle": "바쁜 한 주"
+        },
+        "dc_b1_03": {
+            "title": "사교 모임 계획",
+            "subtitle": "계획 세우기"
+        },
+        "dc_b1_04": {
+            "title": "영어 학습",
+            "subtitle": "동기 부여 이야기"
+        },
+        "dc_b1_05": {
+            "title": "건강한 습관",
+            "subtitle": "웰니스 채팅"
+        },
+        "dc_b1_06": {
+            "title": "무비 나잇",
+            "subtitle": "추천"
+        },
+        "dc_b1_07": {
+            "title": "도시 생활",
+            "subtitle": "도시 이야기"
+        },
+        "dc_b1_08": {
+            "title": "스트레스와 평온함",
+            "subtitle": "감정 이야기"
+        },
+        "dc_b1_09": {
+            "title": "꿈의 여행",
+            "subtitle": "미래 채팅"
+        },
+        "dc_b1_10": {
+            "title": "오늘의 뉴스",
+            "subtitle": "현재 사건"
+        },
+        "dc_b2_01": {
+            "title": "원격 대 사무실",
+            "subtitle": "근무 문화"
+        },
+        "dc_b2_02": {
+            "title": "인간관계",
+            "subtitle": "개인 생활"
+        },
+        "dc_b2_03": {
+            "title": "돈에 대한 사고방식",
+            "subtitle": "금융 채팅"
+        },
+        "dc_b2_04": {
+            "title": "문화와 관습",
+            "subtitle": "이문화"
+        },
+        "dc_b2_05": {
+            "title": "커리어 전환",
+            "subtitle": "전문적인 진로"
+        },
+        "dc_b2_06": {
+            "title": "팟캐스트와 책",
+            "subtitle": "미디어 다이어트"
+        },
+        "dc_b2_07": {
+            "title": "윤리적 선택",
+            "subtitle": "가치관 이야기"
+        },
+        "dc_b2_08": {
+            "title": "양육 / 멘토링",
+            "subtitle": "조언 채팅"
+        },
+        "dc_b2_09": {
+            "title": "창작의 벽",
+            "subtitle": "창작자 이야기"
+        },
+        "dc_b2_10": {
+            "title": "AI의 미래",
+            "subtitle": "기술 사회"
+        },
+        "dc_c1_01": {
+            "title": "정체성과 소속감",
+            "subtitle": "깊고 개인적인 이야기"
+        },
+        "dc_c1_02": {
+            "title": "삶의 설득력",
+            "subtitle": "영향력"
+        },
+        "dc_c1_03": {
+            "title": "문화를 넘나드는 유머",
+            "subtitle": "코미디의 뉘앙스"
+        },
+        "dc_c1_04": {
+            "title": "리더십의 순간",
+            "subtitle": "영향력"
+        },
+        "dc_c1_05": {
+            "title": "프라이버시와 신뢰",
+            "subtitle": "디지털 삶"
+        },
+        "dc_c1_06": {
+            "title": "기후 대화",
+            "subtitle": "큰 주제"
+        },
+        "dc_c1_07": {
+            "title": "마음을 움직인 예술",
+            "subtitle": "미적 대화"
+        },
+        "dc_c1_08": {
+            "title": "협상 이야기",
+            "subtitle": "거래 성사"
+        },
+        "dc_c1_09": {
+            "title": "멘토십",
+            "subtitle": "성장"
+        },
+        "dc_c1_10": {
+            "title": "언어와 사고",
+            "subtitle": "가벼운 언어학"
+        },
+        "dc_c1_11": {
+            "title": "위험과 후회",
+            "subtitle": "삶의 선택"
+        },
+        "dc_c1_12": {
+            "title": "커뮤니티 구축",
+            "subtitle": "사회적 구조"
+        },
+        "dc_c2_01": {
+            "title": "커피를 마시며 하는 철학 이야기",
+            "subtitle": "큰 질문"
+        },
+        "dc_c2_02": {
+            "title": "미디어 수사학",
+            "subtitle": "담론"
+        },
+        "dc_c2_03": {
+            "title": "권력과 윤리",
+            "subtitle": "제도"
+        },
+        "dc_c2_04": {
+            "title": "창의성과 AI",
+            "subtitle": "미래의 공예"
+        },
+        "dc_c2_05": {
+            "title": "글로벌 영어",
+            "subtitle": "세계의 언어"
+        },
+        "dc_c2_06": {
+            "title": "기억과 이야기",
+            "subtitle": "내러티브"
+        },
+        "dc_c2_07": {
+            "title": "경제와 삶",
+            "subtitle": "거시 미시"
+        },
+        "dc_c2_08": {
+            "title": "정의에 대한 토론",
+            "subtitle": "도덕적 시스템"
+        },
+        "dc_c2_09": {
+            "title": "과학과 사회",
+            "subtitle": "대중의 이해"
+        },
+        "dc_c2_10": {
+            "title": "즉석 마스터클래스",
+            "subtitle": "준비 없이 말하기"
+        },
+        "dc_c2_11": {
+            "title": "사용역 놀이",
+            "subtitle": "스타일 전환"
+        },
+        "dc_c2_12": {
+            "title": "오픈 라운지",
+            "subtitle": "자유 채팅"
+        }
+    }
+}

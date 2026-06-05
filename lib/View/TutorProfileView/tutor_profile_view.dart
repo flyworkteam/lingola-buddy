@@ -1,14 +1,13 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
-import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
-import 'package:lingola_buddy/Models/app_enums.dart';
+import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
+import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
+import 'package:lingola_buddy/Riverpod/Providers/curriculum_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 
 class TutorProfileView extends ConsumerWidget {
@@ -16,21 +15,13 @@ class TutorProfileView extends ConsumerWidget {
 
   final String tutorId;
 
-  String _nameForId(String id) {
-    return AppTranslations.section('tudor', id);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tutors = ref.watch(tutorsCatalogProvider);
-    final tutor = tutors.firstWhere(
-      (t) => t.id == tutorId,
-      orElse: () => tutors.first,
-    );
-    final avatarPath = tutor.avatarAssetPath ?? 'assets/images/avatar_1.png';
-    final displayName = _nameForId(tutor.id);
-    final bioText =
-        tutor.bio ?? AppTranslations.section('tudor', 'bio_fallback');
+    final tutor =
+        ref.watch(tutorByIdProvider(tutorId)) ??
+        ref.watch(tutorsCatalogProvider).first;
+    final displayName = tutor.localizedDisplayName;
+    final bioText = tutor.localizedDescription;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -58,47 +49,57 @@ class TutorProfileView extends ConsumerWidget {
             child: IgnorePointer(
               child: Opacity(
                 opacity: 0.45,
-                child: Image.asset(
-                  avatarPath,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => ColoredBox(
-                    color: AppColors.brandPrimary.withValues(alpha: 0.15),
+                child: TutorAvatarImage(tutor: tutor, fit: BoxFit.cover),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withValues(alpha: 0.88),
+                      Colors.white.withValues(alpha: 0.88),
+                      Colors.white,
+                    ],
+                    stops: const [0.0, 0.5, 0.82],
                   ),
                 ),
               ),
             ),
           ),
-          ColoredBox(color: Colors.white.withValues(alpha: 0.88)),
           SafeArea(
             top: false,
-            child: SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: const Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(16),
-                ), 
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: ColoredBox(
-                          color: Colors.white.withValues(alpha: 0.7),
-                          child: Image.asset(
-                            avatarPath,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => const ColoredBox(
-                              color: Colors.white,
-                              child: Center(child: Icon(Icons.face, size: 72)),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: ColoredBox(
+                            color: Colors.white.withValues(alpha: 0.7),
+                            child: TutorAvatarImage(
+                              tutor: tutor,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -119,9 +120,14 @@ class TutorProfileView extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      Text(bioText, style: AppTextStyles.tutorProfileBio()),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
+                      Text(
+                        bioText,
+                        style: AppTextStyles.tutorProfileBio(),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 10),
                       SizedBox(
                         height: 50,
                         width: double.infinity,
@@ -129,9 +135,7 @@ class TutorProfileView extends ConsumerWidget {
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.black,
                             backgroundColor: Colors.white,
-                            side: BorderSide(
-                              color: Colors.transparent,
-                            ),
+                            side: const BorderSide(color: Colors.transparent),
                             shape: const StadiumBorder(),
                             padding: const EdgeInsets.symmetric(vertical: 13),
                           ),
@@ -170,12 +174,18 @@ class TutorProfileView extends ConsumerWidget {
                             shape: const StadiumBorder(),
                             padding: const EdgeInsets.symmetric(vertical: 13),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+                            final lessonId =
+                                ref.read(userCurriculumProvider).value?.currentLesson?.id;
+                            if (lessonId == null) return;
                             ref
                                 .read(callSessionControllerProvider.notifier)
-                                .bindTutor(tutor.id, kind: CallKind.video);
-                            Navigator.of(context, rootNavigator: true).pushNamed(
-                              AppRoutes.activeCall,
+                                .bindTutor(tutor.id, lessonId: lessonId);
+                            await CallNavigation.pushSessionPreview(
+                              context,
+                              ref,
+                              tutorId: tutor.id,
+                              lessonId: lessonId,
                             );
                           },
                           child: Row(
@@ -198,9 +208,14 @@ class TutorProfileView extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       Center(
                         child: TextButton(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
                           onPressed: () => Navigator.pushNamed(
                             context,
                             '/chat',

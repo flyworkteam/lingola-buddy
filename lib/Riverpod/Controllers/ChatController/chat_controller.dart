@@ -1,16 +1,22 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lingola_buddy/Core/Config/openai_config.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Models/chat_message_model.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
+import 'package:lingola_buddy/Repositories/conversation_repository.dart';
+import 'package:lingola_buddy/Riverpod/Providers/conversation_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/talk_history_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 import 'package:lingola_buddy/Models/chat_attachment_model.dart';
 import 'package:path/path.dart' as p;
 import 'package:lingola_buddy/Services/chat_attachment_service.dart';
 import 'package:lingola_buddy/Services/chat_tts_service.dart';
+import 'package:lingola_buddy/Services/chat_voice_playback_service.dart';
 import 'package:lingola_buddy/Services/chat_voice_recorder_service.dart';
 import 'package:lingola_buddy/Services/openai_chat_service.dart';
 
@@ -46,9 +52,14 @@ class ChatSelection {
   final String word;
 }
 
+/// Sohbet oturumu anahtarı — [showHistoryShimmer] geçmişten açılışta true.
+typedef ChatSessionKey = ({String tutorId, bool showHistoryShimmer});
+
 class ChatState {
   const ChatState({
     required this.messages,
+    this.isLoadingHistory = false,
+    this.showHistoryShimmer = false,
     this.isTyping = false,
     this.selection,
     this.wordTranslation,
@@ -64,6 +75,8 @@ class ChatState {
   });
 
   final List<ChatMessage> messages;
+  final bool isLoadingHistory;
+  final bool showHistoryShimmer;
   final bool isTyping;
   final ChatSelection? selection;
   final String? wordTranslation;
@@ -84,6 +97,8 @@ class ChatState {
 
   ChatState copyWith({
     List<ChatMessage>? messages,
+    bool? isLoadingHistory,
+    bool? showHistoryShimmer,
     bool? isTyping,
     ChatSelection? selection,
     String? wordTranslation,
@@ -102,6 +117,8 @@ class ChatState {
   }) {
     return ChatState(
       messages: messages ?? this.messages,
+      isLoadingHistory: isLoadingHistory ?? this.isLoadingHistory,
+      showHistoryShimmer: showHistoryShimmer ?? this.showHistoryShimmer,
       isTyping: isTyping ?? this.isTyping,
       selection: clearSelection ? null : (selection ?? this.selection),
       wordTranslation:
@@ -125,28 +142,99 @@ class ChatController extends StateNotifier<ChatState> {
   ChatController({
     required this.tutorId,
     required this.tutor,
+    required ConversationRepository conversationRepo,
     required OpenAiChatService openAi,
     required ChatTtsService tts,
     required ChatVoiceRecorderService voiceRecorder,
     required ChatAttachmentService attachments,
-  })  : _openAi = openAi,
+    this.showHistoryShimmer = false,
+    this.onThreadUpdated,
+  })  : _conversationRepo = conversationRepo,
+        _openAi = openAi,
         _tts = tts,
         _voiceRecorder = voiceRecorder,
         _attachments = attachments,
-        super(ChatState(messages: _seedMessages(tutor))) {
-    _displayName = AppTranslations.section('tudor', tutor.id);
+        super(
+          ChatState(
+            messages: showHistoryShimmer ? const [] : _seedMessages(tutor),
+            isLoadingHistory: true,
+            showHistoryShimmer: showHistoryShimmer,
+          ),
+        ) {
+    _displayName = tutor.localizedDisplayName;
+    unawaited(_restoreMessages());
   }
 
   final String tutorId;
   final TutorModel tutor;
+  final ConversationRepository _conversationRepo;
+  final bool showHistoryShimmer;
   final OpenAiChatService _openAi;
   final ChatTtsService _tts;
   final ChatVoiceRecorderService _voiceRecorder;
   final ChatAttachmentService _attachments;
   final Map<String, String> _translationCache = {};
+  final Map<String, String> _englishSpeechCache = {};
   StreamSubscription<double>? _voiceLevelSub;
   Timer? _recordingTick;
   late final String _displayName;
+  final VoidCallback? onThreadUpdated;
+
+  Future<void> _restoreMessages() async {
+    try {
+      final hasHistory = await _conversationRepo.hasMessages(tutor.id);
+      if (!hasHistory) {
+        state = state.copyWith(
+          messages: _seedMessages(tutor),
+          isLoadingHistory: false,
+        );
+        return;
+      }
+
+      final saved = await _conversationRepo.fetchMessages(tutor.id);
+      state = state.copyWith(
+        messages: saved.isNotEmpty ? saved : _seedMessages(tutor),
+        isLoadingHistory: false,
+      );
+    } catch (_) {
+      state = state.copyWith(
+        messages: state.messages.isEmpty ? _seedMessages(tutor) : state.messages,
+        isLoadingHistory: false,
+      );
+    }
+  }
+
+  Future<void> _persistMessage(ChatMessage message) async {
+    if (message.id.startsWith('seed-')) return;
+    try {
+      await _conversationRepo.saveMessage(
+        tutorId: tutor.id,
+        message: message,
+      );
+    } catch (_) {}
+  }
+
+  /// Geri çıkmadan önce ses/TTS kaynaklarını bırak — await yok, pop'u bloklamaz.
+  void prepareToLeave() {
+    unawaited(_tts.stop());
+    unawaited(ChatVoicePlaybackService.stopPlayback());
+    _stopRecordingTick();
+    unawaited(_voiceLevelSub?.cancel());
+    _voiceLevelSub = null;
+    unawaited(_voiceRecorder.cancel());
+    if (state.isRecording ||
+        state.isTranscribing ||
+        state.isSpeaking ||
+        state.selection != null) {
+      state = state.copyWith(
+        isRecording: false,
+        isTranscribing: false,
+        isSpeaking: false,
+        clearSelection: true,
+        clearTranslation: true,
+      );
+    }
+  }
 
   void _startRecordingTick() {
     _recordingTick?.cancel();
@@ -199,6 +287,52 @@ class ChatController extends StateNotifier<ChatState> {
     );
   }
 
+  static const _wordTranslationTargetLabel = 'Turkish';
+
+  void _applyWordTranslation(
+    ChatSelection selection,
+    String cacheKey,
+    String translation,
+  ) {
+    final messageId = selection.messageId;
+    final perMessage = Map<String, String>.from(
+      state.messageWordTranslations[messageId] ?? {},
+    );
+    perMessage[cacheKey] = translation;
+    final all = Map<String, Map<String, String>>.from(
+      state.messageWordTranslations,
+    );
+    all[messageId] = perMessage;
+    state = state.copyWith(
+      wordTranslation: translation,
+      messageWordTranslations: all,
+    );
+  }
+
+  Future<String?> _fetchAndStoreTranslation(ChatSelection selection) async {
+    final cacheKey = selection.word.toLowerCase();
+    final inMessage =
+        state.messageWordTranslations[selection.messageId]?[cacheKey];
+    if (inMessage != null) return inMessage;
+
+    final cached = _translationCache[cacheKey];
+    if (cached != null) {
+      if (state.selection?.word.toLowerCase() == cacheKey) {
+        _applyWordTranslation(selection, cacheKey, cached);
+      }
+      return cached;
+    }
+
+    final translation = await _openAi.translateWord(
+      word: selection.word,
+      targetLanguageLabel: _wordTranslationTargetLabel,
+    );
+    _translationCache[cacheKey] = translation;
+    if (state.selection?.word.toLowerCase() != cacheKey) return null;
+    _applyWordTranslation(selection, cacheKey, translation);
+    return translation;
+  }
+
   Future<void> translateSelection() async {
     final selection = state.selection;
     if (selection == null || state.isTranslating) return;
@@ -211,55 +345,68 @@ class ChatController extends StateNotifier<ChatState> {
 
     final cached = _translationCache[cacheKey];
     if (cached != null) {
-      final messageId = selection.messageId;
-      final perMessage = Map<String, String>.from(
-        state.messageWordTranslations[messageId] ?? {},
-      );
-      perMessage[cacheKey] = cached;
-      final all = Map<String, Map<String, String>>.from(
-        state.messageWordTranslations,
-      );
-      all[messageId] = perMessage;
-
-      state = state.copyWith(
-        isTranslating: false,
-        wordTranslation: cached,
-        messageWordTranslations: all,
-      );
+      _applyWordTranslation(selection, cacheKey, cached);
       return;
     }
 
     state = state.copyWith(isTranslating: true, clearError: true);
     try {
-      final translation = await _openAi.translateWord(
-        word: selection.word,
-        targetLanguageLabel: 'Turkish',
-      );
-      _translationCache[cacheKey] = translation;
-      if (state.selection?.word.toLowerCase() != cacheKey) return;
-
-      final messageId = selection.messageId;
-      final perMessage = Map<String, String>.from(
-        state.messageWordTranslations[messageId] ?? {},
-      );
-      perMessage[cacheKey] = translation;
-      final all = Map<String, Map<String, String>>.from(
-        state.messageWordTranslations,
-      );
-      all[messageId] = perMessage;
-
-      state = state.copyWith(
-        isTranslating: false,
-        wordTranslation: translation,
-        messageWordTranslations: all,
-      );
+      await _fetchAndStoreTranslation(selection);
     } catch (e) {
       if (state.selection?.word.toLowerCase() != cacheKey) return;
-      state = state.copyWith(
-        isTranslating: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
+    } finally {
+      if (state.selection?.word.toLowerCase() == cacheKey) {
+        state = state.copyWith(isTranslating: false);
+      }
     }
+  }
+
+  /// Seslendirme metni: her zaman İngilizce kelime (çeviri haritası veya API).
+  Future<String> _resolveEnglishWordForSpeech(ChatSelection selection) async {
+    final token = selection.word.trim();
+    if (token.isEmpty) return token;
+
+    final key = token.toLowerCase();
+    final perMessage = state.messageWordTranslations[selection.messageId];
+
+    // Harita: İngilizce anahtar → yerel çeviri (ör. just → sadece)
+    if (perMessage != null) {
+      if (perMessage.containsKey(key)) {
+        return token;
+      }
+      for (final entry in perMessage.entries) {
+        if (entry.value.toLowerCase() == key) {
+          return entry.key;
+        }
+      }
+    }
+
+    for (final entry in _translationCache.entries) {
+      if (entry.value.toLowerCase() == key) {
+        return entry.key;
+      }
+    }
+
+    final cached = _englishSpeechCache[key];
+    if (cached != null && cached.isNotEmpty) {
+      return cached;
+    }
+
+    if (!OpenAiConfig.isConfigured) {
+      return token;
+    }
+
+    try {
+      final english = await _openAi.translateWordToEnglish(word: token);
+      final trimmed = english.trim();
+      if (trimmed.isNotEmpty) {
+        _englishSpeechCache[key] = trimmed;
+        return trimmed;
+      }
+    } catch (_) {}
+
+    return token;
   }
 
   Future<void> speakSelection() async {
@@ -268,11 +415,20 @@ class ChatController extends StateNotifier<ChatState> {
 
     state = state.copyWith(isSpeaking: true, clearError: true);
     try {
-      await _tts.speak(selection.word);
+      final englishWord = await _resolveEnglishWordForSpeech(selection);
+      if (englishWord.isEmpty) return;
+      if (state.selection?.messageId != selection.messageId ||
+          state.selection?.word.toLowerCase() != selection.word.toLowerCase()) {
+        return;
+      }
+      await _tts.speak(englishWord, languageCode: 'en');
     } catch (e) {
       state = state.copyWith(error: e.toString());
     } finally {
-      state = state.copyWith(isSpeaking: false);
+      if (state.selection?.messageId == selection.messageId &&
+          state.selection?.word.toLowerCase() == selection.word.toLowerCase()) {
+        state = state.copyWith(isSpeaking: false);
+      }
     }
   }
 
@@ -465,6 +621,8 @@ class ChatController extends StateNotifier<ChatState> {
       clearError: true,
     );
 
+    unawaited(_persistMessage(userMsg));
+
     try {
       await _tts.stop();
     } catch (_) {}
@@ -488,6 +646,7 @@ class ChatController extends StateNotifier<ChatState> {
         messages: [...state.messages, assistantMsg],
         isTyping: false,
       );
+      unawaited(_persistMessage(assistantMsg));
     } on TimeoutException {
       state = state.copyWith(
         isTyping: false,
@@ -505,30 +664,38 @@ class ChatController extends StateNotifier<ChatState> {
   void dispose() {
     _stopRecordingTick();
     _voiceLevelSub?.cancel();
-    _tts.stop();
-    _voiceRecorder.cancel();
+    unawaited(_tts.stop());
+    unawaited(_voiceRecorder.cancel());
+    unawaited(ChatVoicePlaybackService.stopPlayback());
+    final refresh = onThreadUpdated;
+    if (refresh != null) {
+      SchedulerBinding.instance.addPostFrameCallback((_) => refresh());
+    }
     super.dispose();
   }
 }
 
 final chatControllerProvider = StateNotifierProvider.autoDispose
-    .family<ChatController, ChatState, String>((ref, tutorId) {
+    .family<ChatController, ChatState, ChatSessionKey>((ref, key) {
       final tutors = ref.watch(tutorsCatalogProvider);
       if (tutors.isEmpty) {
         throw StateError('Tutor catalog is empty');
       }
       final tutor = tutors
-          .where((t) => t.id == tutorId)
+          .where((t) => t.id == key.tutorId)
           .cast<TutorModel?>()
           .firstOrNull;
       final resolved = tutor ?? tutors.first;
       return ChatController(
-        tutorId: tutorId,
+        tutorId: key.tutorId,
         tutor: resolved,
+        conversationRepo: ref.watch(conversationRepositoryProvider),
+        showHistoryShimmer: key.showHistoryShimmer,
         openAi: ref.watch(openAiChatServiceProvider),
         tts: ref.watch(chatTtsServiceProvider),
         voiceRecorder: ref.watch(chatVoiceRecorderProvider),
         attachments: ref.watch(chatAttachmentServiceProvider),
+        onThreadUpdated: () => ref.invalidate(talkHistoryProvider),
       );
     });
 

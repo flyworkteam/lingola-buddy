@@ -26,6 +26,20 @@ dependencies:
   permission_handler: ^12.0.1
   audioplayers: ^6.6.0
   flutter_dotenv: ^5.2.1
+  firebase_core: ^3.15.2
+  firebase_auth: ^5.7.0
+  google_sign_in: ^6.3.0
+  sign_in_with_apple: ^7.0.1
+  device_info_plus: ^11.5.0
+  uuid: ^4.5.1
+  purchases_flutter: 9.9.7
+  purchases_ui_flutter: 9.9.7
+  flutter_pcm_sound: ^3.3.3
+  camera: ^0.11.3
+  rive: ^0.14.0
+  share_plus: ^12.0.2
+  flutter_local_notifications: ^19.0.0
+  timezone: ^0.10.0
 
 dev_dependencies:
   flutter_test:
@@ -53,4 +67,5 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/translations/
+    - assets/translations/daily_conversations/
 

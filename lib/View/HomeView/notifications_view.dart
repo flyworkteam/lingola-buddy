@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
+import 'package:lingola_buddy/Models/notification_inbox_item.dart';
+import 'package:lingola_buddy/Services/notification_inbox_store.dart';
 
 class NotificationsView extends StatefulWidget {
   const NotificationsView({super.key});
@@ -11,41 +13,26 @@ class NotificationsView extends StatefulWidget {
   State<NotificationsView> createState() => _NotificationsViewState();
 }
 
-class _NotificationItem {
-  const _NotificationItem({
-    required this.emoji,
-    required this.titleKey,
-    required this.descKey,
-  });
-
-  final String emoji;
-  final String titleKey;
-  final String descKey;
-}
-
 class _NotificationsViewState extends State<NotificationsView> {
   static const Color _listPanelBackground = Color(0xFFF6F6F6);
 
-  late List<_NotificationItem> _items;
+  List<NotificationInboxItem> _items = [];
 
   @override
   void initState() {
     super.initState();
-    _items = [
-      const _NotificationItem(
-        emoji: '☕',
-        titleKey: 'sample_1_title',
-        descKey: 'sample_1_desc',
-      ),
-      const _NotificationItem(
-        emoji: '☀️',
-        titleKey: 'sample_2_title',
-        descKey: 'sample_2_desc',
-      ),
-    ];
+    _load();
   }
 
-  void _clearAll() {
+  Future<void> _load() async {
+    final items = await NotificationInboxStore.loadDelivered();
+    if (!mounted) return;
+    setState(() => _items = items);
+  }
+
+  Future<void> _clearAll() async {
+    await NotificationInboxStore.clearAll();
+    if (!mounted) return;
     setState(() => _items = []);
   }
 
@@ -86,10 +73,10 @@ class _NotificationsViewState extends State<NotificationsView> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.homeWelcomeTitle().copyWith(
-                            fontSize: 20, 
-                            height: 28 / 20, 
-                            fontWeight: FontWeight.w700, 
-                            letterSpacing: -0.1, 
+                            fontSize: 20,
+                            height: 28 / 20,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.1,
                             color: const Color(0xFF171717),
                           ),
                         ),
@@ -179,7 +166,7 @@ class _NotificationsViewState extends State<NotificationsView> {
 class _NotificationCard extends StatelessWidget {
   const _NotificationCard({required this.item});
 
-  final _NotificationItem item;
+  final NotificationInboxItem item;
 
   @override
   Widget build(BuildContext context) {
@@ -214,14 +201,14 @@ class _NotificationCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    AppTranslations.section('notifications', item.titleKey),
+                    item.title,
                     style: AppTextStyles.notificationCardTitle(),
                   ),
                 ),
               ],
             ),
             Text(
-              AppTranslations.section('notifications', item.descKey),
+              item.description,
               style: AppTextStyles.notificationCardBody().copyWith(
                 color: AppColors.secondaryText,
               ),

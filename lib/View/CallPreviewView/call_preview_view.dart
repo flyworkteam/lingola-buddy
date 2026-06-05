@@ -1,27 +1,88 @@
+import 'dart:math';
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Routes/app_routes.dart';
+import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
+import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
+import 'package:lingola_buddy/Models/app_enums.dart';
+import 'package:lingola_buddy/Models/call_preview_args.dart';
+import 'package:lingola_buddy/Core/Utils/call_topic_display.dart';
+import 'package:lingola_buddy/Models/tutor_model.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
+import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
+import 'package:lingola_buddy/Services/premium_call_gate.dart';
 
-/// Gelen pratik görüşmesi önizlemesi — Figma: bulanık portre, üstte geri + başlık, ortada avatar, gradient CTA.
-class CallPreviewView extends ConsumerWidget {
-  const CallPreviewView({super.key});
+/// Gelen pratik görüşmesi önizlemesi — misafir (onboarding) veya oturum (gerçek ders/eğitmen).
+class CallPreviewView extends ConsumerStatefulWidget {
+  const CallPreviewView({super.key, required this.args});
 
-  static const String _avatarAsset = 'assets/images/avatar_4.png';
-  static const EdgeInsets _screenPadding =
-      EdgeInsets.symmetric(horizontal: 16, vertical: 20);
+  final CallPreviewArgs args;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final name = AppTranslations.section('call', 'title');
-    final desc = AppTranslations.section('call', 'desc');
+  ConsumerState<CallPreviewView> createState() => _CallPreviewViewState();
+}
+
+class _CallPreviewViewState extends ConsumerState<CallPreviewView> {
+  String? _resolvedGuestTutorId;
+
+  String _resolveTutorId(List<TutorModel> catalog) {
+    if (widget.args.isGuestPreview) {
+      if (widget.args.tutorId != null && widget.args.tutorId!.isNotEmpty) {
+        return widget.args.tutorId!;
+      }
+      _resolvedGuestTutorId ??= catalog.isEmpty
+          ? 'sophie'
+          : catalog[Random().nextInt(catalog.length)].id;
+      return _resolvedGuestTutorId!;
+    }
+    return widget.args.tutorId ?? 'annie';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final catalog = ref.watch(tutorsCatalogProvider);
+    final tutorId = _resolveTutorId(catalog);
+    final tutor = ref.watch(tutorByIdProvider(tutorId)) ??
+        catalog.where((t) => t.id == tutorId).firstOrNull;
+    final topic = widget.args.isGuestPreview
+        ? null
+        : resolveCallTopicDisplay(ref, widget.args.lessonId);
+
+    if (tutor == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final tutorDisplayName =
+        tutor.localizedDisplayName;
+    final subtitle = widget.args.isGuestPreview
+        ? AppTranslations.interpolate(
+            AppTranslations.section('call', 'desc'),
+            {'name': tutorDisplayName},
+          )
+        : topic != null
+            ? AppTranslations.interpolate(
+                topic.isDailyConversation
+                    ? AppTranslations.section('call', 'desc_with_daily')
+                    : AppTranslations.section('call', 'desc_with_lesson'),
+                {
+                  'name': tutorDisplayName,
+                  'lesson': topic.emojiTitle,
+                  'topic': topic.emojiTitle,
+                },
+              )
+            : AppTranslations.interpolate(
+                AppTranslations.section('call', 'desc'),
+                {'name': tutorDisplayName},
+              );
+
     final mq = MediaQuery.sizeOf(context);
     final avatarR = (mq.width * 0.31).clamp(96.0, 121.0);
 
@@ -36,8 +97,8 @@ class CallPreviewView extends ConsumerWidget {
               child: Transform.scale(
                 scale: 0.92,
                 alignment: Alignment.center,
-                child: Image.asset(
-                  _avatarAsset,
+                child: TutorAvatarImage(
+                  tutor: tutor,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: double.infinity,
@@ -49,7 +110,7 @@ class CallPreviewView extends ConsumerWidget {
           ColoredBox(color: Colors.black.withValues(alpha: 0.75)),
           SafeArea(
             child: Padding(
-              padding: _screenPadding,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -60,15 +121,19 @@ class CallPreviewView extends ConsumerWidget {
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: () {
-                            if (Navigator.of(context).canPop()) {
-                              Navigator.of(context).pop();
-                            } else {
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                AppRoutes.bottomNav,
-                                (_) => false,
-                              );
+                            final root = Navigator.of(
+                              context,
+                              rootNavigator: true,
+                            );
+                            if (root.canPop()) {
+                              root.pop();
+                              return;
                             }
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRoutes.bottomNav,
+                              (_) => false,
+                            );
                           },
                           child: SvgPicture.asset(
                             'assets/icons/arrow_left.svg',
@@ -98,7 +163,7 @@ class CallPreviewView extends ConsumerWidget {
                                 const SizedBox(width: 8),
                                 Flexible(
                                   child: Text(
-                                    name,
+                                    tutorDisplayName,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
@@ -110,10 +175,10 @@ class CallPreviewView extends ConsumerWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              desc,
+                              subtitle,
                               textAlign: TextAlign.center,
                               softWrap: true,
-                              maxLines: 2,
+                              maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               style: AppTextStyles.callPreviewSubtitleOnDark(),
                             ),
@@ -124,14 +189,14 @@ class CallPreviewView extends ConsumerWidget {
                   ),
                   Expanded(
                     child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
+                      child: DecoratedBox(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
                         ),
                         child: ClipOval(
-                          child: Image.asset(
-                            _avatarAsset,
+                          child: TutorAvatarImage(
+                            tutor: tutor,
                             width: avatarR * 2,
                             height: avatarR * 2,
                             fit: BoxFit.cover,
@@ -151,14 +216,27 @@ class CallPreviewView extends ConsumerWidget {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(999),
                             onTap: () {
-                              ref
-                                  .read(
-                                    callSessionControllerProvider.notifier,
-                                  )
-                                  .bindTutor('sophie');
-                              Navigator.pushNamed(
+                              final lessonId = widget.args.lessonId;
+                              void startVideo() {
+                                ref
+                                    .read(callSessionControllerProvider.notifier)
+                                    .bindTutor(
+                                      tutorId,
+                                      kind: CallKind.video,
+                                      lessonId: lessonId,
+                                    );
+                                CallNavigation.pushVideo(context, tutorId);
+                              }
+
+                              if (widget.args.isGuestPreview) {
+                                startVideo();
+                                return;
+                              }
+
+                              PremiumCallGate.runIfAllowed(
                                 context,
-                                AppRoutes.activeCall,
+                                ref,
+                                () async => startVideo(),
                               );
                             },
                             child: Ink(
@@ -171,8 +249,7 @@ class CallPreviewView extends ConsumerWidget {
                                 children: [
                                   DecoratedBox(
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(999),
+                                      borderRadius: BorderRadius.circular(999),
                                       gradient:
                                           AppColors.callPreviewCtaSheenGradient,
                                     ),
@@ -180,10 +257,7 @@ class CallPreviewView extends ConsumerWidget {
                                   ),
                                   Center(
                                     child: Text(
-                                      AppTranslations.section(
-                                        'call',
-                                        'button',
-                                      ),
+                                      AppTranslations.section('call', 'button'),
                                       style:
                                           AppTextStyles.callPreviewStartCta(),
                                     ),
@@ -194,28 +268,22 @@ class CallPreviewView extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      TextButton(
-                        onPressed: () {
-                          if (Navigator.of(context).canPop()) {
-                            // Navigator.of(context).pop();
-                            Navigator.pushNamed(
-                              context,
-                              AppRoutes.paywall,
-                            );
-                          } else {
+                      if (widget.args.isGuestPreview) ...[
+                        const SizedBox(height: 10),
+                        TextButton(
+                          onPressed: () {
                             Navigator.pushNamedAndRemoveUntil(
                               context,
-                              AppRoutes.bottomNav,
+                              AppRoutes.signUp,
                               (_) => false,
                             );
-                          }
-                        },
-                        child: Text(
-                          AppTranslations.section('call', 'another_time'),
-                          style: AppTextStyles.callPreviewDeferLink(),
+                          },
+                          child: Text(
+                            AppTranslations.section('call', 'another_time'),
+                            style: AppTextStyles.callPreviewDeferLink(),
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ],

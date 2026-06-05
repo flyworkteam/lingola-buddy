@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>768085789416-ie4ct7mde6mcvifrhc80eui7rkeuro19.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.768085789416-ie4ct7mde6mcvifrhc80eui7rkeuro19</string>
+	<key>API_KEY</key>
+	<string>AIzaSyArceFYE9IqtrJlW4HZFZLNAxiRMxompJY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>768085789416</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.flywork.lingolabuddy</string>
+	<key>PROJECT_ID</key>
+	<string>lingolabuddy</string>
+	<key>STORAGE_BUCKET</key>
+	<string>lingolabuddy.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:768085789416:ios:3a6b127b6c5e88ad1ad75d</string>
+</dict>
+</plist>

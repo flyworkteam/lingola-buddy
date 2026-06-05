@@ -1,29 +1,34 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lingola_buddy/Models/app_enums.dart';
+import 'package:lingola_buddy/Models/lesson_model.dart';
 
 class OnboardingPrefsState {
   const OnboardingPrefsState({
     this.nativeLanguageCode,
     this.learnLanguageCode,
     this.proficiency,
+    this.cefrLevel,
     this.dailyGoal,
   });
 
   final String? nativeLanguageCode;
   final String? learnLanguageCode;
   final ProficiencyLevel? proficiency;
+  final CefrLevel? cefrLevel;
   final DailyGoalBucket? dailyGoal;
 
   OnboardingPrefsState copyWith({
     String? nativeLanguageCode,
     String? learnLanguageCode,
     ProficiencyLevel? proficiency,
+    CefrLevel? cefrLevel,
     DailyGoalBucket? dailyGoal,
   }) {
     return OnboardingPrefsState(
       nativeLanguageCode: nativeLanguageCode ?? this.nativeLanguageCode,
       learnLanguageCode: learnLanguageCode ?? this.learnLanguageCode,
       proficiency: proficiency ?? this.proficiency,
+      cefrLevel: cefrLevel ?? this.cefrLevel,
       dailyGoal: dailyGoal ?? this.dailyGoal,
     );
   }
@@ -44,6 +49,10 @@ class OnboardingPrefsController extends Notifier<OnboardingPrefsState> {
 
   void selectProficiency(ProficiencyLevel level) {
     state = state.copyWith(proficiency: level);
+  }
+
+  void selectCefrLevel(CefrLevel level) {
+    state = state.copyWith(cefrLevel: level);
   }
 
   void selectDailyGoal(DailyGoalBucket bucket) {

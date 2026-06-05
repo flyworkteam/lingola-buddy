@@ -1,0 +1,242 @@
+{
+  "dc_a1_01": {
+    "title": "Bonjour du matin",
+    "subtitle": "Commencer la journée"
+  },
+  "dc_a1_02": {
+    "title": "Comment s'est passée ta journée ?",
+    "subtitle": "Check-in quotidien"
+  },
+  "dc_a1_03": {
+    "title": "Pause déjeuner",
+    "subtitle": "Pause de midi"
+  },
+  "dc_a1_04": {
+    "title": "Boisson préférée",
+    "subtitle": "Small talk au café"
+  },
+  "dc_a1_05": {
+    "title": "En ce moment",
+    "subtitle": "Instant présent"
+  },
+  "dc_a1_06": {
+    "title": "Plans du week-end",
+    "subtitle": "Futur simple"
+  },
+  "dc_a1_07": {
+    "title": "Merci et au revoir",
+    "subtitle": "Clôture polie"
+  },
+  "dc_a1_08": {
+    "title": "Météo",
+    "subtitle": "Small talk"
+  },
+  "dc_a2_01": {
+    "title": "Se retrouver",
+    "subtitle": "Mise à jour entre amis"
+  },
+  "dc_a2_02": {
+    "title": "Après le travail",
+    "subtitle": "Détente du soir"
+  },
+  "dc_a2_03": {
+    "title": "Histoire de courses",
+    "subtitle": "Courses du quotidien"
+  },
+  "dc_a2_04": {
+    "title": "Cuisine ce soir",
+    "subtitle": "Discussion cuisine"
+  },
+  "dc_a2_05": {
+    "title": "Souvenir de voyage",
+    "subtitle": "Voyage passé"
+  },
+  "dc_a2_06": {
+    "title": "Musique et humeur",
+    "subtitle": "Playlist"
+  },
+  "dc_a2_07": {
+    "title": "Discussion de quartier",
+    "subtitle": "Vie locale"
+  },
+  "dc_a2_08": {
+    "title": "Habitudes téléphone",
+    "subtitle": "Tech quotidienne"
+  },
+  "dc_b1_01": {
+    "title": "Débat pause café",
+    "subtitle": "Opinions légères"
+  },
+  "dc_b1_02": {
+    "title": "Équilibre vie pro–perso",
+    "subtitle": "Semaine chargée"
+  },
+  "dc_b1_03": {
+    "title": "Plans sociaux",
+    "subtitle": "Organisation"
+  },
+  "dc_b1_04": {
+    "title": "Apprendre l'anglais",
+    "subtitle": "Motivation"
+  },
+  "dc_b1_05": {
+    "title": "Habitudes saines",
+    "subtitle": "Bien-être"
+  },
+  "dc_b1_06": {
+    "title": "Soirée cinéma",
+    "subtitle": "Recommandations"
+  },
+  "dc_b1_07": {
+    "title": "Vie en ville",
+    "subtitle": "Discussion urbaine"
+  },
+  "dc_b1_08": {
+    "title": "Stress et calme",
+    "subtitle": "Émotions"
+  },
+  "dc_b1_09": {
+    "title": "Voyage de rêve",
+    "subtitle": "Discussion future"
+  },
+  "dc_b1_10": {
+    "title": "Actualités du jour",
+    "subtitle": "Événements actuels"
+  },
+  "dc_b2_01": {
+    "title": "Télétravail ou bureau",
+    "subtitle": "Culture du travail"
+  },
+  "dc_b2_02": {
+    "title": "Relations",
+    "subtitle": "Vie personnelle"
+  },
+  "dc_b2_03": {
+    "title": "Rapport à l'argent",
+    "subtitle": "Discussion finance"
+  },
+  "dc_b2_04": {
+    "title": "Culture et coutumes",
+    "subtitle": "Interculturel"
+  },
+  "dc_b2_05": {
+    "title": "Reconversion",
+    "subtitle": "Parcours professionnel"
+  },
+  "dc_b2_06": {
+    "title": "Podcasts et livres",
+    "subtitle": "Diète média"
+  },
+  "dc_b2_07": {
+    "title": "Choix éthiques",
+    "subtitle": "Valeurs"
+  },
+  "dc_b2_08": {
+    "title": "Mentorat",
+    "subtitle": "Accompagnement"
+  },
+  "dc_b2_09": {
+    "title": "Blocage créatif",
+    "subtitle": "Productivité"
+  },
+  "dc_b2_10": {
+    "title": "Avenir de l'IA",
+    "subtitle": "Société tech"
+  },
+  "dc_c1_01": {
+    "title": "Identité et appartenance",
+    "subtitle": "Personnel profond"
+  },
+  "dc_c1_02": {
+    "title": "Persuasion au quotidien",
+    "subtitle": "Influence"
+  },
+  "dc_c1_03": {
+    "title": "Humour interculturel",
+    "subtitle": "Nuances comiques"
+  },
+  "dc_c1_04": {
+    "title": "Moments de leadership",
+    "subtitle": "Influence"
+  },
+  "dc_c1_05": {
+    "title": "Vie privée et confiance",
+    "subtitle": "Vie numérique"
+  },
+  "dc_c1_06": {
+    "title": "Conversations climat",
+    "subtitle": "Grand sujet"
+  },
+  "dc_c1_07": {
+    "title": "Art qui t'a touché",
+    "subtitle": "Esthétique"
+  },
+  "dc_c1_08": {
+    "title": "Histoire de négociation",
+    "subtitle": "Conclusion d'accord"
+  },
+  "dc_c1_09": {
+    "title": "Expérience de mentorat",
+    "subtitle": "Croissance"
+  },
+  "dc_c1_10": {
+    "title": "Langue et pensée",
+    "subtitle": "Linguistique"
+  },
+  "dc_c1_11": {
+    "title": "Risque et regret",
+    "subtitle": "Choix de vie"
+  },
+  "dc_c1_12": {
+    "title": "Construire une communauté",
+    "subtitle": "Tissu social"
+  },
+  "dc_c2_01": {
+    "title": "Philosophie autour d'un café",
+    "subtitle": "Grandes questions"
+  },
+  "dc_c2_02": {
+    "title": "Rhétorique dans les médias",
+    "subtitle": "Discours"
+  },
+  "dc_c2_03": {
+    "title": "Pouvoir et éthique",
+    "subtitle": "Institutions"
+  },
+  "dc_c2_04": {
+    "title": "Créativité et IA",
+    "subtitle": "Artisanat futur"
+  },
+  "dc_c2_05": {
+    "title": "Anglais mondial",
+    "subtitle": "Langue mondiale"
+  },
+  "dc_c2_06": {
+    "title": "Mémoire et récit",
+    "subtitle": "Narration"
+  },
+  "dc_c2_07": {
+    "title": "Économie et vie",
+    "subtitle": "Macro–micro"
+  },
+  "dc_c2_08": {
+    "title": "Débat sur la justice",
+    "subtitle": "Systèmes moraux"
+  },
+  "dc_c2_09": {
+    "title": "Science et société",
+    "subtitle": "Compréhension publique"
+  },
+  "dc_c2_10": {
+    "title": "Masterclass d'impro",
+    "subtitle": "Sans préparation"
+  },
+  "dc_c2_11": {
+    "title": "Jeu de registres",
+    "subtitle": "Changement de style"
+  },
+  "dc_c2_12": {
+    "title": "Salon libre",
+    "subtitle": "Discussion libre"
+  }
+}

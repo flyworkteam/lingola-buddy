@@ -7,7 +7,16 @@ import 'package:path/path.dart' as p;
 
 /// Sohbet sesli mesajlarını platforma uygun şekilde oynatır.
 abstract final class ChatVoicePlaybackService {
+  static final AudioPlayer sharedPlayer = AudioPlayer();
+  static String? activePath;
   static bool _audioContextReady = false;
+
+  static Future<void> stopPlayback() async {
+    activePath = null;
+    try {
+      await sharedPlayer.stop();
+    } catch (_) {}
+  }
 
   static String? mimeTypeForPath(String path) {
     switch (p.extension(path).toLowerCase()) {
@@ -33,7 +42,7 @@ abstract final class ChatVoicePlaybackService {
         AudioContext(
           iOS: AudioContextIOS(
             category: AVAudioSessionCategory.playback,
-            options: {AVAudioSessionOptions.defaultToSpeaker},
+            options: {AVAudioSessionOptions.mixWithOthers},
           ),
           android: AudioContextAndroid(
             isSpeakerphoneOn: true,
@@ -52,7 +61,8 @@ abstract final class ChatVoicePlaybackService {
     }
   }
 
-  static Future<void> play(AudioPlayer player, String path) async {
+  static Future<void> play(String path) async {
+    final player = sharedPlayer;
     final file = File(path);
     if (!await file.exists()) {
       throw StateError('Ses dosyası bulunamadı.');
@@ -80,6 +90,7 @@ abstract final class ChatVoicePlaybackService {
     }
 
     await player.stop();
+    activePath = path;
     await player.play(source);
   }
 }

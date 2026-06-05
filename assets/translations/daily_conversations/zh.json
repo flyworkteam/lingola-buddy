@@ -1,0 +1,242 @@
+{
+  "dc_a1_01": {
+    "title": "早晨问候",
+    "subtitle": "开始一天"
+  },
+  "dc_a1_02": {
+    "title": "今天过得怎么样？",
+    "subtitle": "每日问候"
+  },
+  "dc_a1_03": {
+    "title": "午餐闲聊",
+    "subtitle": "午间休息"
+  },
+  "dc_a1_04": {
+    "title": "最爱的饮品",
+    "subtitle": "咖啡馆闲聊"
+  },
+  "dc_a1_05": {
+    "title": "此刻",
+    "subtitle": "当下话题"
+  },
+  "dc_a1_06": {
+    "title": "周末计划",
+    "subtitle": "简单未来"
+  },
+  "dc_a1_07": {
+    "title": "感谢与告别",
+    "subtitle": "礼貌收尾"
+  },
+  "dc_a1_08": {
+    "title": "天气闲聊",
+    "subtitle": "寒暄"
+  },
+  "dc_a2_01": {
+    "title": "近况聊聊",
+    "subtitle": "朋友近况"
+  },
+  "dc_a2_02": {
+    "title": "下班后",
+    "subtitle": "晚间放松"
+  },
+  "dc_a2_03": {
+    "title": "购物故事",
+    "subtitle": "日常琐事"
+  },
+  "dc_a2_04": {
+    "title": "今晚做饭",
+    "subtitle": "厨房话题"
+  },
+  "dc_a2_05": {
+    "title": "旅行回忆",
+    "subtitle": "过往旅程"
+  },
+  "dc_a2_06": {
+    "title": "音乐与心情",
+    "subtitle": "歌单"
+  },
+  "dc_a2_07": {
+    "title": "邻里闲聊",
+    "subtitle": "社区生活"
+  },
+  "dc_a2_08": {
+    "title": "手机习惯",
+    "subtitle": "日常科技"
+  },
+  "dc_b1_01": {
+    "title": "咖啡休息辩论",
+    "subtitle": "轻松观点"
+  },
+  "dc_b1_02": {
+    "title": "工作生活平衡",
+    "subtitle": "忙碌一周"
+  },
+  "dc_b1_03": {
+    "title": "社交计划",
+    "subtitle": "做计划"
+  },
+  "dc_b1_04": {
+    "title": "学英语",
+    "subtitle": "动力"
+  },
+  "dc_b1_05": {
+    "title": "健康习惯",
+    "subtitle": "身心健康"
+  },
+  "dc_b1_06": {
+    "title": "电影之夜",
+    "subtitle": "推荐"
+  },
+  "dc_b1_07": {
+    "title": "城市生活",
+    "subtitle": "都市话题"
+  },
+  "dc_b1_08": {
+    "title": "压力与平静",
+    "subtitle": "情绪"
+  },
+  "dc_b1_09": {
+    "title": "梦想之旅",
+    "subtitle": "未来话题"
+  },
+  "dc_b1_10": {
+    "title": "每日新闻",
+    "subtitle": "时事"
+  },
+  "dc_b2_01": {
+    "title": "远程还是办公室",
+    "subtitle": "工作文化"
+  },
+  "dc_b2_02": {
+    "title": "人际关系",
+    "subtitle": "私人生活"
+  },
+  "dc_b2_03": {
+    "title": "金钱观念",
+    "subtitle": "理财话题"
+  },
+  "dc_b2_04": {
+    "title": "文化与习俗",
+    "subtitle": "跨文化"
+  },
+  "dc_b2_05": {
+    "title": "职业转型",
+    "subtitle": "职业路径"
+  },
+  "dc_b2_06": {
+    "title": "播客与书籍",
+    "subtitle": "媒体摄入"
+  },
+  "dc_b2_07": {
+    "title": "伦理选择",
+    "subtitle": "价值观"
+  },
+  "dc_b2_08": {
+    "title": "导师经历",
+    "subtitle": "指导"
+  },
+  "dc_b2_09": {
+    "title": "创意瓶颈",
+    "subtitle": "生产力"
+  },
+  "dc_b2_10": {
+    "title": "AI的未来",
+    "subtitle": "科技社会"
+  },
+  "dc_c1_01": {
+    "title": "身份与归属",
+    "subtitle": "深层个人"
+  },
+  "dc_c1_02": {
+    "title": "说服时刻",
+    "subtitle": "影响力"
+  },
+  "dc_c1_03": {
+    "title": "跨文化幽默",
+    "subtitle": "喜剧细微"
+  },
+  "dc_c1_04": {
+    "title": "领导力时刻",
+    "subtitle": "影响力"
+  },
+  "dc_c1_05": {
+    "title": "隐私与信任",
+    "subtitle": "数字生活"
+  },
+  "dc_c1_06": {
+    "title": "气候对话",
+    "subtitle": "大话题"
+  },
+  "dc_c1_07": {
+    "title": "触动你的艺术",
+    "subtitle": "美学"
+  },
+  "dc_c1_08": {
+    "title": "谈判故事",
+    "subtitle": "达成协议"
+  },
+  "dc_c1_09": {
+    "title": "导师体验",
+    "subtitle": "成长"
+  },
+  "dc_c1_10": {
+    "title": "语言与思维",
+    "subtitle": "语言学"
+  },
+  "dc_c1_11": {
+    "title": "风险与遗憾",
+    "subtitle": "人生选择"
+  },
+  "dc_c1_12": {
+    "title": "建设社区",
+    "subtitle": "社会纽带"
+  },
+  "dc_c2_01": {
+    "title": "咖啡哲学",
+    "subtitle": "大问题"
+  },
+  "dc_c2_02": {
+    "title": "媒体修辞",
+    "subtitle": "话语"
+  },
+  "dc_c2_03": {
+    "title": "权力与伦理",
+    "subtitle": "制度"
+  },
+  "dc_c2_04": {
+    "title": "创意与AI",
+    "subtitle": "未来技艺"
+  },
+  "dc_c2_05": {
+    "title": "全球英语",
+    "subtitle": "世界语言"
+  },
+  "dc_c2_06": {
+    "title": "记忆与故事",
+    "subtitle": "叙事"
+  },
+  "dc_c2_07": {
+    "title": "经济与生活",
+    "subtitle": "宏观微观"
+  },
+  "dc_c2_08": {
+    "title": "正义辩论",
+    "subtitle": "道德体系"
+  },
+  "dc_c2_09": {
+    "title": "科学与社会",
+    "subtitle": "公众理解"
+  },
+  "dc_c2_10": {
+    "title": "即兴大师课",
+    "subtitle": "无准备"
+  },
+  "dc_c2_11": {
+    "title": "语域游戏",
+    "subtitle": "风格切换"
+  },
+  "dc_c2_12": {
+    "title": "开放沙龙",
+    "subtitle": "自由聊天"
+  }
+}

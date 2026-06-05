@@ -1,0 +1,242 @@
+{
+  "dc_a1_01": {
+    "title": "朝のあいさつ",
+    "subtitle": "一日の始まり"
+  },
+  "dc_a1_02": {
+    "title": "今日はどうだった？",
+    "subtitle": "毎日のチェックイン"
+  },
+  "dc_a1_03": {
+    "title": "ランチタイムの雑談",
+    "subtitle": "昼休み"
+  },
+  "dc_a1_04": {
+    "title": "好きな飲み物",
+    "subtitle": "カフェの雑談"
+  },
+  "dc_a1_05": {
+    "title": "今この瞬間",
+    "subtitle": "いまの話題"
+  },
+  "dc_a1_06": {
+    "title": "週末の予定",
+    "subtitle": "シンプルな未来"
+  },
+  "dc_a1_07": {
+    "title": "お礼とさようなら",
+    "subtitle": "丁寧な締め"
+  },
+  "dc_a1_08": {
+    "title": "天気の話",
+    "subtitle": "雑談"
+  },
+  "dc_a2_01": {
+    "title": "近況トーク",
+    "subtitle": "友だちアップデート"
+  },
+  "dc_a2_02": {
+    "title": "仕事のあと",
+    "subtitle": "夜のリラックス"
+  },
+  "dc_a2_03": {
+    "title": "買い物エピソード",
+    "subtitle": "日常の用事"
+  },
+  "dc_a2_04": {
+    "title": "今夜の料理",
+    "subtitle": "キッチントーク"
+  },
+  "dc_a2_05": {
+    "title": "旅行の思い出",
+    "subtitle": "過去の旅"
+  },
+  "dc_a2_06": {
+    "title": "音楽と気分",
+    "subtitle": "プレイリスト"
+  },
+  "dc_a2_07": {
+    "title": "近所の話",
+    "subtitle": "地域の生活"
+  },
+  "dc_a2_08": {
+    "title": "スマホの習慣",
+    "subtitle": "日常のテック"
+  },
+  "dc_b1_01": {
+    "title": "コーヒーブレイク討論",
+    "subtitle": "軽い意見"
+  },
+  "dc_b1_02": {
+    "title": "ワークライフバランス",
+    "subtitle": "忙しい一週間"
+  },
+  "dc_b1_03": {
+    "title": "社交の予定",
+    "subtitle": "計画づくり"
+  },
+  "dc_b1_04": {
+    "title": "英語学習",
+    "subtitle": "モチベーション"
+  },
+  "dc_b1_05": {
+    "title": "健康的な習慣",
+    "subtitle": "ウェルネス"
+  },
+  "dc_b1_06": {
+    "title": "映画の夜",
+    "subtitle": "おすすめ"
+  },
+  "dc_b1_07": {
+    "title": "都市生活",
+    "subtitle": "都会の話"
+  },
+  "dc_b1_08": {
+    "title": "ストレスと落ち着き",
+    "subtitle": "感情"
+  },
+  "dc_b1_09": {
+    "title": "夢の旅",
+    "subtitle": "未来の話"
+  },
+  "dc_b1_10": {
+    "title": "今日のニュース",
+    "subtitle": "時事"
+  },
+  "dc_b2_01": {
+    "title": "リモートかオフィスか",
+    "subtitle": "仕事文化"
+  },
+  "dc_b2_02": {
+    "title": "人間関係",
+    "subtitle": "私生活"
+  },
+  "dc_b2_03": {
+    "title": "お金の考え方",
+    "subtitle": "お金の話"
+  },
+  "dc_b2_04": {
+    "title": "文化と習慣",
+    "subtitle": "異文化"
+  },
+  "dc_b2_05": {
+    "title": "キャリア転換",
+    "subtitle": "職業の道"
+  },
+  "dc_b2_06": {
+    "title": "ポッドキャストと本",
+    "subtitle": "メディア"
+  },
+  "dc_b2_07": {
+    "title": "倫理の選択",
+    "subtitle": "価値観"
+  },
+  "dc_b2_08": {
+    "title": "メンタリング",
+    "subtitle": "ガイダンス"
+  },
+  "dc_b2_09": {
+    "title": "創造の行き詰まり",
+    "subtitle": "生産性"
+  },
+  "dc_b2_10": {
+    "title": "AIの未来",
+    "subtitle": "テック社会"
+  },
+  "dc_c1_01": {
+    "title": "アイデンティティと所属",
+    "subtitle": "深い個人的話"
+  },
+  "dc_c1_02": {
+    "title": "説得の瞬間",
+    "subtitle": "影響力"
+  },
+  "dc_c1_03": {
+    "title": "文化を越えるユーモア",
+    "subtitle": "コメディのニュアンス"
+  },
+  "dc_c1_04": {
+    "title": "リーダーシップの瞬間",
+    "subtitle": "影響力"
+  },
+  "dc_c1_05": {
+    "title": "プライバシーと信頼",
+    "subtitle": "デジタル生活"
+  },
+  "dc_c1_06": {
+    "title": "気候の会話",
+    "subtitle": "大きなテーマ"
+  },
+  "dc_c1_07": {
+    "title": "心を動かした芸術",
+    "subtitle": "美学"
+  },
+  "dc_c1_08": {
+    "title": "交渉の話",
+    "subtitle": "合意づくり"
+  },
+  "dc_c1_09": {
+    "title": "メンター体験",
+    "subtitle": "成長"
+  },
+  "dc_c1_10": {
+    "title": "言語と思考",
+    "subtitle": "言語学"
+  },
+  "dc_c1_11": {
+    "title": "リスクと後悔",
+    "subtitle": "人生の選択"
+  },
+  "dc_c1_12": {
+    "title": "コミュニティづくり",
+    "subtitle": "社会的つながり"
+  },
+  "dc_c2_01": {
+    "title": "コーヒーと哲学",
+    "subtitle": "大きな問い"
+  },
+  "dc_c2_02": {
+    "title": "メディアのレトリック",
+    "subtitle": "言説"
+  },
+  "dc_c2_03": {
+    "title": "権力と倫理",
+    "subtitle": "制度"
+  },
+  "dc_c2_04": {
+    "title": "創造性とAI",
+    "subtitle": "未来の職"
+  },
+  "dc_c2_05": {
+    "title": "グローバル英語",
+    "subtitle": "世界語"
+  },
+  "dc_c2_06": {
+    "title": "記憶と物語",
+    "subtitle": "ナラティブ"
+  },
+  "dc_c2_07": {
+    "title": "経済と生活",
+    "subtitle": "マクロとミクロ"
+  },
+  "dc_c2_08": {
+    "title": "正義の議論",
+    "subtitle": "道徳体系"
+  },
+  "dc_c2_09": {
+    "title": "科学と社会",
+    "subtitle": "公共理解"
+  },
+  "dc_c2_10": {
+    "title": "即興マスタークラス",
+    "subtitle": "準備なし"
+  },
+  "dc_c2_11": {
+    "title": "レジスター遊び",
+    "subtitle": "スタイル転換"
+  },
+  "dc_c2_12": {
+    "title": "オープンラウンジ",
+    "subtitle": "自由な会話"
+  }
+}

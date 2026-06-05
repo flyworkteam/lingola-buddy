@@ -24,9 +24,7 @@ class _TutorListViewState extends ConsumerState<TutorListView> {
     super.dispose();
   }
 
-  String _displayName(TutorModel t) {
-    return AppTranslations.section('tudor', t.id);
-  }
+  String _displayName(TutorModel t) => t.localizedDisplayName;
 
   List<TutorModel> _filtered(List<TutorModel> all, String query) {
     final q = query.trim().toLowerCase();

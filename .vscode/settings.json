@@ -1,0 +1,19 @@
+{
+    "cmake.sourceDirectory": "/Users/furkankazimcam/Projects/lingola-buddy/linux",
+    "files.watcherExclude": {
+        "**/build/**": true,
+        "**/.dart_tool/**": true,
+        "**/ios/Pods/**": true,
+        "**/ios/Flutter/ephemeral/**": true
+    },
+    "search.exclude": {
+        "**/build": true,
+        "**/ios/Pods": true
+    },
+    "dart.analysisExcludedFolders": [
+        "build",
+        "ios/Pods",
+        "ios/Flutter/ephemeral",
+        ".dart_tool"
+    ]
+}

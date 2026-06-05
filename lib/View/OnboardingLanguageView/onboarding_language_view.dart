@@ -74,7 +74,7 @@ class _OnboardingLanguageViewState extends ConsumerState<OnboardingLanguageView>
     _LanguageRow(
       code: 'es',
       translationKey: 'option7',
-      flagAsset: 'assets/icons/spanish.svg',
+      flagAsset: 'assets/icons/spain.svg',
     ),
     _LanguageRow(
       code: 'ru',

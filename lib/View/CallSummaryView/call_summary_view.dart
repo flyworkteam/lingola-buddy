@@ -1,3 +1,5 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,7 +8,22 @@ import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/app_primary_button.dart';
+import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
+import 'package:lingola_buddy/Core/Widgets/user_profile_avatar.dart';
+import 'package:lingola_buddy/Models/daily_conversation_model.dart';
+import 'package:lingola_buddy/Models/lesson_model.dart';
+import 'package:lingola_buddy/Models/tutor_model.dart';
+import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/PremiumController/premium_controller.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
+import 'package:lingola_buddy/Riverpod/Providers/curriculum_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/daily_conversation_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/streak_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
+import 'package:lingola_buddy/Services/local_notification_scheduler.dart';
+import 'package:lingola_buddy/Services/revenuecat_paywall.dart';
+import 'package:lingola_buddy/Services/session_local_storage.dart';
 
 String _interp(String template, Map<String, String> vars) {
   var s = template;
@@ -18,42 +35,217 @@ String _interp(String template, Map<String, String> vars) {
 
 /// Görüşme sonrası özet — Figma: başlık + kota rozeti, çift görüntü, istatistikler, skor, sonraki konu, CTA.
 ///
-/// [Kota] şu an sabit demo (`1/3`); ileride API / provider ile beslenecek.
-class CallSummaryView extends ConsumerWidget {
+class CallSummaryView extends ConsumerStatefulWidget {
   const CallSummaryView({super.key});
 
-  static const String _tutorImage = 'assets/images/avatar_4.png';
-  static const String _userImage = 'assets/images/avatar_2.png';
+  @override
+  ConsumerState<CallSummaryView> createState() => _CallSummaryViewState();
+}
 
-  /// Ücretsiz görüşme kotası (demo; sonra dinamik yapılacak).
-  static const int _freeUsed = 1;
-  static const int _freeTotal = 3;
+class _CallSummaryViewState extends ConsumerState<CallSummaryView> {
+  var _postCallSynced = false;
+  var _freeCallRecorded = false;
+  bool _levelAdvanced = false;
+  String? _levelPrevious;
+  String? _levelNew;
 
-  /// Demo metrikler (API bağlanınca kaldırılacak).
-  static const int _wordsDemo = 138;
-  static const String _fluencyDemo = '+12%';
-  static const int _sessionScorePercent = 65;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _syncAfterCall());
+  }
+
+  Future<void> _syncAfterCall() async {
+    if (_postCallSynced) return;
+    _postCallSynced = true;
+
+    final session = ref.read(callSessionControllerProvider);
+    final minutes = session.lastDurationSeconds ~/ 60;
+    final words = session.lastWordsSpoken;
+    final score = session.lastSessionScorePercent;
+
+    try {
+      await ref
+          .read(streakRepositoryProvider)
+          .recordPractice(
+            minutes: minutes,
+            wordsLearned: words,
+            accuracyPercent: score > 0 ? score : null,
+          );
+      ref.invalidate(userStreakProvider);
+    } catch (_) {}
+
+    if (!_freeCallRecorded) {
+      _freeCallRecorded = true;
+      await ref.read(premiumControllerProvider.notifier).recordCompletedCall(
+            durationSeconds: session.lastDurationSeconds,
+          );
+    }
+
+    if (session.lastLessonCompleted) {
+      final lessonId = session.activeLessonId;
+      if (lessonId != null && lessonId.isNotEmpty) {
+        try {
+          if (lessonId.startsWith('dc_')) {
+            await ref
+                .read(dailyConversationRepositoryProvider)
+                .complete(lessonId);
+            ref.invalidate(userDailyConversationProvider);
+          } else {
+            final updated = await ref
+                .read(lessonRepositoryProvider)
+                .completeLesson(lessonId);
+            if (updated.levelAdvanced &&
+                updated.previousLevel != null &&
+                updated.newLevel != null) {
+              unawaited(
+                LocalNotificationScheduler.instance.showLevelAdvanced(
+                  previousLevel: updated.previousLevel!,
+                  newLevel: updated.newLevel!,
+                ),
+              );
+              if (mounted) {
+                setState(() {
+                  _levelAdvanced = true;
+                  _levelPrevious = updated.previousLevel;
+                  _levelNew = updated.newLevel;
+                });
+              }
+            }
+          }
+          ref.invalidate(userCurriculumProvider);
+          ref.invalidate(userStreakProvider);
+          unawaited(SessionLocalStorage.clearCallReminder());
+          unawaited(LocalNotificationScheduler.instance.clearCallFollowUp());
+          unawaited(
+            LocalNotificationScheduler.instance.syncEnabled(enabled: true),
+          );
+        } catch (_) {}
+      }
+    }
+  }
+
+  LessonModel? _lessonById(String? id, UserCurriculumModel? curriculum) {
+    if (id == null || curriculum == null) return null;
+    for (final l in curriculum.lessons) {
+      if (l.id == id) return l;
+    }
+    return null;
+  }
+
+  DailyConversationModel? _dailyById(
+    String? id,
+    UserDailyConversationCurriculum? curriculum,
+  ) {
+    if (id == null || curriculum == null) return null;
+    for (final c in curriculum.conversations) {
+      if (c.id == id) return c;
+    }
+    return null;
+  }
+
+  String? _sessionTopicTitle(
+    String? id,
+    UserCurriculumModel? lessons,
+    UserDailyConversationCurriculum? daily,
+  ) {
+    if (id == null) return null;
+    if (id.startsWith('dc_')) {
+      return _dailyById(id, daily)?.localizedTitle;
+    }
+    return _lessonById(id, lessons)?.localizedTitle;
+  }
+
+  Future<void> _onPrimaryCta(PremiumState premium) async {
+    if (!premium.canStartCall) {
+      await LingolaRevenueCatPaywall.presentSheet(context, ref);
+      return;
+    }
+
+    final session = ref.read(callSessionControllerProvider);
+    final curriculum = ref.read(userCurriculumProvider).value;
+    final daily = ref.read(userDailyConversationProvider).value;
+    final activeId = session.activeLessonId;
+    final lessonId = activeId ??
+        curriculum?.currentLesson?.id ??
+        daily?.currentConversation?.id;
+    final tutorId = session.activeTutorId ?? 'annie';
+    if (lessonId == null) {
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.bottomNav,
+        (_) => false,
+      );
+      return;
+    }
+    ref
+        .read(callSessionControllerProvider.notifier)
+        .bindTutor(tutorId, lessonId: lessonId);
+    if (!mounted) return;
+    await CallNavigation.pushSessionPreview(
+      context,
+      ref,
+      tutorId: tutorId,
+      lessonId: lessonId,
+    );
+  }
 
   static String _formatDurationMmSs(int totalSeconds) {
-    final m = totalSeconds ~/ 60;
-    final s = totalSeconds % 60;
-    return '$m:${s.toString().padLeft(2, '0')}';
+    final safe = totalSeconds.clamp(0, 59999);
+    final m = safe ~/ 60;
+    final s = safe % 60;
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final seconds = ref
-        .watch(callSessionControllerProvider)
-        .lastDurationSeconds;
-    final tutorName = AppTranslations.section('call', 'title');
-    final subject = AppTranslations.section(
-      'video_session',
-      'practice_subject',
-    );
-    final topicPreview = AppTranslations.section(
-      'video_session',
-      'next_topic_preview',
-    );
+  Widget build(BuildContext context) {
+    final session = ref.watch(callSessionControllerProvider);
+    final seconds = session.lastDurationSeconds;
+    final words = session.lastWordsSpoken;
+    final scorePercent = session.lastSessionScorePercent;
+    final fluencyLabel = '$scorePercent%';
+
+    final user = ref.watch(userProfileControllerProvider).user;
+    final userPhotoUrl = user?.avatarUrl;
+    final userLabel = (user?.displayName.trim().isNotEmpty ?? false)
+        ? user!.displayName.trim()
+        : AppTranslations.section('video_session', 'you');
+
+    final premium = ref.watch(premiumControllerProvider);
+    final badgeText = premium.isPro
+        ? AppTranslations.sectionOr(
+            'profile',
+            'premium_badge_pro',
+            AppTranslations.sectionOr('premium', 'badge_pro', 'Pro'),
+          )
+        : _interp(
+            AppTranslations.section('video_session', 'badge_free'),
+            {
+              'current': '${premium.freeCallsUsed}',
+              'total': '${premium.freeCallsTotal}',
+            },
+          );
+
+    final tutorId = session.activeTutorId ?? 'sophie';
+    final tutor =
+        ref.watch(tutorByIdProvider(tutorId)) ??
+        ref.watch(tutorsCatalogProvider).firstOrNull;
+    final tutorName = tutor != null
+        ? tutor.localizedDisplayName
+        : AppTranslations.section('call', 'title');
+
+    final curriculum = ref.watch(userCurriculumProvider).value;
+    final dailyCurriculum = ref.watch(userDailyConversationProvider).value;
+    final activeId = session.activeLessonId;
+    final subject =
+        _sessionTopicTitle(activeId, curriculum, dailyCurriculum) ??
+        AppTranslations.section('video_session', 'practice_subject');
+    final topicPreview = activeId != null && activeId.startsWith('dc_')
+        ? (dailyCurriculum?.currentConversation?.localizedTitle ??
+              AppTranslations.section('video_session', 'next_topic_preview'))
+        : (curriculum?.currentLesson?.localizedTitle ??
+              AppTranslations.section('video_session', 'next_topic_preview'));
 
     final feedback = _interp(
       AppTranslations.section('video_session', 'feedback_great'),
@@ -63,11 +255,6 @@ class CallSummaryView extends ConsumerWidget {
       AppTranslations.section('video_session', 'status_just_finished'),
       {'subject': subject},
     );
-    final badgeText = _interp(
-      AppTranslations.section('video_session', 'badge_free'),
-      {'current': '$_freeUsed', 'total': '$_freeTotal'},
-    );
-
     final roleLabel = AppTranslations.section(
       'video_session',
       'role_label_teacher',
@@ -98,11 +285,48 @@ class CallSummaryView extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _HeaderRow(
-                      tutorImage: _tutorImage,
+                      tutor: tutor,
                       feedback: feedback,
                       statusLine: statusLine,
                       badgeText: badgeText,
                     ),
+                    if (session.lastLessonCompleted || _levelAdvanced) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              (_levelAdvanced
+                                      ? const Color(0xFFFF8D28)
+                                      : AppColors.callPreviewCtaGreen)
+                                  .withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          _levelAdvanced &&
+                                  _levelPrevious != null &&
+                                  _levelNew != null
+                              ? _interp(
+                                  AppTranslations.section(
+                                    'video_session',
+                                    'level_advanced_banner_fmt',
+                                  ),
+                                  {
+                                    'previous': _levelPrevious!,
+                                    'new': _levelNew!,
+                                  },
+                                )
+                              : AppTranslations.section(
+                                  'video_session',
+                                  'lesson_completed_banner',
+                                ),
+                          style: AppTextStyles.notificationCardBody(),
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(
@@ -120,18 +344,22 @@ class CallSummaryView extends ConsumerWidget {
                                 children: [
                                   Expanded(
                                     child: _SnapshotTile(
-                                      imageAsset: _tutorImage,
                                       overlayAlignment: Alignment.bottomLeft,
                                       overlay: _TeacherOverlayRich(
                                         tutorName: tutorName,
                                         roleLabel: roleLabel,
                                       ),
+                                      child: tutor != null
+                                          ? TutorAvatarImage(tutor: tutor)
+                                          : Image.asset(
+                                              'assets/images/avatar_4.png',
+                                              fit: BoxFit.cover,
+                                            ),
                                     ),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: _SnapshotTile(
-                                      imageAsset: _userImage,
                                       overlayAlignment: Alignment.bottomCenter,
                                       overlay: Container(
                                         padding: const EdgeInsets.symmetric(
@@ -147,13 +375,16 @@ class CallSummaryView extends ConsumerWidget {
                                           ),
                                         ),
                                         child: Text(
-                                          AppTranslations.section(
-                                            'video_session',
-                                            'you',
-                                          ),
+                                          userLabel,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style:
                                               AppTextStyles.callSummarySnapshotName(),
                                         ),
+                                      ),
+                                      child: UserProfileAvatar(
+                                        imageUrl: userPhotoUrl,
+                                        cover: true,
                                       ),
                                     ),
                                   ),
@@ -181,7 +412,7 @@ class CallSummaryView extends ConsumerWidget {
                                       'video_session',
                                       'stat_words',
                                     ),
-                                    value: '$_wordsDemo',
+                                    value: '$words',
                                     valueStyle:
                                         AppTextStyles.callSummaryStatValue(
                                           color: AppColors.brandPrimary,
@@ -195,7 +426,7 @@ class CallSummaryView extends ConsumerWidget {
                                       'video_session',
                                       'stat_fluency',
                                     ),
-                                    value: _fluencyDemo,
+                                    value: fluencyLabel,
                                     valueStyle:
                                         AppTextStyles.callSummaryStatValue(
                                           color: AppColors.callPreviewCtaGreen,
@@ -216,7 +447,7 @@ class CallSummaryView extends ConsumerWidget {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(10),
-                        child: _SessionScoreCard(percent: _sessionScorePercent),
+                        child: _SessionScoreCard(percent: scorePercent),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -245,16 +476,17 @@ class CallSummaryView extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AppPrimaryButton(
-                    label: AppTranslations.section(
-                      'video_session',
-                      'start_new_conversation',
-                    ),
+                    label: premium.canStartCall
+                        ? AppTranslations.section(
+                            'video_session',
+                            'start_new_conversation',
+                          )
+                        : AppTranslations.section('paywall', 'subscribe_now'),
                     decorationGradient: AppColors.primaryCtaGradient,
                     foregroundColor: Colors.white,
                     labelStyle: AppTextStyles.callPreviewStartCta(),
                     minimumHeight: 60,
-                    onPressed: () =>
-                        Navigator.pushNamed(context, AppRoutes.paywall),
+                    onPressed: () => _onPrimaryCta(premium),
                   ),
                   TextButton(
                     onPressed: () {
@@ -284,15 +516,22 @@ class CallSummaryView extends ConsumerWidget {
   }
 }
 
+extension _CatalogFirstOrNull<E> on Iterable<E> {
+  E? get firstOrNull {
+    final i = iterator;
+    return i.moveNext() ? i.current : null;
+  }
+}
+
 class _HeaderRow extends StatelessWidget {
   const _HeaderRow({
-    required this.tutorImage,
+    required this.tutor,
     required this.feedback,
     required this.statusLine,
     required this.badgeText,
   });
 
-  final String tutorImage;
+  final TutorModel? tutor;
   final String feedback;
   final String statusLine;
   final String badgeText;
@@ -313,11 +552,13 @@ class _HeaderRow extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: ClipOval(
-                child: Image.asset(
-                  tutorImage,
-                  fit: BoxFit.cover,
-                  alignment: const Alignment(0, -1.2),
-                ),
+                child: tutor != null
+                    ? TutorAvatarImage(tutor: tutor!)
+                    : Image.asset(
+                        'assets/images/avatar_4.png',
+                        fit: BoxFit.cover,
+                        alignment: const Alignment(0, -1.2),
+                      ),
               ),
             ),
             Positioned(
@@ -400,12 +641,12 @@ class _TeacherOverlayRich extends StatelessWidget {
 
 class _SnapshotTile extends StatelessWidget {
   const _SnapshotTile({
-    required this.imageAsset,
+    required this.child,
     required this.overlay,
     this.overlayAlignment = Alignment.bottomLeft,
   });
 
-  final String imageAsset;
+  final Widget child;
   final Widget overlay;
   final AlignmentGeometry overlayAlignment;
 
@@ -416,14 +657,7 @@ class _SnapshotTile extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          ColoredBox(
-            color: Colors.white,
-            child: Image.asset(
-              imageAsset,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            ),
-          ),
+          ColoredBox(color: Colors.white, child: child),
           Positioned(
             left: 0,
             right: 0,

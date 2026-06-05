@@ -1,16 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/app_primary_button.dart';
+import 'package:lingola_buddy/Core/Widgets/app_snackbar.dart';
 import 'package:lingola_buddy/Core/Widgets/weekly_progress_panel.dart';
+import 'package:lingola_buddy/Riverpod/Providers/streak_provider.dart';
+import 'package:lingola_buddy/Services/progress_share_service.dart';
 
 /// Profil ilerleme — ana sayfadaki haftalık panel + paylaş CTA.
-class ProfileProgressView extends StatelessWidget {
+class ProfileProgressView extends ConsumerWidget {
   const ProfileProgressView({super.key});
 
+  Future<void> _shareProgress(BuildContext context, WidgetRef ref) async {
+    final streakAsync = ref.read(userStreakProvider);
+    final data = streakAsync.valueOrNull;
+    if (streakAsync.isLoading) {
+      AppSnackBar.error(
+        AppTranslations.section('profile_progress', 'share_loading'),
+        context: context,
+      );
+      return;
+    }
+
+    try {
+      await ProgressShareService.share(context: context, dashboard: data);
+    } catch (_) {
+      if (!context.mounted) return;
+      AppSnackBar.error(
+        AppTranslations.section('profile_progress', 'share_failed'),
+        context: context,
+      );
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final streakAsync = ref.watch(userStreakProvider);
+    final shareEnabled = !streakAsync.isLoading;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -23,7 +52,7 @@ class ProfileProgressView extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 children: [
-                  WeeklyProgressPanel(
+                  const WeeklyProgressPanel(
                     translationChapter: 'profile_progress',
                     stats: WeeklyProgressPanel.profileProgressStats,
                   ),
@@ -32,16 +61,20 @@ class ProfileProgressView extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: AppPrimaryButton(
-                label: AppTranslations.section(
-                  'profile_progress',
-                  'share_progress',
+              child: Builder(
+                builder: (buttonContext) => AppPrimaryButton(
+                  label: AppTranslations.section(
+                    'profile_progress',
+                    'share_progress',
+                  ),
+                  foregroundColor: Colors.white,
+                  labelStyle: AppTextStyles.homeCharacterCta().copyWith(
+                    color: Colors.white,
+                  ),
+                  onPressed: shareEnabled
+                      ? () => _shareProgress(buttonContext, ref)
+                      : null,
                 ),
-                foregroundColor: Colors.white,
-                labelStyle: AppTextStyles.homeCharacterCta().copyWith(
-                  color: Colors.white,
-                ),
-                onPressed: () {},
               ),
             ),
           ],

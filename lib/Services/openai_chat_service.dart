@@ -108,6 +108,26 @@ class OpenAiChatService {
     );
   }
 
+  /// Herhangi bir dildeki kelimeyi İngilizce karşılığına çevirir (TTS için).
+  Future<String> translateWordToEnglish({required String word}) async {
+    final messages = <Map<String, String>>[
+      {
+        'role': 'system',
+        'content':
+            'Translate the given word or short phrase into English for language learners. '
+            'If it is already English, return the same word in natural English. '
+            'Reply with only the English word or phrase, no punctuation or quotes.',
+      },
+      {'role': 'user', 'content': word},
+    ];
+    return _complete(
+      messages,
+      temperature: 0,
+      maxTokens: 24,
+      receiveTimeout: const Duration(seconds: 8),
+    );
+  }
+
   Future<String> _complete(
     List<Map<String, String>> messages, {
     double temperature = 0.7,

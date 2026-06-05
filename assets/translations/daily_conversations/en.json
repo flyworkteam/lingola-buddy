@@ -1,0 +1,242 @@
+{
+  "dc_a1_01": {
+    "title": "Morning Hello",
+    "subtitle": "Start the day"
+  },
+  "dc_a1_02": {
+    "title": "How Was Your Day?",
+    "subtitle": "Daily check-in"
+  },
+  "dc_a1_03": {
+    "title": "Lunch Chat",
+    "subtitle": "Midday break"
+  },
+  "dc_a1_04": {
+    "title": "Favorite Drink",
+    "subtitle": "Café small talk"
+  },
+  "dc_a1_05": {
+    "title": "Right Now",
+    "subtitle": "Present moment"
+  },
+  "dc_a1_06": {
+    "title": "Weekend Plans",
+    "subtitle": "Simple future"
+  },
+  "dc_a1_07": {
+    "title": "Thanks & Goodbye",
+    "subtitle": "Polite closing"
+  },
+  "dc_a1_08": {
+    "title": "Weather Chat",
+    "subtitle": "Small talk"
+  },
+  "dc_a2_01": {
+    "title": "Catching Up",
+    "subtitle": "Friend update"
+  },
+  "dc_a2_02": {
+    "title": "After Work",
+    "subtitle": "Evening unwind"
+  },
+  "dc_a2_03": {
+    "title": "Shopping Story",
+    "subtitle": "Errands chat"
+  },
+  "dc_a2_04": {
+    "title": "Cooking Tonight",
+    "subtitle": "Kitchen talk"
+  },
+  "dc_a2_05": {
+    "title": "Travel Memory",
+    "subtitle": "Past trip"
+  },
+  "dc_a2_06": {
+    "title": "Music & Mood",
+    "subtitle": "Playlist chat"
+  },
+  "dc_a2_07": {
+    "title": "Neighbor Chat",
+    "subtitle": "Local life"
+  },
+  "dc_a2_08": {
+    "title": "Phone Habits",
+    "subtitle": "Daily tech"
+  },
+  "dc_b1_01": {
+    "title": "Coffee Break Debate",
+    "subtitle": "Light opinions"
+  },
+  "dc_b1_02": {
+    "title": "Work-Life Balance",
+    "subtitle": "Busy week"
+  },
+  "dc_b1_03": {
+    "title": "Social Plans",
+    "subtitle": "Making plans"
+  },
+  "dc_b1_04": {
+    "title": "Learning English",
+    "subtitle": "Motivation talk"
+  },
+  "dc_b1_05": {
+    "title": "Healthy Habits",
+    "subtitle": "Wellness chat"
+  },
+  "dc_b1_06": {
+    "title": "Movie Night",
+    "subtitle": "Recommendations"
+  },
+  "dc_b1_07": {
+    "title": "City Life",
+    "subtitle": "Urban talk"
+  },
+  "dc_b1_08": {
+    "title": "Stress & Calm",
+    "subtitle": "Feelings talk"
+  },
+  "dc_b1_09": {
+    "title": "Dream Trip",
+    "subtitle": "Future chat"
+  },
+  "dc_b1_10": {
+    "title": "Daily News",
+    "subtitle": "Current events"
+  },
+  "dc_b2_01": {
+    "title": "Remote vs Office",
+    "subtitle": "Work culture"
+  },
+  "dc_b2_02": {
+    "title": "Relationships",
+    "subtitle": "Personal life"
+  },
+  "dc_b2_03": {
+    "title": "Money Mindset",
+    "subtitle": "Finance chat"
+  },
+  "dc_b2_04": {
+    "title": "Culture & Customs",
+    "subtitle": "Cross-cultural"
+  },
+  "dc_b2_05": {
+    "title": "Career Pivot",
+    "subtitle": "Professional path"
+  },
+  "dc_b2_06": {
+    "title": "Podcast & Books",
+    "subtitle": "Media diet"
+  },
+  "dc_b2_07": {
+    "title": "Ethical Choices",
+    "subtitle": "Values talk"
+  },
+  "dc_b2_08": {
+    "title": "Parenting / Mentoring",
+    "subtitle": "Guidance chat"
+  },
+  "dc_b2_09": {
+    "title": "Creativity Block",
+    "subtitle": "Maker talk"
+  },
+  "dc_b2_10": {
+    "title": "Future of AI",
+    "subtitle": "Tech society"
+  },
+  "dc_c1_01": {
+    "title": "Identity & Belonging",
+    "subtitle": "Deep personal"
+  },
+  "dc_c1_02": {
+    "title": "Persuasion in Life",
+    "subtitle": "Influence"
+  },
+  "dc_c1_03": {
+    "title": "Humor Across Cultures",
+    "subtitle": "Comedy nuance"
+  },
+  "dc_c1_04": {
+    "title": "Leadership Moments",
+    "subtitle": "Influence"
+  },
+  "dc_c1_05": {
+    "title": "Privacy & Trust",
+    "subtitle": "Digital life"
+  },
+  "dc_c1_06": {
+    "title": "Climate Conversations",
+    "subtitle": "Big topic"
+  },
+  "dc_c1_07": {
+    "title": "Art That Moved You",
+    "subtitle": "Aesthetic talk"
+  },
+  "dc_c1_08": {
+    "title": "Negotiation Story",
+    "subtitle": "Deal-making"
+  },
+  "dc_c1_09": {
+    "title": "Mentorship",
+    "subtitle": "Growth"
+  },
+  "dc_c1_10": {
+    "title": "Language & Thought",
+    "subtitle": "Linguistics lite"
+  },
+  "dc_c1_11": {
+    "title": "Risk & Regret",
+    "subtitle": "Life choices"
+  },
+  "dc_c1_12": {
+    "title": "Community Building",
+    "subtitle": "Social fabric"
+  },
+  "dc_c2_01": {
+    "title": "Philosophy Over Coffee",
+    "subtitle": "Big questions"
+  },
+  "dc_c2_02": {
+    "title": "Rhetoric in Media",
+    "subtitle": "Discourse"
+  },
+  "dc_c2_03": {
+    "title": "Power & Ethics",
+    "subtitle": "Institutions"
+  },
+  "dc_c2_04": {
+    "title": "Creativity & AI",
+    "subtitle": "Future craft"
+  },
+  "dc_c2_05": {
+    "title": "Global English",
+    "subtitle": "World language"
+  },
+  "dc_c2_06": {
+    "title": "Memory & Story",
+    "subtitle": "Narrative"
+  },
+  "dc_c2_07": {
+    "title": "Economics & Life",
+    "subtitle": "Macro micro"
+  },
+  "dc_c2_08": {
+    "title": "Justice Debate",
+    "subtitle": "Moral systems"
+  },
+  "dc_c2_09": {
+    "title": "Science & Society",
+    "subtitle": "Public understanding"
+  },
+  "dc_c2_10": {
+    "title": "Impromptu Masterclass",
+    "subtitle": "No prep"
+  },
+  "dc_c2_11": {
+    "title": "Register Play",
+    "subtitle": "Style shift"
+  },
+  "dc_c2_12": {
+    "title": "Open Lounge",
+    "subtitle": "Free chat"
+  }
+}

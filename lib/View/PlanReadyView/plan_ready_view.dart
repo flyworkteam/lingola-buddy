@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:lingola_buddy/Core/Routes/app_routes.dart';
+import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
 import 'package:lingola_buddy/Core/Widgets/app_primary_button.dart';
-import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 
 class PlanReadyView extends ConsumerWidget {
   const PlanReadyView({super.key});
@@ -35,8 +34,7 @@ class PlanReadyView extends ConsumerWidget {
               AppPrimaryButton(
                 label: 'Start Talking ->',
                 onPressed: () {
-                  ref.read(callSessionControllerProvider.notifier).bindTutor('sophie');
-                  Navigator.pushNamed(context, AppRoutes.callPreview);
+                  CallNavigation.pushGuestPreview(context, ref);
                 },
               ),
             ],
