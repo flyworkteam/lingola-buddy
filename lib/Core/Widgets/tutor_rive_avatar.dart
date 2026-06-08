@@ -13,6 +13,8 @@ class TutorRiveAvatar extends StatefulWidget {
     this.fit = BoxFit.cover,
     this.alignment = const Alignment(0, -1.05),
     this.fallbackAsset = 'assets/images/avatar_4.png',
+    this.loadingBackgroundColor,
+    this.loadingIndicatorColor,
   });
 
   final TutorModel tutor;
@@ -20,6 +22,8 @@ class TutorRiveAvatar extends StatefulWidget {
   final BoxFit fit;
   final Alignment alignment;
   final String fallbackAsset;
+  final Color? loadingBackgroundColor;
+  final Color? loadingIndicatorColor;
 
   @override
   State<TutorRiveAvatar> createState() => _TutorRiveAvatarState();
@@ -116,6 +120,8 @@ class _TutorRiveAvatarState extends State<TutorRiveAvatar> {
         fit: widget.fit,
         alignment: widget.alignment,
         fallbackAsset: widget.fallbackAsset,
+        loadingBackgroundColor: widget.loadingBackgroundColor,
+        loadingIndicatorColor: widget.loadingIndicatorColor,
       );
     }
 
@@ -129,6 +135,8 @@ class _TutorRiveAvatarState extends State<TutorRiveAvatar> {
               fit: widget.fit,
               alignment: widget.alignment,
               fallbackAsset: widget.fallbackAsset,
+              loadingBackgroundColor: widget.loadingBackgroundColor,
+              loadingIndicatorColor: widget.loadingIndicatorColor,
             ),
           rive.RiveWidgetBuilder(
             fileLoader: loader,

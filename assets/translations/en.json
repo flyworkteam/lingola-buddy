@@ -39,9 +39,9 @@
         "option12": "Chinese",
         "see_more": "See more",
         "question2": "What is your language proficiency level?",
-        "q2_desc": "Adjust the content to your level",
+        "q2_desc": "Adjust content to your skill level",
         "option2_1": "I can't speak at all",
-        "option2_2": "I can speak basic",
+        "option2_2": "I can speak simply",
         "option2_3": "I want to speak fluently",
         "question3": "How much do you want to practice every day?",
         "q3_desc": "Set your daily study goal",
@@ -56,7 +56,7 @@
         "plan_ready_title": "Your plan is ready",
         "plan_ready_desc": "You can speak now",
         "plan_ready_button": "Start speaking",
-        "wizard_step_label": "Step {current} of {total}"
+        "wizard_step_label": "{current} of {total}"
     },
     "call": {
         "title": "Sophie",

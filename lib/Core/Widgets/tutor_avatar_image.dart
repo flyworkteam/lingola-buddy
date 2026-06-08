@@ -15,6 +15,8 @@ class TutorAvatarImage extends StatelessWidget {
     this.cacheHeight,
     this.filterQuality = FilterQuality.medium,
     this.gaplessPlayback = true,
+    this.loadingBackgroundColor,
+    this.loadingIndicatorColor,
   });
 
   final TutorModel tutor;
@@ -27,6 +29,8 @@ class TutorAvatarImage extends StatelessWidget {
   final int? cacheHeight;
   final FilterQuality filterQuality;
   final bool gaplessPlayback;
+  final Color? loadingBackgroundColor;
+  final Color? loadingIndicatorColor;
 
   /// Mantıksal boyuta göre decode pikseli (jank önleme, bulanıklık için üst sınır yükseltildi).
   static int decodePixels(BuildContext context, double logicalSize) {
@@ -73,19 +77,30 @@ class TutorAvatarImage extends StatelessWidget {
         gaplessPlayback: gaplessPlayback,
         loadingBuilder: (context, child, progress) {
           if (progress == null) return child;
+          final bg = loadingBackgroundColor ?? const Color(0xFFF6F6F6);
+          final indicator = loadingIndicatorColor;
           return ColoredBox(
-            color: const Color(0xFFF6F6F6),
+            color: bg,
             child: Center(
               child: SizedBox(
                 width: 24,
                 height: 24,
-                child: CircularProgressIndicator.adaptive(
-                  strokeWidth: 2,
-                  value: progress.expectedTotalBytes != null
-                      ? progress.cumulativeBytesLoaded /
-                          progress.expectedTotalBytes!
-                      : null,
-                ),
+                child: indicator != null
+                    ? CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: indicator,
+                        value: progress.expectedTotalBytes != null
+                            ? progress.cumulativeBytesLoaded /
+                                progress.expectedTotalBytes!
+                            : null,
+                      )
+                    : CircularProgressIndicator.adaptive(
+                        strokeWidth: 2,
+                        value: progress.expectedTotalBytes != null
+                            ? progress.cumulativeBytesLoaded /
+                                progress.expectedTotalBytes!
+                            : null,
+                      ),
               ),
             ),
           );

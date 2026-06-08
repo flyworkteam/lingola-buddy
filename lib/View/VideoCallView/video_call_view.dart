@@ -176,6 +176,8 @@ class _VideoCallViewState extends ConsumerState<VideoCallView> {
             cacheWidth: bgCacheWidth,
             filterQuality: FilterQuality.low,
             fallbackAsset: 'assets/images/avatar_4.png',
+            loadingBackgroundColor: Colors.transparent,
+            loadingIndicatorColor: Colors.white70,
           ),
           ColoredBox(color: Colors.black.withValues(alpha: 0.72)),
           Column(
@@ -232,22 +234,20 @@ class _VideoCallViewState extends ConsumerState<VideoCallView> {
               ),
               Expanded(
                 child: Center(
-                  child: DecoratedBox(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: ClipOval(
-                      child: SizedBox(
-                        width: avatarSize,
-                        height: avatarSize,
-                        child: TutorAvatarImage(
-                          tutor: tutor,
-                          alignment: const Alignment(0, -0.15),
-                          cacheWidth: avatarCacheWidth,
-                          cacheHeight: avatarCacheWidth,
-                          fallbackAsset: 'assets/images/avatar_4.png',
+                  child: ClipOval(
+                    child: SizedBox(
+                      width: avatarSize,
+                      height: avatarSize,
+                      child: TutorAvatarImage(
+                        tutor: tutor,
+                        alignment: const Alignment(0, -0.15),
+                        cacheWidth: avatarCacheWidth,
+                        cacheHeight: avatarCacheWidth,
+                        fallbackAsset: 'assets/images/avatar_4.png',
+                        loadingBackgroundColor: Colors.black.withValues(
+                          alpha: 0.35,
                         ),
+                        loadingIndicatorColor: Colors.white,
                       ),
                     ),
                   ),

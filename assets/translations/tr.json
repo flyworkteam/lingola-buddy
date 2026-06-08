@@ -56,7 +56,7 @@
         "plan_ready_title": "Planın hazır",
         "plan_ready_desc": "Artık konuşabilirsin",
         "plan_ready_button": "Konuşmaya başla",
-        "wizard_step_label": "Adım {current} / {total}"
+        "wizard_step_label": "{current} / {total}"
     },
     "call": {
         "title": "Sophie",

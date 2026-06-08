@@ -31,8 +31,11 @@ class OnboardingWizardTopBar extends StatelessWidget {
       children: [
         IconButton(
           onPressed: onBack,
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+          style: IconButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: const Size(20, 44),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
           icon: SvgPicture.asset(
             'assets/icons/left_arrow.svg',
             width: 20,

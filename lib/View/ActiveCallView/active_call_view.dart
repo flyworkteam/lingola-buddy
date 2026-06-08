@@ -378,6 +378,8 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
             fit: BoxFit.cover,
             alignment: const Alignment(0, -1.15),
             fallbackAsset: ActiveCallView._remoteAvatar,
+            loadingBackgroundColor: const Color(0xFF2A2A2A),
+            loadingIndicatorColor: Colors.white70,
           ),
         ),
       );
