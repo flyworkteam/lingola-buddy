@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:lingola_buddy/Core/Config/app_ui_languages.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
@@ -87,6 +88,7 @@ class CharacterCard extends StatelessWidget {
               child: _isWhiteCard
                   ? _CharacterCardFooter(
                       displayName: displayName,
+                      nativeLang: tutor.nativeLang,
                       buttonLabel: buttonLabel,
                       compact: compactFooter,
                     )
@@ -97,6 +99,7 @@ class CharacterCard extends StatelessWidget {
                       ),
                       child: _CharacterCardFooter(
                         displayName: displayName,
+                        nativeLang: tutor.nativeLang,
                         buttonLabel: buttonLabel,
                         compact: compactFooter,
                       ),
@@ -122,11 +125,13 @@ class CharacterCard extends StatelessWidget {
 class _CharacterCardFooter extends StatelessWidget {
   const _CharacterCardFooter({
     required this.displayName,
+    required this.nativeLang,
     required this.buttonLabel,
     this.compact = false,
   });
 
   final String displayName;
+  final String nativeLang;
   final String buttonLabel;
   final bool compact;
 
@@ -154,7 +159,7 @@ class _CharacterCardFooter extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               SvgPicture.asset(
-                'assets/icons/america.svg',
+                AppUiLanguages.flagAssetFor(nativeLang),
                 width: 15,
                 height: 15,
               ),

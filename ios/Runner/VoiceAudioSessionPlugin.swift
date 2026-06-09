@@ -13,16 +13,21 @@ enum VoiceAudioSessionPlugin {
       do {
         switch call.method {
         case "configureForVoiceCall":
-          try session.setCategory(
-            .playAndRecord,
-            mode: .voiceChat,
-            options: [.allowBluetooth, .allowBluetoothA2DP]
-          )
+          let preferSpeaker =
+            (call.arguments as? [String: Any])?["preferSpeaker"] as? Bool ?? false
+          var options: AVAudioSession.CategoryOptions = [
+            .allowBluetooth,
+            .allowBluetoothA2DP,
+          ]
+          if preferSpeaker {
+            options.insert(.defaultToSpeaker)
+          }
+          try session.setCategory(.playAndRecord, mode: .voiceChat, options: options)
           if session.mode != .voiceChat {
             try? session.setMode(.voiceChat)
           }
           try session.setActive(true, options: [])
-          try? session.overrideOutputAudioPort(.none)
+          try session.overrideOutputAudioPort(preferSpeaker ? .speaker : .none)
           result(session.mode.rawValue)
 
         case "setSpeakerOn":

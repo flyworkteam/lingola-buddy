@@ -30,19 +30,15 @@ abstract final class CallNavigation {
     return _pushArgs(context, CallPreviewArgs.guest(tutorId: tutorId));
   }
 
-  /// Giriş sonrası — aktif eğitmen + kaldığı ders (premium / kota kontrolü).
-  static Future<T?> pushSessionPreview<T>(
+  /// Giriş sonrası — doğrudan görüntülü arama (önizleme ekranı yok).
+  static Future<T?> pushSessionVideo<T>(
     BuildContext context,
     WidgetRef ref, {
     required String tutorId,
-    required String lessonId,
   }) async {
     T? result;
     await PremiumCallGate.runIfAllowed(context, ref, () async {
-      result = await _pushArgs<T>(
-        context,
-        CallPreviewArgs.session(tutorId: tutorId, lessonId: lessonId),
-      );
+      result = await pushVideo<T>(context, tutorId);
     });
     return result;
   }

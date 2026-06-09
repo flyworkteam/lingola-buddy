@@ -23,6 +23,10 @@ object VoiceAudioSessionPlugin {
                     when (call.method) {
                         "configureForVoiceCall" -> {
                             am.mode = AudioManager.MODE_IN_COMMUNICATION
+                            val preferSpeaker = call.argument<Boolean>("preferSpeaker") ?: false
+                            if (preferSpeaker) {
+                                routeToSpeaker(am, true)
+                            }
                             result.success("in_communication")
                         }
                         "setSpeakerOn" -> {

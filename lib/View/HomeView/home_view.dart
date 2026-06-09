@@ -11,6 +11,7 @@ import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Utils/time_of_day_greeting.dart';
 import 'package:lingola_buddy/Core/Widgets/character_card.dart';
 import 'package:lingola_buddy/Core/Widgets/weekly_progress_panel.dart';
+import 'package:lingola_buddy/Models/app_enums.dart';
 import 'package:lingola_buddy/Models/streak_model.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/BottomNavController/bottom_nav_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
@@ -21,24 +22,25 @@ import 'package:lingola_buddy/Riverpod/Providers/streak_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/user_provider.dart';
 
-void _openLessonCall(
+Future<void> _openLessonCall(
   BuildContext context,
   WidgetRef ref, {
   required String lessonId,
   String? tutorId,
-}) {
+}) async {
   final resolvedTutor =
       tutorId ??
       ref.read(callSessionControllerProvider).activeTutorId ??
       'annie';
-  ref
-      .read(callSessionControllerProvider.notifier)
-      .bindTutor(resolvedTutor, lessonId: lessonId);
-  CallNavigation.pushSessionPreview(
+  ref.read(callSessionControllerProvider.notifier).bindTutor(
+        resolvedTutor,
+        kind: CallKind.video,
+        lessonId: lessonId,
+      );
+  await CallNavigation.pushSessionVideo(
     context,
     ref,
     tutorId: resolvedTutor,
-    lessonId: lessonId,
   );
 }
 
@@ -126,9 +128,15 @@ class _HomeFeaturedTutorsRow extends ConsumerWidget {
                 displayName: featured[i].localizedDisplayName,
                 buttonLabel: AppTranslations.section('tudor', 'start_talking'),
                 onPressed: () {
-                  ref
-                      .read(callSessionControllerProvider.notifier)
-                      .bindTutor(featured[i].id, lessonId: lessonId);
+                  if (lessonId != null && lessonId.isNotEmpty) {
+                    _openLessonCall(
+                      context,
+                      ref,
+                      lessonId: lessonId,
+                      tutorId: featured[i].id,
+                    );
+                    return;
+                  }
                   Navigator.pushNamed(
                     context,
                     '/tutor',
@@ -280,7 +288,7 @@ class _StreakCard extends ConsumerWidget {
     required int streakDayIndex,
   }) {
     if (!practiced) return 'assets/icons/empty_day.svg';
-    if (streakDayIndex <= 3) return 'assets/icons/tick.svg';
+    if (streakDayIndex < 3) return 'assets/icons/tick.svg';
     return 'assets/icons/fire_tick.svg';
   }
 
@@ -302,7 +310,7 @@ class _StreakCard extends ConsumerWidget {
         practiced: d.practiced,
         streakDayIndex: streakDayIndex,
       ),
-      active: d.practiced && streakDayIndex > 3,
+      active: d.practiced && streakDayIndex >= 3,
       dimmed: !d.practiced,
     );
   }

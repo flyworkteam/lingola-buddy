@@ -93,6 +93,7 @@ class WeeklyProgressPanel extends ConsumerStatefulWidget {
     required StreakDayModel? selectedDay,
     required LearningProgressModel? progress,
     required String translationChapter,
+    int totalPracticeMinutes = 0,
   }) {
     if (selectedDay == null && progress == null) {
       return AppTranslations.section(translationChapter, stat.valueKey);
@@ -107,10 +108,9 @@ class WeeklyProgressPanel extends ConsumerStatefulWidget {
           {'n': '$acc'},
         );
       case 'time_value':
-        final mins = selectedDay?.minutes ?? 0;
         return AppTranslations.interpolate(
           AppTranslations.section(translationChapter, 'minutes_fmt'),
-          {'n': '$mins'},
+          {'n': '$totalPracticeMinutes'},
         );
       case 'level_value':
         return progress?.cefrLevel ?? 'A1';
@@ -146,8 +146,8 @@ class _WeeklyProgressPanelState extends ConsumerState<WeeklyProgressPanel> {
     final streakAsync = ref.watch(userStreakProvider);
     final week = streakAsync.value?.week ?? [];
     final progress = streakAsync.value?.progress;
-    final todayKey =
-        _todayKeyFromWeek(week) ?? progress?.todayDayKey ?? 'mon';
+    final totalPracticeMinutes = streakAsync.value?.totalPracticeMinutes ?? 0;
+    final todayKey = _todayKeyFromWeek(week) ?? progress?.todayDayKey ?? 'mon';
     final selectedKey = _selectedDayKey ?? todayKey;
     final selectedDay = _dayForKey(week, selectedKey);
 
@@ -187,12 +187,14 @@ class _WeeklyProgressPanelState extends ConsumerState<WeeklyProgressPanel> {
                 stats: widget.stats,
                 selectedDay: null,
                 progress: null,
+                totalPracticeMinutes: 0,
               ),
               data: (_) => _StatsGrid(
                 translationChapter: widget.translationChapter,
                 stats: widget.stats,
                 selectedDay: selectedDay,
                 progress: progress,
+                totalPracticeMinutes: totalPracticeMinutes,
               ),
             ),
           ],
@@ -208,12 +210,14 @@ class _StatsGrid extends StatelessWidget {
     required this.stats,
     required this.selectedDay,
     required this.progress,
+    required this.totalPracticeMinutes,
   });
 
   final String translationChapter;
   final List<WeeklyProgressStatConfig> stats;
   final StreakDayModel? selectedDay;
   final LearningProgressModel? progress;
+  final int totalPracticeMinutes;
 
   @override
   Widget build(BuildContext context) {
@@ -221,8 +225,7 @@ class _StatsGrid extends StatelessWidget {
       builder: (context, constraints) {
         const spacing = 10.0;
         final tileWidth = (constraints.maxWidth - spacing) / 2;
-        final tileHeight =
-            (tileWidth * 1.5).clamp(120.0, 140.0).toDouble();
+        final tileHeight = (tileWidth * 1.5).clamp(120.0, 140.0).toDouble();
 
         return GridView.builder(
           padding: EdgeInsets.zero,
@@ -245,6 +248,7 @@ class _StatsGrid extends StatelessWidget {
                 selectedDay: selectedDay,
                 progress: progress,
                 translationChapter: translationChapter,
+                totalPracticeMinutes: totalPracticeMinutes,
               ),
             );
           },
@@ -283,8 +287,10 @@ class _WeekStrip extends StatelessWidget {
           children: [
             for (final key in WeeklyProgressPanel.dayKeys)
               _DayChip(
-                label: AppTranslations.section(translationChapter, key)
-                    .toUpperCase(),
+                label: AppTranslations.section(
+                  translationChapter,
+                  key,
+                ).toUpperCase(),
                 selected: key == selectedDayKey,
                 practiced: byKey[key]?.practiced ?? false,
                 isToday: byKey[key]?.isToday ?? false,
@@ -317,8 +323,8 @@ class _DayChip extends StatelessWidget {
     final color = selected
         ? AppColors.brandPrimary
         : practiced
-            ? Colors.black87
-            : AppColors.secondaryText;
+        ? Colors.black87
+        : AppColors.secondaryText;
 
     return Material(
       color: selected
@@ -333,20 +339,6 @@ class _DayChip extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (practiced)
-                Container(
-                  width: 4,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 4),
-                  decoration: BoxDecoration(
-                    color: selected
-                        ? AppColors.brandPrimary
-                        : AppColors.callPreviewCtaGreen,
-                    shape: BoxShape.circle,
-                  ),
-                )
-              else
-                const SizedBox(height: 8),
               Text(
                 label,
                 style: AppTextStyles.homeDayLabel(color: color).copyWith(

@@ -13,16 +13,11 @@ import 'package:lingola_buddy/Core/Utils/call_permissions.dart';
 import 'package:lingola_buddy/Services/realtime_call_log.dart';
 import 'package:record/record.dart';
 
-enum RealtimeCallPhase {
-  connecting,
-  listening,
-  thinking,
-  speaking,
-  error,
-}
+enum RealtimeCallPhase { connecting, listening, thinking, speaking, error }
 
 typedef RealtimeCallPhaseCallback = void Function(RealtimeCallPhase phase);
-typedef RealtimeVisemeTimelineCallback = void Function(Map<String, dynamic> msg);
+typedef RealtimeVisemeTimelineCallback =
+    void Function(Map<String, dynamic> msg);
 typedef RealtimeLipSyncAudibleCallback = void Function(bool audible);
 
 class _AudioChunk {
@@ -33,11 +28,15 @@ class _AudioChunk {
 
 /// Mindcoach voiceChatServerV2 ile uyumlu WebSocket + PCM16 oynatma/kayıt motoru.
 class RealtimeCallEngine {
+  static bool isFreeTalk(String? lessonId) =>
+      lessonId == null || lessonId.isEmpty;
+
   RealtimeCallEngine({
     required this.tutorId,
     required this.languageCode,
     required this.getAuthToken,
     this.lessonId,
+    this.freeTalk = false,
     this.learnerDisplayName,
     this.videoMode = false,
     this.onPhaseChanged,
@@ -51,20 +50,24 @@ class RealtimeCallEngine {
   final String languageCode;
   final Future<String> Function() getAuthToken;
   final String? lessonId;
+  final bool freeTalk;
   final String? learnerDisplayName;
   final bool videoMode;
   RealtimeCallPhaseCallback? onPhaseChanged;
   RealtimeLipSyncAudibleCallback? onLipSyncAudibleChanged;
   final RealtimeVisemeTimelineCallback? onVisemeTimeline;
   VoidCallback? onConnectionReady;
+
   /// İlk kez kullanıcı konuşmaya başladığında (VAD).
   VoidCallback? onUserSpeechStarted;
+
   /// Sunucu `call_ended_idle` veya WS kapandığında (veda sonrası kapatma).
   VoidCallback? onServerEnded;
 
   void bindServerEndedHandler(VoidCallback handler) {
     onServerEnded = handler;
   }
+
   final VoidCallback? onEnded;
 
   static const MethodChannel _audioChannel = MethodChannel(
@@ -88,6 +91,7 @@ class RealtimeCallEngine {
 
   bool _isRinging = false;
   int _ringSamplePos = 0;
+
   /// Tek “çalıyor” darbesi (~0,9 sn); tekrarlayan zil döngüsü yok.
   static const int _ringOnSamples = (sampleRate * 9) ~/ 10;
   DateTime? _lastAudioSessionConfigAt;
@@ -100,6 +104,7 @@ class RealtimeCallEngine {
   bool _receivedAiPcmThisTurn = false;
   bool _lipSyncAudible = false;
   bool _userSpeechStartedFired = false;
+
   /// Görüntülü aramada aktif ekran açılmadan WS/mikrofon/AI sesi kapalı.
   bool _callActivated = false;
   bool _serverReady = false;
@@ -130,6 +135,7 @@ class RealtimeCallEngine {
     if (t.isEmpty) return 0;
     return t.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length;
   }
+
   DateTime? _lastMicLogAt;
   DateTime? _lastMicRmsLogAt;
 
@@ -174,6 +180,7 @@ class RealtimeCallEngine {
 
   Future<void> start({bool skipPermissionRequest = false}) async {
     if (_disposed) return;
+    if (videoMode) _speakerOn = true;
     _serverReady = false;
     _uiReadySent = false;
     _callActivated = false;
@@ -252,7 +259,11 @@ class RealtimeCallEngine {
     _speakerOn = on;
     RealtimeCallLog.d('speaker on=$on');
     if (kIsWeb || (!Platform.isIOS && !Platform.isAndroid)) return;
+    _lastAudioSessionConfigAt = null;
     try {
+      await _audioChannel.invokeMethod('configureForVoiceCall', {
+        'preferSpeaker': on,
+      });
       await _audioChannel.invokeMethod('setSpeakerOn', {'on': on});
       await _setProximityMonitoring(!on);
     } catch (e) {
@@ -260,26 +271,43 @@ class RealtimeCallEngine {
     }
   }
 
+  bool _resolveSpeakerOutput({bool? forceEarpiece}) {
+    if (forceEarpiece == true) return false;
+    if (forceEarpiece == false) return true;
+    return _speakerOn;
+  }
+
   Future<void> _configureAudioSession({bool? forceEarpiece}) async {
     if (_disposed) return;
     if (kIsWeb || (!Platform.isIOS && !Platform.isAndroid)) return;
+
+    final useSpeaker = _resolveSpeakerOutput(forceEarpiece: forceEarpiece);
+    _speakerOn = useSpeaker;
+
     final now = DateTime.now();
-    if (_lastAudioSessionConfigAt != null &&
-        now.difference(_lastAudioSessionConfigAt!).inMilliseconds < 450) {
-      return;
+    final throttled =
+        _lastAudioSessionConfigAt != null &&
+        now.difference(_lastAudioSessionConfigAt!).inMilliseconds < 450;
+
+    if (!throttled) {
+      _lastAudioSessionConfigAt = now;
+      try {
+        await _audioChannel.invokeMethod('configureForVoiceCall', {
+          'preferSpeaker': useSpeaker,
+        });
+      } catch (e) {
+        RealtimeCallLog.e('configureAudioSession', e);
+      }
     }
-    _lastAudioSessionConfigAt = now;
+
     try {
-      await _audioChannel.invokeMethod('configureForVoiceCall');
-      final useSpeaker = forceEarpiece == true
-          ? false
-          : (forceEarpiece == false ? true : _speakerOn);
-      _speakerOn = useSpeaker;
       await _audioChannel.invokeMethod('setSpeakerOn', {'on': useSpeaker});
       await _setProximityMonitoring(!useSpeaker);
-      RealtimeCallLog.d('audio session ready speaker=$useSpeaker');
+      RealtimeCallLog.d(
+        'audio session ready speaker=$useSpeaker throttled=$throttled video=$videoMode',
+      );
     } catch (e) {
-      RealtimeCallLog.e('configureAudioSession', e);
+      RealtimeCallLog.e('configureAudioSession route', e);
     }
   }
 
@@ -418,7 +446,9 @@ class RealtimeCallEngine {
     if (_pcmTotalSamples == 0) return;
 
     final maxSamples = (sampleRate * 0.5).round();
-    final toSend = _pcmTotalSamples < maxSamples ? _pcmTotalSamples : maxSamples;
+    final toSend = _pcmTotalSamples < maxSamples
+        ? _pcmTotalSamples
+        : maxSamples;
 
     final out = Int16List(toSend);
     var dst = 0;
@@ -469,6 +499,7 @@ class RealtimeCallEngine {
           '&lang=${Uri.encodeQueryComponent(languageCode)}'
           '&video=${videoMode ? '1' : '0'}'
           '${lessonId != null && lessonId!.isNotEmpty ? '&lessonId=${Uri.encodeQueryComponent(lessonId!)}' : ''}'
+          '${freeTalk ? '&freeTalk=1' : ''}'
           '${_learnerNameQuery()}';
 
       RealtimeCallLog.d('WS bağlanıyor…');
@@ -480,7 +511,9 @@ class RealtimeCallEngine {
           _setPhase(RealtimeCallPhase.error);
         },
         onDone: () {
-          RealtimeCallLog.d('WS kapandı disposed=$_disposed serverEnded=$_serverEnded');
+          RealtimeCallLog.d(
+            'WS kapandı disposed=$_disposed serverEnded=$_serverEnded',
+          );
           if (!_disposed) {
             unawaited(end(fromServer: true));
           }
@@ -578,7 +611,7 @@ class RealtimeCallEngine {
       onConnectionReady?.call();
       return;
     }
-    await _configureAudioSession(forceEarpiece: !videoMode);
+    await _configureAudioSession(forceEarpiece: !videoMode && !_speakerOn);
     _playPickupChime();
     _setPhase(RealtimeCallPhase.listening);
     _callActivated = true;
@@ -696,7 +729,8 @@ class RealtimeCallEngine {
     // playback_done sunucuda idle/veda tetikler.
     if (!_receivedAiPcmThisTurn) {
       final waitPcmDeadline = DateTime.now().add(const Duration(seconds: 8));
-      while (!_receivedAiPcmThisTurn && DateTime.now().isBefore(waitPcmDeadline)) {
+      while (!_receivedAiPcmThisTurn &&
+          DateTime.now().isBefore(waitPcmDeadline)) {
         await Future<void>.delayed(const Duration(milliseconds: 40));
         if (_disposed) return;
       }
@@ -747,7 +781,9 @@ class RealtimeCallEngine {
 
   void _armAiPlaybackIdleMonitor() {
     _cancelAiPlaybackIdleMonitor();
-    _aiPlaybackIdleTimer = Timer.periodic(const Duration(milliseconds: 200), (_) {
+    _aiPlaybackIdleTimer = Timer.periodic(const Duration(milliseconds: 200), (
+      _,
+    ) {
       if (_phase != RealtimeCallPhase.speaking) return;
       final base = _lastAiPcmReceivedAt ?? _aiSpeakingSince;
       if (base == null) return;
@@ -774,9 +810,7 @@ class RealtimeCallEngine {
       _ws!.add(jsonEncode(obj));
       return;
     }
-    RealtimeCallLog.e(
-      'WS gönderilemedi ($type) readyState=${_ws?.readyState}',
-    );
+    RealtimeCallLog.e('WS gönderilemedi ($type) readyState=${_ws?.readyState}');
   }
 
   int _computeRms(Uint8List chunk) {

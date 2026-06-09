@@ -76,11 +76,10 @@ class LessonsListView extends ConsumerWidget {
           lessonId: lesson.id,
         );
     if (!context.mounted) return;
-    await CallNavigation.pushSessionPreview(
+    await CallNavigation.pushSessionVideo(
       context,
       ref,
       tutorId: tutorId,
-      lessonId: lesson.id,
     );
   }
 }

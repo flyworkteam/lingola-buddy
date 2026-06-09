@@ -17,6 +17,7 @@ class _NotificationsViewState extends State<NotificationsView> {
   static const Color _listPanelBackground = Color(0xFFF6F6F6);
 
   List<NotificationInboxItem> _items = [];
+  bool _loading = true;
 
   @override
   void initState() {
@@ -25,9 +26,13 @@ class _NotificationsViewState extends State<NotificationsView> {
   }
 
   Future<void> _load() async {
+    setState(() => _loading = true);
     final items = await NotificationInboxStore.loadDelivered();
     if (!mounted) return;
-    setState(() => _items = items);
+    setState(() {
+      _items = items;
+      _loading = false;
+    });
   }
 
   Future<void> _clearAll() async {
@@ -102,7 +107,9 @@ class _NotificationsViewState extends State<NotificationsView> {
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: _items.isEmpty
+                child: _loading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _items.isEmpty
                     ? Center(
                         child: Padding(
                           padding: const EdgeInsets.all(24),

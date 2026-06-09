@@ -8,11 +8,12 @@ import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Utils/realtime_auth_token.dart';
+import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Models/app_enums.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
-import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
+import 'package:lingola_buddy/Services/call_session_post_sync.dart';
 import 'package:lingola_buddy/Services/local_notification_scheduler.dart';
 import 'package:lingola_buddy/Services/realtime_call_engine.dart';
 import 'package:lingola_buddy/Services/session_local_storage.dart';
@@ -34,6 +35,7 @@ class VoiceCallView extends ConsumerStatefulWidget {
 class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
   RealtimeCallEngine? _engine;
   bool _speakerOn = false;
+  bool _speakerUserSet = false;
   bool _micMuted = false;
   RealtimeCallPhase _phase = RealtimeCallPhase.connecting;
   int _elapsedSeconds = 0;
@@ -70,6 +72,7 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
       tutorId: widget.tutorId,
       languageCode: lang,
       lessonId: lessonId,
+      freeTalk: RealtimeCallEngine.isFreeTalk(lessonId),
       getAuthToken: () => ensureRealtimeAuthToken(ref),
       onPhaseChanged: (p) {
         if (!mounted) return;
@@ -82,14 +85,14 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
     );
     engine.onUserSpeechStarted = _startCallDuration;
     engine.onConnectionReady = () {
-      if (!mounted) return;
+      if (!mounted || _speakerUserSet) return;
       setState(() => _speakerOn = engine.isSpeakerOn);
     };
     _engine = engine;
     await engine.start();
     if (!mounted) return;
     setState(() {
-      _speakerOn = engine.isSpeakerOn;
+      if (!_speakerUserSet) _speakerOn = engine.isSpeakerOn;
       _micMuted = engine.isMuted;
     });
   }
@@ -132,30 +135,28 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
       durationSeconds: elapsed,
       words: words,
     );
-    final lessonCompleted = session.activeLessonId != null &&
+    final lessonCompleted =
+        session.activeLessonId != null &&
         session.activeLessonId!.isNotEmpty &&
         elapsed >= 120;
-    ref.read(callSessionControllerProvider.notifier).endCall(
+    ref
+        .read(callSessionControllerProvider.notifier)
+        .endCall(
           durationSeconds: elapsed,
           wordsSpoken: words,
           sessionScorePercent: score,
           lessonCompleted: lessonCompleted,
         );
+    unawaited(CallSessionPostSync.sync(ref));
     final lessonId = session.activeLessonId;
-    if (!lessonCompleted &&
-        lessonId != null &&
-        lessonId.isNotEmpty) {
+    if (!lessonCompleted && lessonId != null && lessonId.isNotEmpty) {
       final title = lessonId.startsWith('dc_')
           ? AppTranslations.dailyConversationField(
               lessonId,
               'title',
               fallback: lessonId,
             )
-          : AppTranslations.lessonField(
-              lessonId,
-              'title',
-              fallback: lessonId,
-            );
+          : AppTranslations.lessonField(lessonId, 'title', fallback: lessonId);
       unawaited(
         LocalNotificationScheduler.instance.scheduleCallFollowUp(
           lessonId: lessonId,
@@ -201,7 +202,8 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
 
   @override
   Widget build(BuildContext context) {
-    final tutor = ref.watch(tutorByIdProvider(widget.tutorId)) ??
+    final tutor =
+        ref.watch(tutorByIdProvider(widget.tutorId)) ??
         ref.watch(tutorsCatalogProvider).first;
     final displayName = tutor.localizedDisplayName;
     final status = _statusLabel();
@@ -308,10 +310,11 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
                           asset: _speakerOn
                               ? 'assets/icons/volume.svg'
                               : 'assets/icons/volume_slash.svg',
-                          onTap: () async {
+                          onTap: () {
                             final next = !_speakerOn;
+                            _speakerUserSet = true;
                             setState(() => _speakerOn = next);
-                            await _engine?.setSpeakerOn(next);
+                            unawaited(_engine?.setSpeakerOn(next));
                           },
                           iconOpacity: _speakerOn ? 1 : 0.45,
                         ),

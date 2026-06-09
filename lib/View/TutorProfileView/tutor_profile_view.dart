@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lingola_buddy/Core/Config/app_ui_languages.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
+import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
-import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
-import 'package:lingola_buddy/Riverpod/Providers/curriculum_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
+import 'package:lingola_buddy/Models/app_enums.dart';
 
 class TutorProfileView extends ConsumerWidget {
   const TutorProfileView({super.key, required this.tutorId});
@@ -114,7 +115,7 @@ class TutorProfileView extends ConsumerWidget {
                           ),
                           const SizedBox(width: 8),
                           SvgPicture.asset(
-                            'assets/icons/america.svg',
+                            AppUiLanguages.flagAssetFor(tutor.nativeLang),
                             width: 22,
                             height: 22,
                           ),
@@ -124,7 +125,7 @@ class TutorProfileView extends ConsumerWidget {
                       Text(
                         bioText,
                         style: AppTextStyles.tutorProfileBio(),
-                        maxLines: 2,
+                        maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 10),
@@ -139,11 +140,20 @@ class TutorProfileView extends ConsumerWidget {
                             shape: const StadiumBorder(),
                             padding: const EdgeInsets.symmetric(vertical: 13),
                           ),
-                          onPressed: () => Navigator.pushNamed(
-                            context,
-                            '/voice',
-                            arguments: tutor.id,
-                          ),
+                          onPressed: () {
+                            ref
+                                .read(callSessionControllerProvider.notifier)
+                                .bindTutor(
+                                  tutor.id,
+                                  kind: CallKind.voice,
+                                  lessonId: null,
+                                );
+                            Navigator.pushNamed(
+                              context,
+                              '/voice',
+                              arguments: tutor.id,
+                            );
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -175,17 +185,13 @@ class TutorProfileView extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(vertical: 13),
                           ),
                           onPressed: () async {
-                            final lessonId =
-                                ref.read(userCurriculumProvider).value?.currentLesson?.id;
-                            if (lessonId == null) return;
                             ref
                                 .read(callSessionControllerProvider.notifier)
-                                .bindTutor(tutor.id, lessonId: lessonId);
-                            await CallNavigation.pushSessionPreview(
+                                .bindTutor(tutor.id, lessonId: null);
+                            await CallNavigation.pushSessionVideo(
                               context,
                               ref,
                               tutorId: tutor.id,
-                              lessonId: lessonId,
                             );
                           },
                           child: Row(

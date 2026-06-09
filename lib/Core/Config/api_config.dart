@@ -5,31 +5,42 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// REST + WS için API kök adresi.
 ///
-/// - iOS Simulator → `127.0.0.1`
-/// - Android Emulator → `10.0.2.2`
-/// - Fiziksel cihaz → `.env` içindeki `API_LAN_HOST` / `API_BASE_URL`
+/// Varsayılan: `https://lingolabuddy.fly-work.com`
+///
+/// Yerel geliştirme için `.env`:
+/// - `API_BASE_URL=http://192.168.x.x:3011` veya
+/// - `USE_LOCAL_API=true` (simülatör/emülatör → 127.0.0.1 / 10.0.2.2)
 class ApiConfig {
   ApiConfig._();
 
+  static const String productionBaseUrl = 'https://lingolabuddy.fly-work.com';
   static const int defaultPort = 3011;
 
   static String get baseUrl {
-    if (kIsWeb) {
-      return _physicalBaseUrl() ?? _simulatorBaseUrl();
+    final explicit = _env('API_BASE_URL');
+    if (explicit != null) return _stripTrailingSlash(explicit);
+
+    final lanHost = _env('API_LAN_HOST') ?? _env('DEV_HOST_IP');
+    if (lanHost != null) return 'http://$lanHost:$defaultPort';
+
+    final physical = _env('API_BASE_URL_PHYSICAL');
+    if (physical != null) return _stripTrailingSlash(physical);
+
+    if (_useLocalApi) {
+      if (kIsWeb) return _simulatorBaseUrl();
+      if (Platform.isIOS && _isIosSimulator) return _simulatorBaseUrl();
+      if (Platform.isAndroid && _isAndroidEmulator) {
+        return 'http://10.0.2.2:$defaultPort';
+      }
     }
 
-    if (Platform.isIOS && _isIosSimulator) {
-      return _simulatorBaseUrl();
-    }
-
-    if (Platform.isAndroid && _isAndroidEmulator) {
-      return 'http://10.0.2.2:$defaultPort';
-    }
-
-    return _physicalBaseUrl() ?? _simulatorBaseUrl();
+    return productionBaseUrl;
   }
 
+  static bool get _useLocalApi => _env('USE_LOCAL_API') == 'true';
+
   static String get resolvedKind {
+    if (baseUrl == productionBaseUrl) return 'production';
     if (kIsWeb) return 'web';
     if (Platform.isIOS && _isIosSimulator) return 'ios-simulator';
     if (Platform.isAndroid && _isAndroidEmulator) return 'android-emulator';
@@ -38,28 +49,6 @@ class ApiConfig {
   }
 
   static String _simulatorBaseUrl() => 'http://127.0.0.1:$defaultPort';
-
-  static String? _physicalBaseUrl() {
-    final explicit = _env('API_BASE_URL_PHYSICAL');
-    if (explicit != null) return _stripTrailingSlash(explicit);
-
-    final lanHost = _env('API_LAN_HOST') ?? _env('DEV_HOST_IP');
-    if (lanHost != null) {
-      return 'http://$lanHost:$defaultPort';
-    }
-
-    final fromEnv = _env('API_BASE_URL');
-    if (fromEnv == null) return null;
-
-    final uri = Uri.tryParse(fromEnv);
-    if (uri == null) return _stripTrailingSlash(fromEnv);
-
-    if (uri.host == '127.0.0.1' || uri.host == 'localhost') {
-      return null;
-    }
-
-    return _stripTrailingSlash(fromEnv);
-  }
 
   static bool get _isIosSimulator =>
       Platform.environment.containsKey('SIMULATOR_DEVICE_NAME');

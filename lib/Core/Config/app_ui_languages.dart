@@ -20,10 +20,11 @@ abstract final class AppUiLanguages {
   ];
 
   static String flagAssetFor(String code) {
+    final normalized = code.trim().toLowerCase();
     for (final lang in entries) {
-      if (lang.code == code) return lang.flagAsset;
+      if (lang.code == normalized) return lang.flagAsset;
     }
-    return entries.first.flagAsset;
+    return entries.firstWhere((l) => l.code == 'en').flagAsset;
   }
 }
 

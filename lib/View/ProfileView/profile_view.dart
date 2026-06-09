@@ -12,8 +12,8 @@ import 'package:lingola_buddy/Core/Widgets/future_extensions_dialog.dart';
 import 'package:lingola_buddy/Core/Widgets/logout_confirm_dialog.dart';
 import 'package:lingola_buddy/Core/Widgets/user_profile_avatar.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/BottomNavController/bottom_nav_controller.dart';
-import 'package:lingola_buddy/Riverpod/Controllers/SessionController/session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/PremiumController/premium_controller.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/SessionController/session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/auth_repository_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/user_scoped_providers.dart';
@@ -156,7 +156,11 @@ class ProfileView extends ConsumerWidget {
                           AppTranslations.sectionOr(
                             'profile',
                             'premium_badge_pro',
-                            AppTranslations.sectionOr('premium', 'badge_pro', 'Pro'),
+                            AppTranslations.sectionOr(
+                              'premium',
+                              'badge_pro',
+                              'Pro',
+                            ),
                           ),
                           style: AppTextStyles.notificationCardTitle().copyWith(
                             color: AppColors.brandPrimary,
@@ -165,20 +169,6 @@ class ProfileView extends ConsumerWidget {
                         )
                       : null,
                   onTap: () => _onPremiumTap(context, ref),
-                ),
-                _ProfileSettingsRow(
-                  iconAsset: 'assets/icons/premium.svg',
-                  label: AppTranslations.sectionOr(
-                    'profile',
-                    'restore_purchases',
-                    AppTranslations.sectionOr(
-                      'premium',
-                      'restore_purchases',
-                      'Restore purchases',
-                    ),
-                  ),
-                  onTap: () =>
-                      LingolaRevenueCatPaywall.restorePurchases(context, ref),
                 ),
                 // _ProfileSettingsRow(
                 //   iconAsset: 'assets/icons/share.svg',

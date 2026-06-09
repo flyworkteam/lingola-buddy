@@ -1,3 +1,5 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,7 +7,6 @@ import 'package:lingola_buddy/Core/Config/app_ui_languages.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/app_primary_button.dart';
-import 'package:lingola_buddy/Core/Widgets/future_extensions_dialog.dart';
 import 'package:lingola_buddy/Core/Widgets/profile_language_option_tile.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
@@ -30,25 +31,38 @@ class _ProfileLanguageViewState extends ConsumerState<ProfileLanguageView> {
     final code = _pendingCode;
     if (code == null) return;
 
-    await FutureExtensionsDialog.guard(
-      context,
-      () async {
-        await SessionLocalStorage.setUiLanguageCode(code, manual: true);
-        await AppTranslations.setLocale(code);
-        ref.read(userProfileControllerProvider.notifier).setUiLanguageCode(code);
-        ref.invalidate(tutorsCatalogAsyncProvider);
-        if (ref.read(userProfileControllerProvider).notificationsEnabled) {
-          await LocalNotificationScheduler.instance.syncEnabled(enabled: true);
-        }
-      }(),
-    );
+    final savedCode = ref.read(userProfileControllerProvider).uiLanguageCode;
+    if (code == savedCode && code == AppTranslations.locale) {
+      if (!mounted) return;
+      Navigator.of(context).maybePop();
+      return;
+    }
+
+    if (code != AppTranslations.locale) {
+      await AppTranslations.setLocale(code);
+    }
     if (!mounted) return;
+
+    ref.read(userProfileControllerProvider.notifier).setUiLanguageCode(code);
+    unawaited(_persistLanguage(code));
     Navigator.of(context).maybePop();
+  }
+
+  Future<void> _persistLanguage(String code) async {
+    await SessionLocalStorage.setUiLanguageCode(code, manual: true);
+    if (!mounted) return;
+
+    ref.invalidate(tutorsCatalogAsyncProvider);
+    if (ref.read(userProfileControllerProvider).notificationsEnabled) {
+      await LocalNotificationScheduler.instance.syncEnabled(enabled: true);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final savedCode = ref.watch(userProfileControllerProvider).uiLanguageCode;
+    final savedCode = ref.watch(
+      userProfileControllerProvider.select((s) => s.uiLanguageCode),
+    );
     _pendingCode ??= savedCode;
 
     return Scaffold(
@@ -57,7 +71,7 @@ class _ProfileLanguageViewState extends ConsumerState<ProfileLanguageView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const _LanguageHeader(),
+            _LanguageHeader(),
             Expanded(
               child: ListView(
                 physics: const ClampingScrollPhysics(),
@@ -115,7 +129,7 @@ class _ProfileLanguageViewState extends ConsumerState<ProfileLanguageView> {
                 labelStyle: AppTextStyles.homeCharacterCta().copyWith(
                   color: Colors.white,
                 ),
-                onPressed: _save,
+                onPressed: () => unawaited(_save()),
               ),
             ),
           ],

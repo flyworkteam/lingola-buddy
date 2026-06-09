@@ -1,15 +1,18 @@
+import 'dart:async' show unawaited;
 import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lingola_buddy/Models/notification_inbox_item.dart';
+import 'package:lingola_buddy/Repositories/notification_repository.dart';
 import 'package:lingola_buddy/Services/session_local_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Gelen yerel bildirimlerin uygulama içi geçmişi (hesap başına).
+/// Gelen yerel bildirimlerin uygulama içi geçmişi (hesap başına, backend ile senkron).
 abstract final class NotificationInboxStore {
   NotificationInboxStore._();
 
   static const _guestScope = 'guest';
+  static final NotificationRepository _api = NotificationRepository();
 
   static String _scopeKey(String? userId) {
     final id = userId?.trim();
@@ -23,6 +26,11 @@ abstract final class NotificationInboxStore {
   static Future<String> _scope() async {
     final userId = await SessionLocalStorage.getAuthUserId();
     return _scopeKey(userId);
+  }
+
+  static Future<bool> _hasAuth() async {
+    final token = await SessionLocalStorage.getAuthToken();
+    return token != null && token.isNotEmpty;
   }
 
   static String emojiForNotificationId(int id) {
@@ -91,6 +99,7 @@ abstract final class NotificationInboxStore {
       _deliveredKey(scope),
       jsonEncode(trimmed.map((e) => e.toJson()).toList()),
     );
+    unawaited(_syncItemToBackend(item));
   }
 
   /// Zamanı gelen bekleyen bildirimleri gelen kutusuna taşır.
@@ -117,9 +126,30 @@ abstract final class NotificationInboxStore {
 
   static Future<List<NotificationInboxItem>> loadDelivered() async {
     await flushDueDeliveries();
+
     final scope = await _scope();
     final prefs = await SharedPreferences.getInstance();
-    return _decodeDelivered(prefs.getString(_deliveredKey(scope)));
+    final local = _decodeDelivered(prefs.getString(_deliveredKey(scope)));
+
+    if (await _hasAuth()) {
+      try {
+        final remote = await _api.fetchMine();
+        final remoteIds = remote.map((e) => e.id).toSet();
+        final missing =
+            local.where((e) => !remoteIds.contains(e.id)).toList();
+        if (missing.isNotEmpty) {
+          unawaited(_api.syncBatch(missing).catchError((_) {}));
+        }
+
+        final merged = _mergeItems(remote, local);
+        await _cacheDelivered(merged);
+        return merged;
+      } catch (_) {
+        // Ağ hatasında yerel önbelleğe düş.
+      }
+    }
+
+    return local;
   }
 
   static Future<void> clearAll() async {
@@ -127,6 +157,10 @@ abstract final class NotificationInboxStore {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_deliveredKey(scope));
     await prefs.remove(_pendingKey(scope));
+
+    if (await _hasAuth()) {
+      unawaited(_api.clearAll().catchError((_) {}));
+    }
   }
 
   static Future<void> handleNotificationResponse(
@@ -155,6 +189,35 @@ abstract final class NotificationInboxStore {
         ),
       );
     } catch (_) {}
+  }
+
+  static Future<void> _cacheDelivered(List<NotificationInboxItem> items) async {
+    final scope = await _scope();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _deliveredKey(scope),
+      jsonEncode(items.take(50).map((e) => e.toJson()).toList()),
+    );
+  }
+
+  static Future<void> _syncItemToBackend(NotificationInboxItem item) async {
+    if (!await _hasAuth()) return;
+    try {
+      await _api.record(item);
+    } catch (_) {}
+  }
+
+  static List<NotificationInboxItem> _mergeItems(
+    List<NotificationInboxItem> primary,
+    List<NotificationInboxItem> secondary,
+  ) {
+    final byId = <String, NotificationInboxItem>{};
+    for (final item in [...primary, ...secondary]) {
+      byId[item.id] = item;
+    }
+    final merged = byId.values.toList()
+      ..sort((a, b) => b.deliveredAt.compareTo(a.deliveredAt));
+    return merged.take(50).toList();
   }
 
   static List<NotificationInboxItem> _decodeDelivered(String? raw) {

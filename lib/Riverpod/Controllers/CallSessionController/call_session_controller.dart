@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lingola_buddy/Models/app_enums.dart';
 
 class CallSessionState {
+  static const Object _unset = Object();
+
   const CallSessionState({
     this.activeTutorId,
     this.activeLessonId,
@@ -28,7 +30,7 @@ class CallSessionState {
 
   CallSessionState copyWith({
     String? activeTutorId,
-    String? activeLessonId,
+    Object? activeLessonId = _unset,
     CallKind? kind,
     DateTime? callStartedAt,
     bool clearCallStartedAt = false,
@@ -40,7 +42,9 @@ class CallSessionState {
   }) {
     return CallSessionState(
       activeTutorId: activeTutorId ?? this.activeTutorId,
-      activeLessonId: activeLessonId ?? this.activeLessonId,
+      activeLessonId: identical(activeLessonId, _unset)
+          ? this.activeLessonId
+          : activeLessonId as String?,
       kind: kind ?? this.kind,
       callStartedAt: clearCallStartedAt
           ? null

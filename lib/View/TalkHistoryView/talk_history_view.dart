@@ -12,6 +12,7 @@ import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Models/chat_route_args.dart';
 import 'package:lingola_buddy/Models/conversation_model.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/conversation_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/talk_history_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
@@ -29,6 +30,7 @@ class TalkHistoryView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(userProfileControllerProvider.select((s) => s.uiLanguageCode));
     final messagesAsync = ref.watch(talkHistoryProvider);
     final featured = ref.watch(talkFeaturedTutorsProvider);
     final catalog = ref.watch(tutorsCatalogProvider);
@@ -117,7 +119,7 @@ class _TalkHistoryBody extends StatelessWidget {
                             catalog: catalog,
                           ),
                         )
-                      : const _QuickMessagesEmptyPanel(),
+                      : _QuickMessagesEmptyPanel(),
                 ),
               ],
             ),
@@ -233,9 +235,8 @@ class _DismissibleConversationTile extends StatelessWidget {
   final VoidCallback onTap;
   final Future<void> Function() onDelete;
 
-  String get _displayName => tutor != null
-      ? tutor!.localizedDisplayName
-      : row.tutorName;
+  String get _displayName =>
+      tutor != null ? tutor!.localizedDisplayName : row.tutorName;
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,3 @@
-import 'dart:async' show unawaited;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,11 +17,9 @@ import 'package:lingola_buddy/Riverpod/Controllers/PremiumController/premium_con
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/curriculum_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/daily_conversation_provider.dart';
-import 'package:lingola_buddy/Riverpod/Providers/streak_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
-import 'package:lingola_buddy/Services/local_notification_scheduler.dart';
+import 'package:lingola_buddy/Services/call_session_post_sync.dart';
 import 'package:lingola_buddy/Services/revenuecat_paywall.dart';
-import 'package:lingola_buddy/Services/session_local_storage.dart';
 
 String _interp(String template, Map<String, String> vars) {
   var s = template;
@@ -44,7 +40,6 @@ class CallSummaryView extends ConsumerStatefulWidget {
 
 class _CallSummaryViewState extends ConsumerState<CallSummaryView> {
   var _postCallSynced = false;
-  var _freeCallRecorded = false;
   bool _levelAdvanced = false;
   String? _levelPrevious;
   String? _levelNew;
@@ -59,70 +54,13 @@ class _CallSummaryViewState extends ConsumerState<CallSummaryView> {
     if (_postCallSynced) return;
     _postCallSynced = true;
 
-    final session = ref.read(callSessionControllerProvider);
-    final minutes = session.lastDurationSeconds ~/ 60;
-    final words = session.lastWordsSpoken;
-    final score = session.lastSessionScorePercent;
-
-    try {
-      await ref
-          .read(streakRepositoryProvider)
-          .recordPractice(
-            minutes: minutes,
-            wordsLearned: words,
-            accuracyPercent: score > 0 ? score : null,
-          );
-      ref.invalidate(userStreakProvider);
-    } catch (_) {}
-
-    if (!_freeCallRecorded) {
-      _freeCallRecorded = true;
-      await ref.read(premiumControllerProvider.notifier).recordCompletedCall(
-            durationSeconds: session.lastDurationSeconds,
-          );
-    }
-
-    if (session.lastLessonCompleted) {
-      final lessonId = session.activeLessonId;
-      if (lessonId != null && lessonId.isNotEmpty) {
-        try {
-          if (lessonId.startsWith('dc_')) {
-            await ref
-                .read(dailyConversationRepositoryProvider)
-                .complete(lessonId);
-            ref.invalidate(userDailyConversationProvider);
-          } else {
-            final updated = await ref
-                .read(lessonRepositoryProvider)
-                .completeLesson(lessonId);
-            if (updated.levelAdvanced &&
-                updated.previousLevel != null &&
-                updated.newLevel != null) {
-              unawaited(
-                LocalNotificationScheduler.instance.showLevelAdvanced(
-                  previousLevel: updated.previousLevel!,
-                  newLevel: updated.newLevel!,
-                ),
-              );
-              if (mounted) {
-                setState(() {
-                  _levelAdvanced = true;
-                  _levelPrevious = updated.previousLevel;
-                  _levelNew = updated.newLevel;
-                });
-              }
-            }
-          }
-          ref.invalidate(userCurriculumProvider);
-          ref.invalidate(userStreakProvider);
-          unawaited(SessionLocalStorage.clearCallReminder());
-          unawaited(LocalNotificationScheduler.instance.clearCallFollowUp());
-          unawaited(
-            LocalNotificationScheduler.instance.syncEnabled(enabled: true),
-          );
-        } catch (_) {}
-      }
-    }
+    final result = await CallSessionPostSync.sync(ref);
+    if (!mounted || !result.levelAdvanced) return;
+    setState(() {
+      _levelAdvanced = true;
+      _levelPrevious = result.levelPrevious;
+      _levelNew = result.levelNew;
+    });
   }
 
   LessonModel? _lessonById(String? id, UserCurriculumModel? curriculum) {
@@ -183,11 +121,10 @@ class _CallSummaryViewState extends ConsumerState<CallSummaryView> {
         .read(callSessionControllerProvider.notifier)
         .bindTutor(tutorId, lessonId: lessonId);
     if (!mounted) return;
-    await CallNavigation.pushSessionPreview(
+    await CallNavigation.pushSessionVideo(
       context,
       ref,
       tutorId: tutorId,
-      lessonId: lessonId,
     );
   }
 

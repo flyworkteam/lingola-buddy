@@ -9,10 +9,10 @@ import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
+import 'package:lingola_buddy/Core/Utils/call_topic_display.dart';
 import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Models/app_enums.dart';
 import 'package:lingola_buddy/Models/call_preview_args.dart';
-import 'package:lingola_buddy/Core/Utils/call_topic_display.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
@@ -48,40 +48,36 @@ class _CallPreviewViewState extends ConsumerState<CallPreviewView> {
   Widget build(BuildContext context) {
     final catalog = ref.watch(tutorsCatalogProvider);
     final tutorId = _resolveTutorId(catalog);
-    final tutor = ref.watch(tutorByIdProvider(tutorId)) ??
+    final tutor =
+        ref.watch(tutorByIdProvider(tutorId)) ??
         catalog.where((t) => t.id == tutorId).firstOrNull;
     final topic = widget.args.isGuestPreview
         ? null
         : resolveCallTopicDisplay(ref, widget.args.lessonId);
 
     if (tutor == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final tutorDisplayName =
-        tutor.localizedDisplayName;
+    final tutorDisplayName = tutor.localizedDisplayName;
     final subtitle = widget.args.isGuestPreview
-        ? AppTranslations.interpolate(
-            AppTranslations.section('call', 'desc'),
-            {'name': tutorDisplayName},
-          )
+        ? AppTranslations.interpolate(AppTranslations.section('call', 'desc'), {
+            'name': tutorDisplayName,
+          })
         : topic != null
-            ? AppTranslations.interpolate(
-                topic.isDailyConversation
-                    ? AppTranslations.section('call', 'desc_with_daily')
-                    : AppTranslations.section('call', 'desc_with_lesson'),
-                {
-                  'name': tutorDisplayName,
-                  'lesson': topic.emojiTitle,
-                  'topic': topic.emojiTitle,
-                },
-              )
-            : AppTranslations.interpolate(
-                AppTranslations.section('call', 'desc'),
-                {'name': tutorDisplayName},
-              );
+        ? AppTranslations.interpolate(
+            topic.isDailyConversation
+                ? AppTranslations.section('call', 'desc_with_daily')
+                : AppTranslations.section('call', 'desc_with_lesson'),
+            {
+              'name': tutorDisplayName,
+              'lesson': topic.emojiTitle,
+              'topic': topic.emojiTitle,
+            },
+          )
+        : AppTranslations.interpolate(AppTranslations.section('call', 'desc'), {
+            'name': tutorDisplayName,
+          });
 
     final mq = MediaQuery.sizeOf(context);
     final avatarR = (mq.width * 0.31).clamp(96.0, 121.0);
@@ -189,18 +185,22 @@ class _CallPreviewViewState extends ConsumerState<CallPreviewView> {
                   ),
                   Expanded(
                     child: Center(
-                      child: DecoratedBox(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: ClipOval(
-                          child: TutorAvatarImage(
-                            tutor: tutor,
-                            width: avatarR * 2,
-                            height: avatarR * 2,
-                            fit: BoxFit.cover,
-                            alignment: const Alignment(0, -1.2),
+                      child: SizedBox(
+                        width: avatarR * 2,
+                        height: avatarR * 2,
+                        child: DecoratedBox(
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: ClipOval(
+                            child: TutorAvatarImage(
+                              tutor: tutor,
+                              width: avatarR * 2,
+                              height: avatarR * 2,
+                              fit: BoxFit.cover,
+                              alignment: const Alignment(0, -1.2),
+                            ),
                           ),
                         ),
                       ),
@@ -219,7 +219,9 @@ class _CallPreviewViewState extends ConsumerState<CallPreviewView> {
                               final lessonId = widget.args.lessonId;
                               void startVideo() {
                                 ref
-                                    .read(callSessionControllerProvider.notifier)
+                                    .read(
+                                      callSessionControllerProvider.notifier,
+                                    )
                                     .bindTutor(
                                       tutorId,
                                       kind: CallKind.video,

@@ -85,6 +85,7 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
         tutorId: tutorId,
         languageCode: lang,
         lessonId: lessonId,
+        freeTalk: RealtimeCallEngine.isFreeTalk(lessonId),
         learnerDisplayName: learnerName,
         videoMode: true,
         getAuthToken: () => ensureRealtimeAuthToken(ref),

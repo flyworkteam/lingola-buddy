@@ -91,11 +91,10 @@ class DailyConversationsListView extends ConsumerWidget {
         .read(callSessionControllerProvider.notifier)
         .bindTutor(tutorId, lessonId: topic.id);
     if (!context.mounted) return;
-    await CallNavigation.pushSessionPreview(
+    await CallNavigation.pushSessionVideo(
       context,
       ref,
       tutorId: tutorId,
-      lessonId: topic.id,
     );
   }
 }
