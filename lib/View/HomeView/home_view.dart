@@ -1,3 +1,5 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,12 +17,15 @@ import 'package:lingola_buddy/Models/app_enums.dart';
 import 'package:lingola_buddy/Models/streak_model.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/BottomNavController/bottom_nav_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/PremiumController/premium_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/curriculum_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/daily_conversation_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/post_login_paywall_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/streak_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/user_provider.dart';
+import 'package:lingola_buddy/Services/revenuecat_paywall.dart';
 
 Future<void> _openLessonCall(
   BuildContext context,
@@ -44,11 +49,36 @@ Future<void> _openLessonCall(
   );
 }
 
-class HomeView extends ConsumerWidget {
+class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends ConsumerState<HomeView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => unawaited(_maybeShowPostLoginPaywall()),
+    );
+  }
+
+  Future<void> _maybeShowPostLoginPaywall() async {
+    if (!ref.read(postLoginPaywallPendingProvider)) return;
+    ref.read(postLoginPaywallPendingProvider.notifier).state = false;
+    if (!mounted) return;
+
+    await ref.read(premiumControllerProvider.notifier).refresh();
+    if (!mounted) return;
+    if (ref.read(premiumControllerProvider).isPro) return;
+
+    await LingolaRevenueCatPaywall.presentSheet(context, ref);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -111,7 +141,13 @@ class _HomeFeaturedTutorsRow extends ConsumerWidget {
 
     final featured = tutors.length > 2 ? tutors.sublist(0, 2) : tutors;
     final lessonId = ref.watch(
-      userCurriculumProvider.select((c) => c.value?.currentLesson?.id),
+      userCurriculumProvider.select(
+        (c) => c.when(
+          data: (data) => data.currentLesson?.id,
+          loading: () => null,
+          error: (_, __) => null,
+        ),
+      ),
     );
 
     return SizedBox(
@@ -318,7 +354,11 @@ class _StreakCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final streakAsync = ref.watch(userStreakProvider);
-    final dashboard = streakAsync.value;
+    final dashboard = streakAsync.when(
+      data: (data) => data,
+      loading: () => null,
+      error: (_, __) => null,
+    );
     final week = dashboard?.week ?? [];
     final streakDays = dashboard?.streakDays ?? 0;
     final lastPracticeDate = dashboard?.lastPracticeDate;
@@ -425,7 +465,11 @@ class _ResumeLessonCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final curriculum = ref.watch(userCurriculumProvider).value;
+    final curriculum = ref.watch(userCurriculumProvider).when(
+          data: (data) => data,
+          loading: () => null,
+          error: (_, __) => null,
+        );
     final lesson = curriculum?.currentLesson;
     final lessonIndex = lesson != null && curriculum != null
         ? curriculum.lessons.indexWhere((l) => l.id == lesson.id) + 1
@@ -641,7 +685,11 @@ class _DailyConversationCard extends ConsumerWidget {
     ref.watch(
       userProfileControllerProvider.select((s) => s.uiLanguageCode),
     );
-    final dcCurriculum = ref.watch(userDailyConversationProvider).value;
+    final dcCurriculum = ref.watch(userDailyConversationProvider).when(
+          data: (data) => data,
+          loading: () => null,
+          error: (_, __) => null,
+        );
     final topic = dcCurriculum?.currentConversation;
     final level = dcCurriculum?.cefrLevel ?? 'A1';
     final topicTitle =

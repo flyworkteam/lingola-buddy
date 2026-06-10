@@ -14,6 +14,9 @@ abstract final class LegalLinkLauncher {
   static Future<void> openTermsOfService(BuildContext context) =>
       _open(context, LegalUrls.termsOfService);
 
+  static Future<void> openCookiePolicy(BuildContext context) =>
+      _open(context, LegalUrls.cookiePolicy);
+
   static Future<void> openContactUs(BuildContext context) =>
       _open(context, LegalUrls.contactUs);
 

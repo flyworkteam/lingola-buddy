@@ -8,5 +8,8 @@ abstract final class LegalUrls {
   static const String termsOfService =
       'https://fly-work.com/lingolabuddy/terms/';
 
+  static const String cookiePolicy =
+      'https://fly-work.com/lingolabuddy/cookies/';
+
   static const String contactUs = 'https://fly-work.com/contact-us/';
 }

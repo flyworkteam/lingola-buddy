@@ -12,10 +12,6 @@ class ApiTutorRepository implements TutorRepository {
 
   @override
   Future<List<TutorModel>> fetchTutors() async {
-    try {
-      final tutors = await _api.fetchTutors();
-      if (tutors.isNotEmpty) return tutors;
-    } catch (_) {}
-    return TutorModel.fallbackCatalog();
+    return _api.fetchTutors();
   }
 }

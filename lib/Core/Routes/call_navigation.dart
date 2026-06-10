@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lingola_buddy/Core/Routes/app_routes.dart';
 import 'package:lingola_buddy/Models/call_preview_args.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 import 'package:lingola_buddy/Services/premium_call_gate.dart';
 
@@ -23,6 +24,9 @@ abstract final class CallNavigation {
     BuildContext context,
     WidgetRef ref,
   ) {
+    ref
+        .read(callSessionControllerProvider.notifier)
+        .markOnboardingGuestCallLimit();
     final catalog = ref.read(tutorsCatalogProvider);
     final tutorId = catalog.isEmpty
         ? 'sophie'

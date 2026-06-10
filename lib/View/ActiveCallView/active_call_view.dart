@@ -13,8 +13,8 @@ import 'package:lingola_buddy/Core/Utils/realtime_auth_token.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Core/Widgets/local_camera_preview.dart';
+import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Core/Widgets/tutor_rive_avatar.dart';
-import 'package:lingola_buddy/Services/rive_preload_service.dart';
 import 'package:lingola_buddy/Models/app_enums.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
 import 'package:lingola_buddy/Riverpod/Providers/realtime_call_holder_provider.dart';
@@ -34,6 +34,7 @@ class ActiveCallView extends ConsumerStatefulWidget {
   static const double _controlBarHeight = 99;
   static const double _controlButtonSize = 60;
   static const double _controlGap = 16;
+  static const int _maxVideoCallSeconds = 60;
 
   static const String _remoteAvatar = 'assets/images/avatar_4.png';
 
@@ -54,6 +55,7 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
   bool _micMuted = false;
   bool _speakerOn = true;
   bool _lipSyncAudible = false;
+  bool _endingCall = false;
 
   static const ColorFilter _whiteIcon = ColorFilter.mode(
     Colors.white,
@@ -68,11 +70,6 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
 
   Future<void> _bootstrap() async {
     _startCallDuration();
-    final tutorId =
-        ref.read(callSessionControllerProvider).activeTutorId ?? 'sophie';
-    final tutor = ref.read(tutorByIdProvider(tutorId)) ??
-        ref.read(tutorsCatalogProvider).first;
-    RivePreloadService.instance.preload(tutor.rivUrl);
 
     var engine = ref.read(realtimeCallHolderProvider);
     if (engine == null) {
@@ -80,7 +77,10 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
       final tutorId = session.activeTutorId ?? 'sophie';
       final lang = ref.read(userProfileControllerProvider).uiLanguageCode;
       final lessonId = session.activeLessonId;
-      final learnerName = ref.read(currentUserProvider)?.displayName ?? '';
+      final profileUser = ref.read(currentUserProvider);
+      final learnerName = profileUser != null && profileUser.id != 'local'
+          ? profileUser.displayName.trim()
+          : '';
       engine = RealtimeCallEngine(
         tutorId: tutorId,
         languageCode: lang,
@@ -118,19 +118,22 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
     _scheduleCameraLast();
   }
 
+  bool get _applyOnboardingTimeLimit =>
+      ref.read(callSessionControllerProvider).onboardingGuestCallLimit;
+
   void _startCallDuration() {
     if (_callStartedAt != null) return;
-    final sessionStart =
-        ref.read(callSessionControllerProvider).callStartedAt;
-    _callStartedAt = sessionStart ?? DateTime.now();
-    if (sessionStart == null) {
-      ref.read(callSessionControllerProvider.notifier).markCallStarted(
-            _callStartedAt,
-          );
-    }
+    _callStartedAt = DateTime.now();
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!mounted || _callStartedAt == null) return;
+      if (!mounted || _callStartedAt == null || _endingCall) return;
+      final elapsed = _resolvedElapsedSeconds();
+      if (_applyOnboardingTimeLimit &&
+          elapsed >= ActiveCallView._maxVideoCallSeconds) {
+        _timer?.cancel();
+        unawaited(_endCall());
+        return;
+      }
       setState(() {});
     });
     if (mounted) setState(() {});
@@ -261,9 +264,14 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
   }
 
   Future<void> _endCall() async {
+    if (_endingCall) return;
+    _endingCall = true;
     _timer?.cancel();
-    final elapsed = _resolvedElapsedSeconds();
     final session = ref.read(callSessionControllerProvider);
+    final rawElapsed = _resolvedElapsedSeconds();
+    final elapsed = session.onboardingGuestCallLimit
+        ? rawElapsed.clamp(0, ActiveCallView._maxVideoCallSeconds)
+        : rawElapsed;
     final engine = ref.read(realtimeCallHolderProvider);
     final words = engine?.userWordsSpoken ?? 0;
     final score = RealtimeCallEngine.computeSessionScore(
@@ -309,7 +317,7 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
     Navigator.of(
       context,
       rootNavigator: true,
-    ).pushReplacementNamed(AppRoutes.callSummary);
+    ).pushNamedAndRemoveUntil(AppRoutes.callSummary, (route) => false);
   }
 
   Widget _roundControlButton({
@@ -365,24 +373,20 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
     required Widget? bottomOverlay,
     bool isLocalPreview = false,
     bool dimContent = false,
+    int? portraitCacheWidth,
   }) {
     final Widget portrait;
     if (tutor != null) {
-      portrait = Transform.translate(
-        offset: const Offset(0, 32),
-        child: Transform.scale(
-          scale: 0.9,
-          alignment: Alignment.topCenter,
-          child: TutorRiveAvatar(
-            tutor: tutor,
-            isTalking: _lipSyncAudible,
-            fit: BoxFit.cover,
-            alignment: const Alignment(0, -1.15),
-            fallbackAsset: ActiveCallView._remoteAvatar,
-            loadingBackgroundColor: const Color(0xFF2A2A2A),
-            loadingIndicatorColor: Colors.white70,
-          ),
-        ),
+      portrait = TutorRiveAvatar(
+        tutor: tutor,
+        isTalking: _lipSyncAudible,
+        fit: BoxFit.cover,
+        alignment: const Alignment(0, -0.15),
+        fallbackAsset: ActiveCallView._remoteAvatar,
+        cacheWidth: portraitCacheWidth,
+        cacheHeight: portraitCacheWidth,
+        loadingBackgroundColor: const Color(0xFFF6F6F6),
+        hideAssetFallback: true,
       );
     } else if (isLocalPreview) {
       portrait = _localPreviewContent();
@@ -471,6 +475,8 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
     final tutor = ref.watch(tutorByIdProvider(tutorId)) ??
         ref.watch(tutorsCatalogProvider).first;
     final name = tutor.localizedDisplayName;
+    final cardWidth = MediaQuery.sizeOf(context).width - 32;
+    final portraitCacheWidth = TutorAvatarImage.decodePixels(context, cardWidth);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -523,6 +529,7 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
                 child: _videoCard(
                   tutor: tutor,
                   bottomOverlay: null,
+                  portraitCacheWidth: portraitCacheWidth,
                 ),
               ),
             ),

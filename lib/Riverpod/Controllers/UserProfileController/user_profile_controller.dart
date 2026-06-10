@@ -60,8 +60,8 @@ class UserProfileController extends Notifier<UserProfileState> {
       user: restored ??
           const UserModel(
             id: 'local',
-            displayName: 'Emrah D.',
-            email: 'emrah12345@gmail.com',
+            displayName: 'Lingola User',
+            email: '',
             learnLanguageCode: 'en',
             nativeLanguageCode: 'tr',
             proficiency: ProficiencyLevel.simple,

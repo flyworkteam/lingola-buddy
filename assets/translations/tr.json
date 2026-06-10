@@ -56,6 +56,8 @@
         "plan_ready_title": "Planın hazır",
         "plan_ready_desc": "Artık konuşabilirsin",
         "plan_ready_button": "Konuşmaya başla",
+        "plan_ready_app_bar": "Hazır",
+        "plan_ready_note": "Video/görüşme bileşeni ve gerçek arama servisleri daha sonra bağlanır.",
         "wizard_step_label": "{current} / {total}"
     },
     "call": {
@@ -118,7 +120,10 @@
         "attach_error": "Dosya seçilemedi",
         "sent_photo": "Bir fotoğraf paylaştı.",
         "sent_document_named": "Bir belge paylaştı: {name}",
-        "api_missing": "OpenAI anahtarı tanımlanmamış. Uygulamayı --dart-define=OPENAI_API_KEY=... ile çalıştırın"
+        "api_missing": "OpenAI anahtarı tanımlanmamış. Uygulamayı --dart-define=OPENAI_API_KEY=... ile çalıştırın",
+        "seed_greeting_topic": "Merhaba! Ben {tutor}. Bugün \"{topic}\" konusunda birlikte çalışalım. Hazır mısın?",
+        "seed_greeting_free": "Merhaba! Ben {tutor}. Birlikte İngilizce pratik yapalım. Hazır mısın?",
+        "seed_greeting_generic": "Merhaba! Ben {tutor}. Tanıştığımıza memnun oldum. Hazır mısın?"
     },
     "talk": {
         "history_title": "Sohbet geçmişi",
@@ -327,11 +332,29 @@
     "profile_faq": {
         "title": "Sıkça sorulan sorular",
         "q1": "Lingola Buddy nedir?",
-        "q2": "Lingola Buddy nasıl çalışır?",
-        "q3": "Uygulamada hangi diller destekleniyor?",
-        "a1": "Lingola Buddy, yapay zeka destekli bir dil öğrenme ve konuşma pratiği uygulamasıdır.",
-        "a2": "Öğrenmek istediğin dilde yapay zeka eğitmenleriyle sesli, görüntülü veya yazılı sohbet ederek her gün pratik yaparsın.",
-        "a3": "Lingola Buddy, kullanıcıların farklı dillerde konuşma pratiği yapmalarını sağlamak için birçok dili destekler. Kullanıcılar öğrenmek istedikleri dili seçip o dilde yapay zeka karakterleriyle sohbet edebilirler."
+        "q2": "Lingola Buddy dil bilgisi (gramer) öğretir mi?",
+        "q3": "Kimler Lingola Buddy kullanabilir?",
+        "q4": "İngilizce seviyemi bilmiyorsam ne yapmalıyım?",
+        "q5": "Yeni başlayanlar Lingola Buddy kullanabilir mi?",
+        "q6": "Konuşma pratiği nasıl yapılır?",
+        "q7": "Telaffuzumu geliştirebilir miyim?",
+        "q8": "Günlük ne kadar zaman ayırmam gerekir?",
+        "q9": "Lingola Buddy İngilizce konuşma özgüvenimi artırır mı?",
+        "q10": "Lingola Buddy ücretsiz mi?",
+        "q11": "Hangi konularda konuşma pratiği yapabilirim?",
+        "q12": "Lingola Buddy'yi istediğim zaman kullanabilir miyim?",
+        "a1": "Lingola Buddy, kullanıcıların İngilizce konuşma becerilerini geliştirmelerine yardımcı olmak için tasarlanmış yapay zeka destekli bir İngilizce konuşma pratiği uygulamasıdır.",
+        "a2": "Lingola Buddy'nin temel amacı konuşma ve dinleme becerilerini geliştirmektir. Gramer bilgisi, gerçek konuşma pratikleri sırasında doğal olarak gelişir.",
+        "a3": "İngilizce konuşma becerilerini geliştirmek isteyen herkes, başlangıç seviyesinden ileri seviyeye kadar Lingola Buddy kullanabilir.",
+        "a4": "Endişelenmeyin. Lingola Buddy seviyenize uyum sağlar ve size uygun konuşma pratikleri sunar.",
+        "a5": "Evet. Uygulama, başlangıç seviyesindeki kullanıcılar için kolay konuşmalar sunar ve seviyeniz geliştikçe içerikler de ilerler.",
+        "a6": "Yapay zeka destekli konuşma partnerleriyle çeşitli konular hakkında sohbet edebilir ve anında geri bildirim alabilirsiniz.",
+        "a7": "Evet. Lingola Buddy, sesli konuşma pratikleri ve geri bildirimler sayesinde telaffuzunuzu geliştirmenize yardımcı olur.",
+        "a8": "Günde sadece 10–15 dakika düzenli pratik yapmak bile konuşma becerilerinizde önemli gelişmeler sağlayabilir.",
+        "a9": "Evet. Düzenli konuşma pratikleri sayesinde akıcılığınızı artırabilir ve İngilizce konuşurken daha özgüvenli hissedebilirsiniz.",
+        "a10": "Uygulama temel özellikleriyle ücretsiz olarak kullanılabilir. Ek özellikler ve gelişmiş içerikler için premium seçenekler sunulmaktadır.",
+        "a11": "Seyahat, iş hayatı, eğitim, teknoloji, günlük yaşam, hobiler ve daha birçok farklı konuda konuşma pratiği yapabilirsiniz.",
+        "a12": "Evet. Lingola Buddy 7/24 kullanılabilir ve dilediğiniz zaman İngilizce konuşma pratiği yapmanıza olanak tanır."
     },
     "profile_language": {
         "title": "Dil",

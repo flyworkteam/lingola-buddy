@@ -9,7 +9,11 @@ import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
+import 'package:lingola_buddy/Core/Utils/chat_lesson_resolver.dart';
+import 'package:lingola_buddy/Riverpod/Providers/curriculum_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/daily_conversation_provider.dart';
 import 'package:lingola_buddy/Models/app_enums.dart';
+import 'package:lingola_buddy/Models/chat_route_args.dart';
 
 class TutorProfileView extends ConsumerWidget {
   const TutorProfileView({super.key, required this.tutorId});
@@ -225,7 +229,18 @@ class TutorProfileView extends ConsumerWidget {
                           onPressed: () => Navigator.pushNamed(
                             context,
                             '/chat',
-                            arguments: tutor.id,
+                            arguments: ChatRouteArgs(
+                              tutorId: tutor.id,
+                              lessonId: resolveChatLessonIdFromState(
+                                tutorId: tutor.id,
+                                session: ref.read(callSessionControllerProvider),
+                                curriculum:
+                                    ref.read(userCurriculumProvider).value,
+                                daily: ref
+                                    .read(userDailyConversationProvider)
+                                    .value,
+                              ),
+                            ),
                           ),
                           child: Text(
                             AppTranslations.section('tudor', 'text_message'),

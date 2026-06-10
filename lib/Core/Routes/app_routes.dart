@@ -11,7 +11,6 @@ import 'package:lingola_buddy/View/OnboardingCarouselView/onboarding_carousel_vi
 import 'package:lingola_buddy/View/OnboardingGoalView/onboarding_goal_view.dart';
 import 'package:lingola_buddy/View/OnboardingLanguageView/onboarding_language_view.dart';
 import 'package:lingola_buddy/View/OnboardingLevelView/onboarding_level_view.dart';
-import 'package:lingola_buddy/View/PlanReadyView/plan_ready_view.dart';
 import 'package:lingola_buddy/View/SignUpView/sign_up_view.dart';
 import 'package:lingola_buddy/View/SplashView/splash_view.dart';
 import 'package:lingola_buddy/View/VideoCallView/video_call_view.dart';
@@ -26,7 +25,6 @@ class AppRoutes {
   static const String onboardingLevel = '/onboarding/level';
   static const String onboardingGoal = '/onboarding/goal';
   static const String generatingPlan = '/onboarding/plan-generating';
-  static const String planReady = '/onboarding/plan-ready';
   static const String callPreview = '/call/preview';
   /// Görüntülü arama (onboarding önizlemeden veya kök navigator’dan).
   static const String videoCall = '/call/video';
@@ -43,7 +41,6 @@ class AppRoutes {
     onboardingLevel: (_) => const OnboardingLevelView(),
     onboardingGoal: (_) => const OnboardingGoalView(),
     generatingPlan: (_) => const GeneratingPlanView(),
-    planReady: (_) => const PlanReadyView(),
     callPreview: (ctx) {
       final args = _parseCallPreviewArgs(ModalRoute.of(ctx)?.settings.arguments);
       return CallPreviewView(args: args);

@@ -133,6 +133,7 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
           builder: (_) => ChatView(
             tutorId: args.tutorId,
             showHistoryShimmer: args.showHistoryShimmer,
+            lessonId: args.lessonId,
           ),
           settings: settings,
         );
@@ -193,6 +194,7 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
           builder: (_) => ChatView(
             tutorId: args.tutorId,
             showHistoryShimmer: args.showHistoryShimmer,
+            lessonId: args.lessonId,
           ),
           settings: settings,
         );
@@ -238,6 +240,7 @@ class _BottomNavBarViewState extends ConsumerState<BottomNavBarView> {
           builder: (_) => ChatView(
             tutorId: args.tutorId,
             showHistoryShimmer: args.showHistoryShimmer,
+            lessonId: args.lessonId,
           ),
           settings: settings,
         );

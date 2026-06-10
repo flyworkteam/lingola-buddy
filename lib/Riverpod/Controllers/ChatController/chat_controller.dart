@@ -6,9 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lingola_buddy/Core/Config/openai_config.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
+import 'package:lingola_buddy/Core/Utils/chat_lesson_resolver.dart';
+import 'package:lingola_buddy/Models/chat_lesson_context.dart';
 import 'package:lingola_buddy/Models/chat_message_model.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
 import 'package:lingola_buddy/Repositories/conversation_repository.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/conversation_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/talk_history_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
@@ -18,6 +22,7 @@ import 'package:lingola_buddy/Services/chat_attachment_service.dart';
 import 'package:lingola_buddy/Services/chat_tts_service.dart';
 import 'package:lingola_buddy/Services/chat_voice_playback_service.dart';
 import 'package:lingola_buddy/Services/chat_voice_recorder_service.dart';
+import 'package:lingola_buddy/Services/chat_prompt_builder.dart';
 import 'package:lingola_buddy/Services/openai_chat_service.dart';
 
 final openAiChatServiceProvider = Provider<OpenAiChatService>((ref) {
@@ -53,7 +58,11 @@ class ChatSelection {
 }
 
 /// Sohbet oturumu anahtarı — [showHistoryShimmer] geçmişten açılışta true.
-typedef ChatSessionKey = ({String tutorId, bool showHistoryShimmer});
+typedef ChatSessionKey = ({
+  String tutorId,
+  bool showHistoryShimmer,
+  String? lessonId,
+});
 
 class ChatState {
   const ChatState({
@@ -142,6 +151,8 @@ class ChatController extends StateNotifier<ChatState> {
   ChatController({
     required this.tutorId,
     required this.tutor,
+    required this.uiLanguageCode,
+    required this.lessonContext,
     required ConversationRepository conversationRepo,
     required OpenAiChatService openAi,
     required ChatTtsService tts,
@@ -156,7 +167,13 @@ class ChatController extends StateNotifier<ChatState> {
         _attachments = attachments,
         super(
           ChatState(
-            messages: showHistoryShimmer ? const [] : _seedMessages(tutor),
+            messages: showHistoryShimmer
+                ? const []
+                : _seedMessages(
+                    tutor: tutor,
+                    uiLanguageCode: uiLanguageCode,
+                    lessonContext: lessonContext,
+                  ),
             isLoadingHistory: true,
             showHistoryShimmer: showHistoryShimmer,
           ),
@@ -167,6 +184,8 @@ class ChatController extends StateNotifier<ChatState> {
 
   final String tutorId;
   final TutorModel tutor;
+  final String uiLanguageCode;
+  final ChatLessonContext lessonContext;
   final ConversationRepository _conversationRepo;
   final bool showHistoryShimmer;
   final OpenAiChatService _openAi;
@@ -185,7 +204,11 @@ class ChatController extends StateNotifier<ChatState> {
       final hasHistory = await _conversationRepo.hasMessages(tutor.id);
       if (!hasHistory) {
         state = state.copyWith(
-          messages: _seedMessages(tutor),
+          messages: _seedMessages(
+            tutor: tutor,
+            uiLanguageCode: uiLanguageCode,
+            lessonContext: lessonContext,
+          ),
           isLoadingHistory: false,
         );
         return;
@@ -193,12 +216,24 @@ class ChatController extends StateNotifier<ChatState> {
 
       final saved = await _conversationRepo.fetchMessages(tutor.id);
       state = state.copyWith(
-        messages: saved.isNotEmpty ? saved : _seedMessages(tutor),
+        messages: saved.isNotEmpty
+            ? saved
+            : _seedMessages(
+                tutor: tutor,
+                uiLanguageCode: uiLanguageCode,
+                lessonContext: lessonContext,
+              ),
         isLoadingHistory: false,
       );
     } catch (_) {
       state = state.copyWith(
-        messages: state.messages.isEmpty ? _seedMessages(tutor) : state.messages,
+        messages: state.messages.isEmpty
+            ? _seedMessages(
+                tutor: tutor,
+                uiLanguageCode: uiLanguageCode,
+                lessonContext: lessonContext,
+              )
+            : state.messages,
         isLoadingHistory: false,
       );
     }
@@ -254,14 +289,22 @@ class ChatController extends StateNotifier<ChatState> {
 
   String get tutorDisplayName => _displayName;
 
-  static List<ChatMessage> _seedMessages(TutorModel tutor) {
-    final name = tutor.name;
+  static List<ChatMessage> _seedMessages({
+    required TutorModel tutor,
+    required String uiLanguageCode,
+    required ChatLessonContext lessonContext,
+  }) {
+    final name = tutor.localizedDisplayName;
+    final text = ChatPromptBuilder.buildSeedGreeting(
+      tutorName: name,
+      uiLanguageCode: uiLanguageCode,
+      lessonContext: lessonContext,
+    );
     return [
       ChatMessage(
         id: 'seed-1',
         role: ChatMessageRole.assistant,
-        text:
-            'Hello! I\'m $name. It was a pleasure meeting you. Could you tell me a little about yourself?',
+        text: text,
       ),
     ];
   }
@@ -287,7 +330,8 @@ class ChatController extends StateNotifier<ChatState> {
     );
   }
 
-  static const _wordTranslationTargetLabel = 'Turkish';
+  String get _wordTranslationTargetLabel =>
+      ChatPromptBuilder.uiLanguageLabel(uiLanguageCode);
 
   void _applyWordTranslation(
     ChatSelection selection,
@@ -633,6 +677,8 @@ class ChatController extends StateNotifier<ChatState> {
             tutorName: _displayName,
             tutorBio: tutor.bio ?? '',
             history: historyWithUser,
+            uiLanguageCode: uiLanguageCode,
+            lessonContext: lessonContext,
           )
           .timeout(const Duration(seconds: 45));
 
@@ -686,9 +732,23 @@ final chatControllerProvider = StateNotifierProvider.autoDispose
           .cast<TutorModel?>()
           .firstOrNull;
       final resolved = tutor ?? tutors.first;
-      return ChatController(
+      final uiLanguageCode = ref.watch(
+        userProfileControllerProvider.select((s) => s.uiLanguageCode),
+      );
+      final resolvedLessonId = resolveChatLessonId(
+        ref,
+        explicitLessonId: key.lessonId,
+        tutorId: key.tutorId,
+      );
+      final lessonContext = resolveChatLessonContext(
+        ref,
+        lessonId: resolvedLessonId,
+      );
+      final controller = ChatController(
         tutorId: key.tutorId,
         tutor: resolved,
+        uiLanguageCode: uiLanguageCode,
+        lessonContext: lessonContext,
         conversationRepo: ref.watch(conversationRepositoryProvider),
         showHistoryShimmer: key.showHistoryShimmer,
         openAi: ref.watch(openAiChatServiceProvider),
@@ -697,6 +757,13 @@ final chatControllerProvider = StateNotifierProvider.autoDispose
         attachments: ref.watch(chatAttachmentServiceProvider),
         onThreadUpdated: () => ref.invalidate(talkHistoryProvider),
       );
+      Future.microtask(() {
+        ref.read(callSessionControllerProvider.notifier).bindTutor(
+              key.tutorId,
+              lessonId: resolvedLessonId,
+            );
+      });
+      return controller;
     });
 
 extension _FirstOrNull<E> on Iterable<E> {

@@ -108,9 +108,10 @@ class WeeklyProgressPanel extends ConsumerStatefulWidget {
           {'n': '$acc'},
         );
       case 'time_value':
+        final dayMinutes = selectedDay?.minutes ?? 0;
         return AppTranslations.interpolate(
           AppTranslations.section(translationChapter, 'minutes_fmt'),
-          {'n': '$totalPracticeMinutes'},
+          {'n': '$dayMinutes'},
         );
       case 'level_value':
         return progress?.cefrLevel ?? 'A1';
@@ -144,9 +145,14 @@ class _WeeklyProgressPanelState extends ConsumerState<WeeklyProgressPanel> {
   @override
   Widget build(BuildContext context) {
     final streakAsync = ref.watch(userStreakProvider);
-    final week = streakAsync.value?.week ?? [];
-    final progress = streakAsync.value?.progress;
-    final totalPracticeMinutes = streakAsync.value?.totalPracticeMinutes ?? 0;
+    final dashboard = streakAsync.when(
+      data: (data) => data,
+      loading: () => null,
+      error: (_, __) => null,
+    );
+    final week = dashboard?.week ?? [];
+    final progress = dashboard?.progress;
+    final totalPracticeMinutes = dashboard?.totalPracticeMinutes ?? 0;
     final todayKey = _todayKeyFromWeek(week) ?? progress?.todayDayKey ?? 'mon';
     final selectedKey = _selectedDayKey ?? todayKey;
     final selectedDay = _dayForKey(week, selectedKey);

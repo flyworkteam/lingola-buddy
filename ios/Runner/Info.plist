@@ -50,6 +50,8 @@
 	<string>Geliştirme sırasında yerel API sunucusuna bağlanmak için yerel ağ erişimi gerekir.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Sesli mesaj göndermek için mikrofon erişimi gerekir.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Konum bilgisi uygulama deneyimini iyileştirmek ve analitik hizmetlerini desteklemek için kullanılabilir.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Sohbete fotoğraf eklemek için galeri erişimi gerekir.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

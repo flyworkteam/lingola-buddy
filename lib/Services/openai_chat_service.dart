@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:lingola_buddy/Core/Config/openai_config.dart';
+import 'package:lingola_buddy/Models/chat_lesson_context.dart';
 import 'package:lingola_buddy/Models/chat_message_model.dart';
+import 'package:lingola_buddy/Services/chat_prompt_builder.dart';
 
 class OpenAiChatService {
   OpenAiChatService({Dio? dio}) : _dio = dio ?? _createDio();
@@ -29,15 +31,20 @@ class OpenAiChatService {
     required String tutorName,
     required String tutorBio,
     required List<ChatMessage> history,
+    required String uiLanguageCode,
+    required ChatLessonContext lessonContext,
   }) async {
+    final systemPrompt = ChatPromptBuilder.buildSystemPrompt(
+      tutorName: tutorName,
+      tutorBio: tutorBio,
+      uiLanguageCode: uiLanguageCode,
+      lessonContext: lessonContext,
+    );
+
     final messages = <Map<String, String>>[
       {
         'role': 'system',
-        'content':
-            'You are $tutorName, a friendly English conversation tutor. '
-            'Help the learner practice spoken English in short, natural messages (1-3 sentences). '
-            'Gently correct mistakes when needed. Mix English; you may use occasional Turkish '
-            'only if the learner seems stuck. Stay in character. Bio: $tutorBio',
+        'content': systemPrompt,
       },
       for (final m in history)
         if (!m.isTyping && m.apiText.isNotEmpty)
@@ -47,7 +54,10 @@ class OpenAiChatService {
     return _complete(messages);
   }
 
-  Future<String> transcribeAudio(String filePath) async {
+  Future<String> transcribeAudio(
+    String filePath, {
+    String? languageCode,
+  }) async {
     final file = File(filePath);
     if (!await file.exists()) {
       throw OpenAiApiException('Ses dosyası bulunamadı');
@@ -65,7 +75,8 @@ class OpenAiChatService {
             filename: uploadName,
           ),
           'model': 'whisper-1',
-          'language': 'en',
+          if (languageCode != null && languageCode.trim().isNotEmpty)
+            'language': languageCode.trim().toLowerCase(),
         }),
         options: Options(
           contentType: 'multipart/form-data',

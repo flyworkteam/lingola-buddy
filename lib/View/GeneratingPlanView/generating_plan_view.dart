@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingola_buddy/Core/Localization/app_translations.dart';
-import 'package:lingola_buddy/Core/Routes/app_routes.dart';
+import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
@@ -195,7 +195,7 @@ class _GeneratingPlanViewState extends ConsumerState<GeneratingPlanView> {
                       minimumHeight: 60,
                       icon: _ctaArrowIcon(),
                       onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.planReady);
+                        CallNavigation.pushGuestPreview(context, ref);
                       },
                     ),
                   ],

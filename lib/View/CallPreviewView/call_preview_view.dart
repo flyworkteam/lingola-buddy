@@ -81,6 +81,8 @@ class _CallPreviewViewState extends ConsumerState<CallPreviewView> {
 
     final mq = MediaQuery.sizeOf(context);
     final avatarR = (mq.width * 0.31).clamp(96.0, 121.0);
+    final avatarSize = avatarR * 2;
+    final avatarCacheSize = TutorAvatarImage.decodePixels(context, avatarSize);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -90,16 +92,12 @@ class _CallPreviewViewState extends ConsumerState<CallPreviewView> {
           Positioned.fill(
             child: ImageFiltered(
               imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Transform.scale(
-                scale: 0.92,
-                alignment: Alignment.center,
-                child: TutorAvatarImage(
-                  tutor: tutor,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                  alignment: const Alignment(0, 0.5),
-                ),
+              child: TutorAvatarImage(
+                tutor: tutor,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+                alignment: const Alignment(0, 0.5),
               ),
             ),
           ),
@@ -196,10 +194,14 @@ class _CallPreviewViewState extends ConsumerState<CallPreviewView> {
                           child: ClipOval(
                             child: TutorAvatarImage(
                               tutor: tutor,
-                              width: avatarR * 2,
-                              height: avatarR * 2,
+                              width: avatarSize,
+                              height: avatarSize,
                               fit: BoxFit.cover,
                               alignment: const Alignment(0, -1.2),
+                              cacheWidth: avatarCacheSize,
+                              cacheHeight: avatarCacheSize,
+                              loadingBackgroundColor: Colors.white,
+                              hideAssetFallback: true,
                             ),
                           ),
                         ),

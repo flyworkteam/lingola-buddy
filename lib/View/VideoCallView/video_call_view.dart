@@ -20,6 +20,7 @@ import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/user_provider.dart';
 import 'package:lingola_buddy/Services/local_camera_holder.dart';
 import 'package:lingola_buddy/Services/realtime_call_engine.dart';
+import 'package:lingola_buddy/Services/rive_preload_service.dart';
 
 /// Görüntülü arama — bağlanırken sadece durum + kapat; kontroller aktif ekranda.
 class VideoCallView extends ConsumerStatefulWidget {
@@ -68,6 +69,11 @@ class _VideoCallViewState extends ConsumerState<VideoCallView> {
 
   Future<void> _bootstrap() async {
     final lessonId = ref.read(callSessionControllerProvider).activeLessonId;
+    final tutor =
+        ref.read(tutorByIdProvider(widget.tutorId)) ??
+        ref.read(tutorsCatalogProvider).first;
+    RivePreloadService.instance.preload(tutor.rivUrl);
+
     ref
         .read(callSessionControllerProvider.notifier)
         .bindTutor(widget.tutorId, kind: CallKind.video, lessonId: lessonId);
@@ -91,7 +97,10 @@ class _VideoCallViewState extends ConsumerState<VideoCallView> {
     }
 
     final lang = ref.read(userProfileControllerProvider).uiLanguageCode;
-    final learnerName = ref.read(currentUserProvider)?.displayName ?? '';
+    final profileUser = ref.read(currentUserProvider);
+    final learnerName = profileUser != null && profileUser.id != 'local'
+        ? profileUser.displayName.trim()
+        : '';
     final engine = RealtimeCallEngine(
       tutorId: widget.tutorId,
       languageCode: lang,

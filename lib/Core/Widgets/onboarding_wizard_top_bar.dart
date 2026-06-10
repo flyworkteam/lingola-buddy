@@ -46,6 +46,7 @@ class OnboardingWizardTopBar extends StatelessWidget {
             ),
           ),
         ),
+        SizedBox(width: 8),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(right: 8),

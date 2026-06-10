@@ -8,13 +8,12 @@ final tutorsCatalogAsyncProvider = FutureProvider<List<TutorModel>>((ref) {
   return ref.read(tutorRepositoryProvider).fetchTutors();
 });
 
-/// API’den yüklenen eğitmen listesi; yüklenirken / hata durumunda yedek katalog.
+/// API’den yüklenen eğitmen listesi; yüklenirken veya hata durumunda boş.
 final tutorsCatalogProvider = Provider<List<TutorModel>>((ref) {
   final async = ref.watch(tutorsCatalogAsyncProvider);
-  return async.when(
-    data: (list) => list.isNotEmpty ? list : TutorModel.fallbackCatalog(),
-    loading: () => TutorModel.fallbackCatalog(),
-    error: (_, __) => TutorModel.fallbackCatalog(),
+  return async.maybeWhen(
+    data: (list) => list,
+    orElse: () => const [],
   );
 });
 

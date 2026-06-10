@@ -1,8 +1,10 @@
 import 'dart:async' show unawaited;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lingola_buddy/Core/Config/premium_config.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/PremiumController/premium_controller.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/SessionController/session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/curriculum_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/daily_conversation_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/streak_provider.dart';
@@ -25,18 +27,15 @@ class CallSessionPostSyncResult {
 abstract final class CallSessionPostSync {
   static Future<CallSessionPostSyncResult> sync(WidgetRef ref) async {
     final session = ref.read(callSessionControllerProvider);
-    final minutes = session.lastDurationSeconds ~/ 60;
-    final words = session.lastWordsSpoken;
-    final score = session.lastSessionScorePercent;
+    final isAuthenticated = ref.read(sessionControllerProvider).isAuthenticated;
 
-    try {
-      await ref.read(streakRepositoryProvider).recordPractice(
-            minutes: minutes,
-            wordsLearned: words,
-            accuracyPercent: score > 0 ? score : null,
-          );
-      ref.invalidate(userStreakProvider);
-    } catch (_) {}
+    if (!isAuthenticated) {
+      await _queueSession(session);
+      return const CallSessionPostSyncResult();
+    }
+
+    await _recordPracticeForSession(ref, session);
+    await _flushPendingPractice(ref);
 
     await ref.read(premiumControllerProvider.notifier).recordCompletedCall(
           durationSeconds: session.lastDurationSeconds,
@@ -86,5 +85,64 @@ abstract final class CallSessionPostSync {
     } catch (_) {}
 
     return result;
+  }
+
+  /// Giriş sonrası misafir görüşmelerini sunucuya aktarır.
+  static Future<void> flushPendingAfterLogin(WidgetRef ref) async {
+    if (!ref.read(sessionControllerProvider).isAuthenticated) return;
+    await _flushPendingPractice(ref);
+  }
+
+  static Future<void> _queueSession(CallSessionState session) async {
+    if (session.lastDurationSeconds <
+        PremiumConfig.minDurationToCountSeconds) {
+      return;
+    }
+    await SessionLocalStorage.enqueuePendingPractice(
+      durationSeconds: session.lastDurationSeconds,
+      wordsLearned: session.lastWordsSpoken,
+      accuracyPercent: session.lastSessionScorePercent > 0
+          ? session.lastSessionScorePercent
+          : null,
+    );
+  }
+
+  static Future<void> _recordPracticeForSession(
+    WidgetRef ref,
+    CallSessionState session,
+  ) async {
+    if (session.lastDurationSeconds <
+        PremiumConfig.minDurationToCountSeconds) {
+      return;
+    }
+    try {
+      await ref.read(streakRepositoryProvider).recordPractice(
+            durationSeconds: session.lastDurationSeconds,
+            wordsLearned: session.lastWordsSpoken,
+            accuracyPercent: session.lastSessionScorePercent > 0
+                ? session.lastSessionScorePercent
+                : null,
+          );
+      ref.invalidate(userStreakProvider);
+    } catch (_) {}
+  }
+
+  static Future<void> _flushPendingPractice(WidgetRef ref) async {
+    final pending = await SessionLocalStorage.drainPendingPractice();
+    if (pending.isEmpty) return;
+
+    for (final entry in pending) {
+      if (entry.durationSeconds < PremiumConfig.minDurationToCountSeconds) {
+        continue;
+      }
+      try {
+        await ref.read(streakRepositoryProvider).recordPractice(
+              durationSeconds: entry.durationSeconds,
+              wordsLearned: entry.wordsLearned,
+              accuracyPercent: entry.accuracyPercent,
+            );
+      } catch (_) {}
+    }
+    ref.invalidate(userStreakProvider);
   }
 }

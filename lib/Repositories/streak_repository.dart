@@ -14,13 +14,15 @@ class StreakRepository {
 
   Future<StreakDashboardModel> recordPractice({
     int minutes = 0,
+    int durationSeconds = 0,
     int wordsLearned = 0,
     int? accuracyPercent,
   }) async {
     final envelope = await _http.post(
       '/stats/practice/me',
       body: {
-        'minutes': minutes,
+        if (durationSeconds > 0) 'durationSeconds': durationSeconds,
+        if (durationSeconds <= 0 && minutes > 0) 'minutes': minutes,
         if (wordsLearned > 0) 'wordsLearned': wordsLearned,
         if (accuracyPercent != null) 'accuracyPercent': accuracyPercent,
       },

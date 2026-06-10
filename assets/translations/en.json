@@ -56,6 +56,8 @@
         "plan_ready_title": "Your plan is ready",
         "plan_ready_desc": "You can speak now",
         "plan_ready_button": "Start speaking",
+        "plan_ready_app_bar": "Ready",
+        "plan_ready_note": "The video/call component and live call services will be connected later.",
         "wizard_step_label": "{current} of {total}"
     },
     "call": {
@@ -327,11 +329,29 @@
     "profile_faq": {
         "title": "Frequently asked questions",
         "q1": "What is Lingola Buddy?",
-        "q2": "How does Lingola Buddy work?",
-        "q3": "Which languages are supported in the app?",
-        "a1": "Lingola Buddy is an AI-supported language learning and speaking practice application.",
-        "a2": "You practice daily by chatting via voice, video, or text with AI tutors in the language you want to learn.",
-        "a3": "Lingola Buddy supports many languages to enable users to practice speaking in different languages. Users can choose the language they want to learn and chat with artificial intelligence characters in that language."
+        "q2": "Does Lingola Buddy teach grammar?",
+        "q3": "Who can use Lingola Buddy?",
+        "q4": "What should I do if I don't know my English level?",
+        "q5": "Can beginners use Lingola Buddy?",
+        "q6": "How do I practice speaking?",
+        "q7": "Can I improve my pronunciation?",
+        "q8": "How much time should I set aside daily?",
+        "q9": "Does Lingola Buddy boost my confidence in speaking English?",
+        "q10": "Is Lingola Buddy free?",
+        "q11": "What topics can I practice speaking about?",
+        "q12": "Can I use Lingola Buddy whenever I want?",
+        "a1": "Lingola Buddy is an AI-powered English speaking practice app designed to help users improve their English conversation skills.",
+        "a2": "Lingola Buddy's main focus is developing speaking and listening skills. Grammar knowledge develops naturally during real conversation practice.",
+        "a3": "Anyone who wants to improve their English speaking skills can use Lingola Buddy, from beginner to advanced level.",
+        "a4": "Don't worry. Lingola Buddy adapts to your level and offers speaking practice suited to you.",
+        "a5": "Yes. The app offers easy conversations for beginners, and content progresses as your level improves.",
+        "a6": "You can chat about various topics with AI-powered speaking partners and get instant feedback.",
+        "a7": "Yes. Lingola Buddy helps you improve your pronunciation through voice-based speaking practice and feedback.",
+        "a8": "Even just 10–15 minutes of regular daily practice can lead to significant improvements in your speaking skills.",
+        "a9": "Yes. Regular speaking practice can help you become more fluent and feel more confident when speaking English.",
+        "a10": "The app can be used free with its basic features. Premium options are available for additional features and advanced content.",
+        "a11": "You can practice speaking about travel, work, education, technology, daily life, hobbies, and many other topics.",
+        "a12": "Yes. Lingola Buddy is available 24/7 and lets you practice English speaking whenever you like."
     },
     "profile_language": {
         "title": "Language",

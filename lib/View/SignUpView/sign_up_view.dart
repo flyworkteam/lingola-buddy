@@ -53,7 +53,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
 
   void _onCookiesTap() {
     if (!mounted) return;
-    _openPrivacy(context);
+    _openCookies(context);
   }
 
   @override
@@ -70,6 +70,10 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
 
   void _openPrivacy(BuildContext context) {
     LegalLinkLauncher.openPrivacyPolicy(context);
+  }
+
+  void _openCookies(BuildContext context) {
+    LegalLinkLauncher.openCookiePolicy(context);
   }
 
   Future<void> _signInGoogle(BuildContext context) =>

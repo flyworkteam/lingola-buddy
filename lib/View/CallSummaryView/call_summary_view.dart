@@ -14,6 +14,7 @@ import 'package:lingola_buddy/Models/tutor_model.dart';
 import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/PremiumController/premium_controller.dart';
+import 'package:lingola_buddy/Riverpod/Controllers/SessionController/session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/curriculum_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/daily_conversation_provider.dart';
@@ -95,14 +96,30 @@ class _CallSummaryViewState extends ConsumerState<CallSummaryView> {
   }
 
   Future<void> _onPrimaryCta(PremiumState premium) async {
+    if (!ref.read(sessionControllerProvider).isAuthenticated) {
+      ref.read(callSessionControllerProvider.notifier).clearActiveSession();
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.signUp,
+        (_) => false,
+      );
+      return;
+    }
+
     if (!premium.canStartCall) {
       await LingolaRevenueCatPaywall.presentSheet(context, ref);
       return;
     }
 
     final session = ref.read(callSessionControllerProvider);
-    final curriculum = ref.read(userCurriculumProvider).value;
-    final daily = ref.read(userDailyConversationProvider).value;
+    final isAuthenticated = ref.read(sessionControllerProvider).isAuthenticated;
+    final curriculum = isAuthenticated
+        ? ref.read(userCurriculumProvider).valueOrNull
+        : null;
+    final daily = isAuthenticated
+        ? ref.read(userDailyConversationProvider).valueOrNull
+        : null;
     final activeId = session.activeLessonId;
     final lessonId = activeId ??
         curriculum?.currentLesson?.id ??
@@ -138,6 +155,9 @@ class _CallSummaryViewState extends ConsumerState<CallSummaryView> {
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(callSessionControllerProvider);
+    final isAuthenticated = ref.watch(
+      sessionControllerProvider.select((s) => s.isAuthenticated),
+    );
     final seconds = session.lastDurationSeconds;
     final words = session.lastWordsSpoken;
     final scorePercent = session.lastSessionScorePercent;
@@ -172,8 +192,12 @@ class _CallSummaryViewState extends ConsumerState<CallSummaryView> {
         ? tutor.localizedDisplayName
         : AppTranslations.section('call', 'title');
 
-    final curriculum = ref.watch(userCurriculumProvider).value;
-    final dailyCurriculum = ref.watch(userDailyConversationProvider).value;
+    final curriculum = isAuthenticated
+        ? ref.watch(userCurriculumProvider).valueOrNull
+        : null;
+    final dailyCurriculum = isAuthenticated
+        ? ref.watch(userDailyConversationProvider).valueOrNull
+        : null;
     final activeId = session.activeLessonId;
     final subject =
         _sessionTopicTitle(activeId, curriculum, dailyCurriculum) ??
@@ -205,7 +229,9 @@ class _CallSummaryViewState extends ConsumerState<CallSummaryView> {
       {'topic': topicPreview},
     );
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(
         bottom: false,
@@ -432,7 +458,7 @@ class _CallSummaryViewState extends ConsumerState<CallSummaryView> {
                           .clearActiveSession();
                       Navigator.pushNamedAndRemoveUntil(
                         context,
-                        AppRoutes.bottomNav,
+                        isAuthenticated ? AppRoutes.bottomNav : AppRoutes.signUp,
                         (_) => false,
                       );
                     },
@@ -449,6 +475,7 @@ class _CallSummaryViewState extends ConsumerState<CallSummaryView> {
           ],
         ),
       ),
+    ),
     );
   }
 }

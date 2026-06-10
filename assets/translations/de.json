@@ -56,6 +56,8 @@
         "plan_ready_title": "Dein Plan ist fertig",
         "plan_ready_desc": "Du kannst jetzt sprechen",
         "plan_ready_button": "Sprechen starten",
+        "plan_ready_app_bar": "Fertig",
+        "plan_ready_note": "Die Video-/Anrufkomponente und echte Anrufdienste werden später angebunden.",
         "wizard_step_label": "Schritt {current} von {total}"
     },
     "call": {
@@ -327,11 +329,29 @@
     "profile_faq": {
         "title": "Häufig gestellte Fragen",
         "q1": "Was ist Lingola Buddy?",
-        "q2": "Wie funktioniert Lingola Buddy?",
-        "q3": "Welche Sprachen werden in der App unterstützt?",
-        "a1": "Lingola Buddy ist eine KI-gestützte App zum Erlernen von Sprachen und zum Üben des Sprechens.",
-        "a2": "Du übst täglich, indem du per Sprache, Video oder Text mit KI-Tutoren in der Sprache chattest, die du lernen möchtest.",
-        "a3": "Lingola Buddy unterstützt viele Sprachen, um Benutzern das Sprechen in verschiedenen Sprachen zu ermöglichen. Benutzer können die Sprache auswählen, die sie lernen möchten, und mit KI-Charakteren in dieser Sprache chatten."
+        "q2": "Unterrichtet Lingola Buddy Grammatik?",
+        "q3": "Wer kann Lingola Buddy nutzen?",
+        "q4": "Was soll ich tun, wenn ich mein Englischniveau nicht kenne?",
+        "q5": "Können Anfänger Lingola Buddy nutzen?",
+        "q6": "Wie übe ich das Sprechen?",
+        "q7": "Kann ich meine Aussprache verbessern?",
+        "q8": "Wie viel Zeit sollte ich täglich einplanen?",
+        "q9": "Stärkt Lingola Buddy mein Selbstvertrauen beim Englischsprechen?",
+        "q10": "Ist Lingola Buddy kostenlos?",
+        "q11": "Über welche Themen kann ich Sprechpraxis machen?",
+        "q12": "Kann ich Lingola Buddy jederzeit nutzen?",
+        "a1": "Lingola Buddy ist eine KI-gestützte App zur englischen Sprechpraxis, die Nutzern hilft, ihre Englisch-Konversationsfähigkeiten zu verbessern.",
+        "a2": "Der Schwerpunkt von Lingola Buddy liegt auf dem Training von Sprech- und Hörverständnis. Grammatikwissen entwickelt sich natürlich während echter Gesprächspraxis.",
+        "a3": "Jeder, der seine Englisch-Sprechfähigkeiten verbessern möchte, kann Lingola Buddy nutzen – vom Anfänger bis zum Fortgeschrittenen.",
+        "a4": "Keine Sorge. Lingola Buddy passt sich deinem Niveau an und bietet dir passende Sprechübungen.",
+        "a5": "Ja. Die App bietet einfache Gespräche für Anfänger, und die Inhalte werden fortgeschrittener, wenn sich dein Niveau verbessert.",
+        "a6": "Du kannst mit KI-gestützten Gesprächspartnern über verschiedene Themen chatten und sofortiges Feedback erhalten.",
+        "a7": "Ja. Lingola Buddy hilft dir, deine Aussprache durch sprachbasierte Sprechübungen und Feedback zu verbessern.",
+        "a8": "Schon 10–15 Minuten regelmäßiges tägliches Üben können zu deutlichen Verbesserungen deiner Sprechfähigkeiten führen.",
+        "a9": "Ja. Regelmäßige Sprechpraxis kann dir helfen, flüssiger zu werden und beim Englischsprechen selbstbewusster zu sein.",
+        "a10": "Die App kann mit ihren Grundfunktionen kostenlos genutzt werden. Premium-Optionen stehen für zusätzliche Funktionen und erweiterte Inhalte zur Verfügung.",
+        "a11": "Du kannst Sprechpraxis zu Reisen, Beruf, Bildung, Technologie, Alltag, Hobbys und vielen weiteren Themen machen.",
+        "a12": "Ja. Lingola Buddy ist rund um die Uhr verfügbar und ermöglicht dir Englisch-Sprechpraxis, wann immer du möchtest."
     },
     "profile_language": {
         "title": "Sprache",

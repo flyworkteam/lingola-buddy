@@ -16,20 +16,15 @@ class ProfileFaqView extends StatefulWidget {
 class _ProfileFaqViewState extends State<ProfileFaqView> {
   int? _expandedIndex;
 
-  List<_FaqItem> get _items => [
-    _FaqItem(
-      question: AppTranslations.section('profile_faq', 'q1'),
-      answer: AppTranslations.section('profile_faq', 'a1'),
+  static const int _faqCount = 12;
+
+  List<_FaqItem> get _items => List.generate(
+    _faqCount,
+    (i) => _FaqItem(
+      question: AppTranslations.section('profile_faq', 'q${i + 1}'),
+      answer: AppTranslations.section('profile_faq', 'a${i + 1}'),
     ),
-    _FaqItem(
-      question: AppTranslations.section('profile_faq', 'q2'),
-      answer: AppTranslations.section('profile_faq', 'a2'),
-    ),
-    _FaqItem(
-      question: AppTranslations.section('profile_faq', 'q3'),
-      answer: AppTranslations.section('profile_faq', 'a3'),
-    ),
-  ];
+  );
 
   void _onTileTap(int index) {
     setState(() {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:lingola_buddy/Core/Config/device_ui_language.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/SessionController/session_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +20,7 @@ class SessionLocalStorage {
   static const _keyCallReminderTitle = 'notif_call_lesson_title';
   static const _keyCallReminderAtMs = 'notif_call_reminder_at_ms';
   static const _keyFreeCallsUsedPrefix = 'premium_free_calls_used_';
+  static const _keyPendingPracticeQueue = 'pending_practice_queue';
 
   static Future<SessionState> loadSessionState() async {
     final prefs = await SharedPreferences.getInstance();
@@ -157,6 +160,46 @@ class SessionLocalStorage {
     await setFreeCallsUsed(userId, next);
     return next;
   }
+
+  static Future<void> enqueuePendingPractice({
+    required int durationSeconds,
+    int wordsLearned = 0,
+    int? accuracyPercent,
+  }) async {
+    if (durationSeconds <= 0) return;
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getStringList(_keyPendingPracticeQueue) ?? [];
+    raw.add(
+      jsonEncode({
+        'durationSeconds': durationSeconds,
+        'wordsLearned': wordsLearned,
+        if (accuracyPercent != null) 'accuracyPercent': accuracyPercent,
+      }),
+    );
+    await prefs.setStringList(_keyPendingPracticeQueue, raw);
+  }
+
+  static Future<List<PendingPracticeEntry>> drainPendingPractice() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getStringList(_keyPendingPracticeQueue) ?? [];
+    await prefs.remove(_keyPendingPracticeQueue);
+    final out = <PendingPracticeEntry>[];
+    for (final line in raw) {
+      try {
+        final map = jsonDecode(line) as Map<String, dynamic>;
+        final seconds = (map['durationSeconds'] as num?)?.toInt() ?? 0;
+        if (seconds <= 0) continue;
+        out.add(
+          PendingPracticeEntry(
+            durationSeconds: seconds,
+            wordsLearned: (map['wordsLearned'] as num?)?.toInt() ?? 0,
+            accuracyPercent: (map['accuracyPercent'] as num?)?.toInt(),
+          ),
+        );
+      } catch (_) {}
+    }
+    return out;
+  }
 }
 
 class PendingCallReminder {
@@ -167,4 +210,16 @@ class PendingCallReminder {
 
   final String lessonTitle;
   final DateTime fireAt;
+}
+
+class PendingPracticeEntry {
+  const PendingPracticeEntry({
+    required this.durationSeconds,
+    this.wordsLearned = 0,
+    this.accuracyPercent,
+  });
+
+  final int durationSeconds;
+  final int wordsLearned;
+  final int? accuracyPercent;
 }

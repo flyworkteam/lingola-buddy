@@ -14,6 +14,7 @@ class CallSessionState {
     this.lastSessionScorePercent = 0,
     this.lastLessonCompleted = false,
     this.planProgress = 0,
+    this.onboardingGuestCallLimit = false,
   });
 
   final String? activeTutorId;
@@ -28,6 +29,9 @@ class CallSessionState {
   /// Plan oluşturma ekranı için kaba ilerleme (0–1)
   final double planProgress;
 
+  /// Onboarding misafir görüşmesi (GeneratingPlan → VideoCall → ActiveCall) için 1 dk sınırı.
+  final bool onboardingGuestCallLimit;
+
   CallSessionState copyWith({
     String? activeTutorId,
     Object? activeLessonId = _unset,
@@ -39,6 +43,7 @@ class CallSessionState {
     int? lastSessionScorePercent,
     bool? lastLessonCompleted,
     double? planProgress,
+    bool? onboardingGuestCallLimit,
   }) {
     return CallSessionState(
       activeTutorId: activeTutorId ?? this.activeTutorId,
@@ -55,6 +60,8 @@ class CallSessionState {
           lastSessionScorePercent ?? this.lastSessionScorePercent,
       lastLessonCompleted: lastLessonCompleted ?? this.lastLessonCompleted,
       planProgress: planProgress ?? this.planProgress,
+      onboardingGuestCallLimit:
+          onboardingGuestCallLimit ?? this.onboardingGuestCallLimit,
     );
   }
 }
@@ -84,6 +91,10 @@ class CallSessionController extends Notifier<CallSessionState> {
     state = state.copyWith(planProgress: value.clamp(0, 1).toDouble());
   }
 
+  void markOnboardingGuestCallLimit() {
+    state = state.copyWith(onboardingGuestCallLimit: true);
+  }
+
   void endCall({
     required int durationSeconds,
     int wordsSpoken = 0,
@@ -95,6 +106,7 @@ class CallSessionController extends Notifier<CallSessionState> {
       lastWordsSpoken: wordsSpoken,
       lastSessionScorePercent: sessionScorePercent.clamp(0, 100),
       lastLessonCompleted: lessonCompleted,
+      onboardingGuestCallLimit: false,
     );
   }
 

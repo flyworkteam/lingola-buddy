@@ -56,6 +56,8 @@
         "plan_ready_title": "Votre plan est prêt",
         "plan_ready_desc": "Vous pouvez parler maintenant",
         "plan_ready_button": "Commencer à parler",
+        "plan_ready_app_bar": "Prêt",
+        "plan_ready_note": "Le composant vidéo/appel et les services d'appel réels seront connectés ultérieurement.",
         "wizard_step_label": "Étape {current} sur {total}"
     },
     "call": {
@@ -327,11 +329,29 @@
     "profile_faq": {
         "title": "Foire aux questions",
         "q1": "Qu'est-ce que Lingola Buddy ?",
-        "q2": "Comment fonctionne Lingola Buddy ?",
-        "q3": "Quelles langues sont prises en charge dans l'application ?",
-        "a1": "Lingola Buddy est une application d'apprentissage des langues et de pratique de l'oral soutenue par l'IA.",
-        "a2": "Vous pratiquez quotidiennement en discutant par voix, vidéo ou texte avec des tuteurs IA dans la langue que vous souhaitez apprendre.",
-        "a3": "Lingola Buddy prend en charge de nombreuses langues pour permettre aux utilisateurs de s'entraîner à parler dans différentes langues. Les utilisateurs peuvent choisir la langue qu'ils veulent apprendre et discuter avec des personnages d'intelligence artificielle dans cette langue."
+        "q2": "Lingola Buddy enseigne-t-il la grammaire ?",
+        "q3": "Qui peut utiliser Lingola Buddy ?",
+        "q4": "Que faire si je ne connais pas mon niveau d'anglais ?",
+        "q5": "Les débutants peuvent-ils utiliser Lingola Buddy ?",
+        "q6": "Comment pratiquer l'expression orale ?",
+        "q7": "Puis-je améliorer ma prononciation ?",
+        "q8": "Combien de temps dois-je consacrer chaque jour ?",
+        "q9": "Lingola Buddy renforce-t-il ma confiance pour parler anglais ?",
+        "q10": "Lingola Buddy est-il gratuit ?",
+        "q11": "Sur quels sujets puis-je pratiquer l'expression orale ?",
+        "q12": "Puis-je utiliser Lingola Buddy quand je le souhaite ?",
+        "a1": "Lingola Buddy est une application de pratique de l'anglais oral assistée par l'IA, conçue pour aider les utilisateurs à améliorer leurs compétences en conversation en anglais.",
+        "a2": "L'objectif principal de Lingola Buddy est de développer les compétences orales et d'écoute. Les connaissances grammaticales se développent naturellement lors de véritables pratiques de conversation.",
+        "a3": "Toute personne souhaitant améliorer ses compétences en anglais oral peut utiliser Lingola Buddy, du niveau débutant au niveau avancé.",
+        "a4": "Ne vous inquiétez pas. Lingola Buddy s'adapte à votre niveau et vous propose des exercices de conversation adaptés.",
+        "a5": "Oui. L'application propose des conversations faciles pour les débutants, et le contenu évolue à mesure que votre niveau progresse.",
+        "a6": "Vous pouvez discuter de divers sujets avec des partenaires de conversation assistés par l'IA et recevoir des retours instantanés.",
+        "a7": "Oui. Lingola Buddy vous aide à améliorer votre prononciation grâce à des exercices de conversation vocale et des retours.",
+        "a8": "Seulement 10 à 15 minutes de pratique quotidienne régulière peuvent entraîner des améliorations significatives de vos compétences orales.",
+        "a9": "Oui. Une pratique régulière de l'expression orale peut vous aider à gagner en fluidité et à vous sentir plus confiant lorsque vous parlez anglais.",
+        "a10": "L'application peut être utilisée gratuitement avec ses fonctionnalités de base. Des options premium sont disponibles pour des fonctionnalités supplémentaires et du contenu avancé.",
+        "a11": "Vous pouvez pratiquer l'expression orale sur des sujets tels que les voyages, le travail, l'éducation, la technologie, la vie quotidienne, les loisirs et bien d'autres.",
+        "a12": "Oui. Lingola Buddy est disponible 24h/24 et 7j/7 et vous permet de pratiquer l'anglais oral quand vous le souhaitez."
     },
     "profile_language": {
         "title": "Langue",

@@ -17,6 +17,7 @@ class TutorAvatarImage extends StatelessWidget {
     this.gaplessPlayback = true,
     this.loadingBackgroundColor,
     this.loadingIndicatorColor,
+    this.hideAssetFallback = false,
   });
 
   final TutorModel tutor;
@@ -31,6 +32,7 @@ class TutorAvatarImage extends StatelessWidget {
   final bool gaplessPlayback;
   final Color? loadingBackgroundColor;
   final Color? loadingIndicatorColor;
+  final bool hideAssetFallback;
 
   /// Mantıksal boyuta göre decode pikseli (jank önleme, bulanıklık için üst sınır yükseltildi).
   static int decodePixels(BuildContext context, double logicalSize) {
@@ -74,41 +76,53 @@ class TutorAvatarImage extends StatelessWidget {
         cacheWidth: cacheWidth,
         cacheHeight: cacheHeight,
         filterQuality: filterQuality,
-        gaplessPlayback: gaplessPlayback,
+        gaplessPlayback: hideAssetFallback ? false : gaplessPlayback,
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded || frame != null) return child;
+          return _loadingPlaceholder();
+        },
         loadingBuilder: (context, child, progress) {
           if (progress == null) return child;
-          final bg = loadingBackgroundColor ?? const Color(0xFFF6F6F6);
-          final indicator = loadingIndicatorColor;
-          return ColoredBox(
-            color: bg,
-            child: Center(
-              child: SizedBox(
-                width: 24,
-                height: 24,
-                child: indicator != null
-                    ? CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: indicator,
-                        value: progress.expectedTotalBytes != null
-                            ? progress.cumulativeBytesLoaded /
-                                progress.expectedTotalBytes!
-                            : null,
-                      )
-                    : CircularProgressIndicator.adaptive(
-                        strokeWidth: 2,
-                        value: progress.expectedTotalBytes != null
-                            ? progress.cumulativeBytesLoaded /
-                                progress.expectedTotalBytes!
-                            : null,
-                      ),
-              ),
-            ),
+          return _loadingPlaceholder(
+            value: progress.expectedTotalBytes != null
+                ? progress.cumulativeBytesLoaded /
+                    progress.expectedTotalBytes!
+                : null,
           );
         },
-        errorBuilder: (_, __, ___) => _fallback(),
+        errorBuilder: (_, __, ___) =>
+            hideAssetFallback ? _loadingPlaceholder() : _fallback(),
       );
     }
-    return _fallback();
+    return hideAssetFallback ? _loadingPlaceholder() : _fallback();
+  }
+
+  Widget _loadingPlaceholder({double? value}) {
+    final bg = loadingBackgroundColor ?? const Color(0xFFF6F6F6);
+    final indicator = loadingIndicatorColor;
+    return SizedBox(
+      width: width,
+      height: height,
+      child: ColoredBox(
+        color: bg,
+        child: Center(
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: indicator != null
+                ? CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: indicator,
+                    value: value,
+                  )
+                : CircularProgressIndicator.adaptive(
+                    strokeWidth: 2,
+                    value: value,
+                  ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _fallback() {

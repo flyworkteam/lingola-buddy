@@ -65,6 +65,11 @@ class _SplashViewState extends ConsumerState<SplashView> {
       session = ref.read(sessionControllerProvider);
     }
 
+    if (!session.isAuthenticated) {
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+    }
+
     if (!session.hasCompletedIntroCarousel) {
       Navigator.pushReplacementNamed(context, AppRoutes.onboardingCarousel);
       return;

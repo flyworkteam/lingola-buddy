@@ -8,10 +8,12 @@ import 'package:lingola_buddy/Repositories/auth_repository.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/SessionController/session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/auth_repository_provider.dart';
+import 'package:lingola_buddy/Riverpod/Providers/post_login_paywall_provider.dart';
 import 'package:lingola_buddy/Riverpod/Providers/user_scoped_providers.dart';
 import 'package:lingola_buddy/Services/local_notification_scheduler.dart';
 import 'package:lingola_buddy/Services/session_local_storage.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/PremiumController/premium_controller.dart';
+import 'package:lingola_buddy/Services/call_session_post_sync.dart';
 import 'package:lingola_buddy/Services/http_api_service.dart';
 
 /// Giriş sonrası ortak akış (UI değişmeden SignUp / Paywall tarafından kullanılır).
@@ -36,6 +38,8 @@ class AuthFlowHelper {
           await LocalNotificationScheduler.instance.syncEnabled(enabled: true);
         }
         await ref.read(premiumControllerProvider.notifier).refresh();
+        ref.read(postLoginPaywallPendingProvider.notifier).state = true;
+        await CallSessionPostSync.flushPendingAfterLogin(ref);
         if (!context.mounted) return;
         await Navigator.pushNamedAndRemoveUntil(
           context,

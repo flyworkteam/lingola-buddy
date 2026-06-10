@@ -27,13 +27,18 @@ class ChatView extends ConsumerStatefulWidget {
     super.key,
     required this.tutorId,
     this.showHistoryShimmer = false,
+    this.lessonId,
   });
 
   final String tutorId;
   final bool showHistoryShimmer;
+  final String? lessonId;
 
-  ChatSessionKey get _sessionKey =>
-      (tutorId: tutorId, showHistoryShimmer: showHistoryShimmer);
+  ChatSessionKey get _sessionKey => (
+        tutorId: tutorId,
+        showHistoryShimmer: showHistoryShimmer,
+        lessonId: lessonId,
+      );
 
   @override
   ConsumerState<ChatView> createState() => _ChatViewState();
