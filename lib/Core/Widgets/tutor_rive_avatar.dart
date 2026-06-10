@@ -1,3 +1,5 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
@@ -12,24 +14,20 @@ class TutorRiveAvatar extends StatefulWidget {
     this.isTalking = false,
     this.fit = BoxFit.cover,
     this.alignment = const Alignment(0, -1.05),
-    this.fallbackAsset = 'assets/images/avatar_4.png',
     this.cacheWidth,
     this.cacheHeight,
-    this.loadingBackgroundColor,
-    this.loadingIndicatorColor,
-    this.hideAssetFallback = false,
+    this.shimmerBaseColor,
+    this.shimmerHighlightColor,
   });
 
   final TutorModel tutor;
   final bool isTalking;
   final BoxFit fit;
   final Alignment alignment;
-  final String fallbackAsset;
   final int? cacheWidth;
   final int? cacheHeight;
-  final Color? loadingBackgroundColor;
-  final Color? loadingIndicatorColor;
-  final bool hideAssetFallback;
+  final Color? shimmerBaseColor;
+  final Color? shimmerHighlightColor;
 
   @override
   State<TutorRiveAvatar> createState() => _TutorRiveAvatarState();
@@ -46,16 +44,29 @@ class _TutorRiveAvatarState extends State<TutorRiveAvatar> {
   @override
   void initState() {
     super.initState();
-    RivePreloadService.instance.preload(widget.tutor.rivUrl);
-    _loader = RivePreloadService.instance.obtainOrCreateLoader(widget.tutor.rivUrl);
-    if (_loader == null) {
-      _riveFailed = true;
-    }
+    unawaited(_resolveLoader());
+  }
+
+  Future<void> _resolveLoader() async {
+    final loader =
+        await RivePreloadService.instance.ensureLoader(widget.tutor.rivUrl);
+    if (!mounted) return;
+    setState(() {
+      _loader = loader;
+      _riveFailed = loader == null;
+      if (_riveFailed) _riveVisible = false;
+    });
   }
 
   @override
   void didUpdateWidget(covariant TutorRiveAvatar oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.tutor.rivUrl != widget.tutor.rivUrl) {
+      _riveVisible = false;
+      _loader = null;
+      _riveFailed = false;
+      unawaited(_resolveLoader());
+    }
     if (oldWidget.isTalking != widget.isTalking) {
       _syncTalk();
     }
@@ -125,12 +136,10 @@ class _TutorRiveAvatarState extends State<TutorRiveAvatar> {
         tutor: widget.tutor,
         fit: widget.fit,
         alignment: widget.alignment,
-        fallbackAsset: widget.fallbackAsset,
         cacheWidth: widget.cacheWidth,
         cacheHeight: widget.cacheHeight,
-        loadingBackgroundColor: widget.loadingBackgroundColor,
-        loadingIndicatorColor: widget.loadingIndicatorColor,
-        hideAssetFallback: widget.hideAssetFallback,
+        shimmerBaseColor: widget.shimmerBaseColor,
+        shimmerHighlightColor: widget.shimmerHighlightColor,
       );
     }
 
@@ -143,12 +152,10 @@ class _TutorRiveAvatarState extends State<TutorRiveAvatar> {
               tutor: widget.tutor,
               fit: widget.fit,
               alignment: widget.alignment,
-              fallbackAsset: widget.fallbackAsset,
-              loadingBackgroundColor: widget.loadingBackgroundColor,
-              loadingIndicatorColor: widget.loadingIndicatorColor,
-              hideAssetFallback: widget.hideAssetFallback,
               cacheWidth: widget.cacheWidth,
               cacheHeight: widget.cacheHeight,
+              shimmerBaseColor: widget.shimmerBaseColor,
+              shimmerHighlightColor: widget.shimmerHighlightColor,
             ),
           rive.RiveWidgetBuilder(
             fileLoader: loader,

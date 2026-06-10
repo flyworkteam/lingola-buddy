@@ -11,9 +11,11 @@ import 'package:lingola_buddy/Core/Routes/call_navigation.dart';
 import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Utils/time_of_day_greeting.dart';
+import 'package:lingola_buddy/Core/Widgets/avatar_shimmer.dart';
 import 'package:lingola_buddy/Core/Widgets/character_card.dart';
 import 'package:lingola_buddy/Core/Widgets/weekly_progress_panel.dart';
 import 'package:lingola_buddy/Models/app_enums.dart';
+import 'package:lingola_buddy/Models/lesson_model.dart';
 import 'package:lingola_buddy/Models/streak_model.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/BottomNavController/bottom_nav_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
@@ -465,34 +467,47 @@ class _ResumeLessonCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final curriculum = ref.watch(userCurriculumProvider).when(
-          data: (data) => data,
-          loading: () => null,
-          error: (_, __) => null,
+    return ref.watch(userCurriculumProvider).when(
+          loading: () => const _ResumeLessonCardSkeleton(),
+          error: (_, __) => const SizedBox.shrink(),
+          data: (curriculum) {
+            final lesson = curriculum.currentLesson;
+            if (lesson == null) return const SizedBox.shrink();
+            return _ResumeLessonCardContent(
+              curriculum: curriculum,
+              lesson: lesson,
+            );
+          },
         );
-    final lesson = curriculum?.currentLesson;
-    final lessonIndex = lesson != null && curriculum != null
-        ? curriculum.lessons.indexWhere((l) => l.id == lesson.id) + 1
-        : 0;
-    final progressLabel = curriculum != null && lessonIndex > 0
-        ? AppTranslations.interpolate(
-            AppTranslations.section('home', 'lesson_progress_fmt'),
-            {'current': '$lessonIndex', 'total': '${curriculum.totalCount}'},
-          )
-        : AppTranslations.section('home', 'lesson_progress');
-    final title = lesson != null
-        ? '${lesson.scenarioEmoji} ${lesson.localizedTitle}'
-        : '☕ ${AppTranslations.section('home', 'coffee_shop_title')}';
-    final subtitle = lesson != null
-        ? AppTranslations.interpolate(
-            AppTranslations.section('home', 'level_subtitle_fmt'),
-            {
-              'level': curriculum!.cefrLevel,
-              'subtitle': lesson.localizedSubtitle,
-            },
-          )
-        : AppTranslations.section('home', 'level_daily_conversation');
-    final progressValue = curriculum?.progressFraction ?? 0;
+  }
+}
+
+class _ResumeLessonCardContent extends ConsumerWidget {
+  const _ResumeLessonCardContent({
+    required this.curriculum,
+    required this.lesson,
+  });
+
+  final UserCurriculumModel curriculum;
+  final LessonModel lesson;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final lessonIndex =
+        curriculum.lessons.indexWhere((l) => l.id == lesson.id) + 1;
+    final progressLabel = AppTranslations.interpolate(
+      AppTranslations.section('home', 'lesson_progress_fmt'),
+      {'current': '$lessonIndex', 'total': '${curriculum.totalCount}'},
+    );
+    final title = '${lesson.scenarioEmoji} ${lesson.localizedTitle}';
+    final subtitle = AppTranslations.interpolate(
+      AppTranslations.section('home', 'level_subtitle_fmt'),
+      {
+        'level': curriculum.cefrLevel,
+        'subtitle': lesson.localizedSubtitle,
+      },
+    );
+    final progressValue = curriculum.progressFraction;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -551,9 +566,8 @@ class _ResumeLessonCard extends ConsumerWidget {
                   elevation: 0,
                   shape: const StadiumBorder(),
                 ),
-                onPressed: lesson == null
-                    ? null
-                    : () => _openLessonCall(context, ref, lessonId: lesson.id),
+                onPressed: () =>
+                    _openLessonCall(context, ref, lessonId: lesson.id),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -574,6 +588,69 @@ class _ResumeLessonCard extends ConsumerWidget {
                   ],
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ResumeLessonCardSkeleton extends StatelessWidget {
+  const _ResumeLessonCardSkeleton();
+
+  static final _shimmerRadius = BorderRadius.circular(6);
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF6F6F6),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                AvatarShimmer(
+                  width: 132,
+                  height: 26,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                const Spacer(),
+                AvatarShimmer(
+                  width: 72,
+                  height: 14,
+                  borderRadius: _shimmerRadius,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            AvatarShimmer(
+              width: 220,
+              height: 22,
+              borderRadius: _shimmerRadius,
+            ),
+            const SizedBox(height: 8),
+            AvatarShimmer(
+              width: 168,
+              height: 16,
+              borderRadius: _shimmerRadius,
+            ),
+            const SizedBox(height: 16),
+            const AvatarShimmer(
+              width: double.infinity,
+              height: 14,
+              borderRadius: BorderRadius.all(Radius.circular(999)),
+            ),
+            const SizedBox(height: 20),
+            const AvatarShimmer(
+              width: double.infinity,
+              height: 48,
+              borderRadius: BorderRadius.all(Radius.circular(999)),
             ),
           ],
         ),

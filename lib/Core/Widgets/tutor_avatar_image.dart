@@ -1,12 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:lingola_buddy/Models/tutor_model.dart';
+import 'dart:io';
 
-/// Eğitmen portresi — önce CDN [photoUrl], yoksa yerel asset.
+import 'package:flutter/material.dart';
+import 'package:lingola_buddy/Core/Widgets/avatar_shimmer.dart';
+import 'package:lingola_buddy/Models/tutor_model.dart';
+import 'package:lingola_buddy/Services/tutor_asset_cache_service.dart';
+
+/// Eğitmen portresi — disk önbelleği; yüklenene kadar shimmer.
 class TutorAvatarImage extends StatelessWidget {
   const TutorAvatarImage({
     super.key,
     required this.tutor,
-    this.fallbackAsset = 'assets/images/avatar_1.png',
     this.fit = BoxFit.cover,
     this.alignment = Alignment.topCenter,
     this.width,
@@ -15,13 +18,12 @@ class TutorAvatarImage extends StatelessWidget {
     this.cacheHeight,
     this.filterQuality = FilterQuality.medium,
     this.gaplessPlayback = true,
-    this.loadingBackgroundColor,
-    this.loadingIndicatorColor,
-    this.hideAssetFallback = false,
+    this.shimmerBaseColor,
+    this.shimmerHighlightColor,
+    this.borderRadius = BorderRadius.zero,
   });
 
   final TutorModel tutor;
-  final String fallbackAsset;
   final BoxFit fit;
   final Alignment alignment;
   final double? width;
@@ -30,9 +32,9 @@ class TutorAvatarImage extends StatelessWidget {
   final int? cacheHeight;
   final FilterQuality filterQuality;
   final bool gaplessPlayback;
-  final Color? loadingBackgroundColor;
-  final Color? loadingIndicatorColor;
-  final bool hideAssetFallback;
+  final Color? shimmerBaseColor;
+  final Color? shimmerHighlightColor;
+  final BorderRadius borderRadius;
 
   /// Mantıksal boyuta göre decode pikseli (jank önleme, bulanıklık için üst sınır yükseltildi).
   static int decodePixels(BuildContext context, double logicalSize) {
@@ -43,91 +45,48 @@ class TutorAvatarImage extends StatelessWidget {
   /// Portre CDN görselleri — yüz yerine üst gövde (CallPreview ile uyumlu).
   static const Alignment portraitAlignment = Alignment(0, 0.35);
 
-  static NetworkImage? networkProvider(TutorModel tutor) {
-    final url = tutor.photoUrl.trim();
-    if (!url.startsWith('http')) return null;
-    return NetworkImage(url);
-  }
-
   static Future<void> precache(
     BuildContext context,
     TutorModel tutor, {
     int? cacheWidth,
     int? cacheHeight,
   }) async {
-    final provider = networkProvider(tutor);
-    if (provider == null) return;
+    final url = tutor.photoUrl.trim();
+    if (!url.startsWith('http')) return;
+
+    TutorAssetCacheService.instance.preload(url);
+    final file = await TutorAssetCacheService.instance.getCachedFile(url);
+    if (file == null || !context.mounted) return;
+
     await precacheImage(
-      ResizeImage(provider, width: cacheWidth, height: cacheHeight),
+      ResizeImage(
+        FileImage(file),
+        width: cacheWidth,
+        height: cacheHeight,
+      ),
       context,
+    );
+  }
+
+  Widget _shimmer() {
+    return AvatarShimmer(
+      width: width,
+      height: height,
+      baseColor: shimmerBaseColor ?? const Color(0xFFE8E8EC),
+      highlightColor: shimmerHighlightColor ?? const Color(0xFFF8F8FA),
+      borderRadius: borderRadius,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final url = tutor.photoUrl.trim();
-    if (url.startsWith('http')) {
-      return Image.network(
-        url,
-        fit: fit,
-        width: width,
-        height: height,
-        alignment: alignment,
-        cacheWidth: cacheWidth,
-        cacheHeight: cacheHeight,
-        filterQuality: filterQuality,
-        gaplessPlayback: hideAssetFallback ? false : gaplessPlayback,
-        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-          if (wasSynchronouslyLoaded || frame != null) return child;
-          return _loadingPlaceholder();
-        },
-        loadingBuilder: (context, child, progress) {
-          if (progress == null) return child;
-          return _loadingPlaceholder(
-            value: progress.expectedTotalBytes != null
-                ? progress.cumulativeBytesLoaded /
-                    progress.expectedTotalBytes!
-                : null,
-          );
-        },
-        errorBuilder: (_, __, ___) =>
-            hideAssetFallback ? _loadingPlaceholder() : _fallback(),
-      );
+    if (!url.startsWith('http')) {
+      return _shimmer();
     }
-    return hideAssetFallback ? _loadingPlaceholder() : _fallback();
-  }
 
-  Widget _loadingPlaceholder({double? value}) {
-    final bg = loadingBackgroundColor ?? const Color(0xFFF6F6F6);
-    final indicator = loadingIndicatorColor;
-    return SizedBox(
-      width: width,
-      height: height,
-      child: ColoredBox(
-        color: bg,
-        child: Center(
-          child: SizedBox(
-            width: 24,
-            height: 24,
-            child: indicator != null
-                ? CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: indicator,
-                    value: value,
-                  )
-                : CircularProgressIndicator.adaptive(
-                    strokeWidth: 2,
-                    value: value,
-                  ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _fallback() {
-    return Image.asset(
-      fallbackAsset,
+    return _CachedTutorPhoto(
+      url: url,
       fit: fit,
       width: width,
       height: height,
@@ -136,8 +95,99 @@ class TutorAvatarImage extends StatelessWidget {
       cacheHeight: cacheHeight,
       filterQuality: filterQuality,
       gaplessPlayback: gaplessPlayback,
-      errorBuilder: (_, __, ___) =>
-          const Center(child: Icon(Icons.face_rounded, size: 48)),
+      borderRadius: borderRadius,
+      shimmer: _shimmer(),
+    );
+  }
+}
+
+class _CachedTutorPhoto extends StatefulWidget {
+  const _CachedTutorPhoto({
+    required this.url,
+    required this.fit,
+    required this.width,
+    required this.height,
+    required this.alignment,
+    required this.cacheWidth,
+    required this.cacheHeight,
+    required this.filterQuality,
+    required this.gaplessPlayback,
+    required this.borderRadius,
+    required this.shimmer,
+  });
+
+  final String url;
+  final BoxFit fit;
+  final double? width;
+  final double? height;
+  final Alignment alignment;
+  final int? cacheWidth;
+  final int? cacheHeight;
+  final FilterQuality filterQuality;
+  final bool gaplessPlayback;
+  final BorderRadius borderRadius;
+  final Widget shimmer;
+
+  @override
+  State<_CachedTutorPhoto> createState() => _CachedTutorPhotoState();
+}
+
+class _CachedTutorPhotoState extends State<_CachedTutorPhoto> {
+  File? _file;
+
+  @override
+  void initState() {
+    super.initState();
+    _resolve();
+  }
+
+  @override
+  void didUpdateWidget(covariant _CachedTutorPhoto oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.url != widget.url) {
+      _file = null;
+      _resolve();
+    }
+  }
+
+  Future<void> _resolve() async {
+    final ready =
+        await TutorAssetCacheService.instance.cachedFileIfReady(widget.url);
+    if (ready != null && mounted) {
+      setState(() => _file = ready);
+      return;
+    }
+
+    final file =
+        await TutorAssetCacheService.instance.getCachedFile(widget.url);
+    if (mounted) setState(() => _file = file);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final file = _file;
+    if (file == null) {
+      return widget.shimmer;
+    }
+
+    return ClipRRect(
+      borderRadius: widget.borderRadius,
+      child: Image.file(
+        file,
+        fit: widget.fit,
+        width: widget.width,
+        height: widget.height,
+        alignment: widget.alignment,
+        cacheWidth: widget.cacheWidth,
+        cacheHeight: widget.cacheHeight,
+        filterQuality: widget.filterQuality,
+        gaplessPlayback: widget.gaplessPlayback,
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded || frame != null) return child;
+          return widget.shimmer;
+        },
+        errorBuilder: (_, __, ___) => widget.shimmer,
+      ),
     );
   }
 }

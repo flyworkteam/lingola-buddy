@@ -36,8 +36,6 @@ class ActiveCallView extends ConsumerStatefulWidget {
   static const double _controlGap = 16;
   static const int _maxVideoCallSeconds = 60;
 
-  static const String _remoteAvatar = 'assets/images/avatar_4.png';
-
   @override
   ConsumerState<ActiveCallView> createState() => _ActiveCallViewState();
 }
@@ -382,11 +380,10 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
         isTalking: _lipSyncAudible,
         fit: BoxFit.cover,
         alignment: const Alignment(0, -0.15),
-        fallbackAsset: ActiveCallView._remoteAvatar,
         cacheWidth: portraitCacheWidth,
         cacheHeight: portraitCacheWidth,
-        loadingBackgroundColor: const Color(0xFFF6F6F6),
-        hideAssetFallback: true,
+        shimmerBaseColor: const Color(0xFFE8E8EC),
+        shimmerHighlightColor: const Color(0xFFF6F6F6),
       );
     } else if (isLocalPreview) {
       portrait = _localPreviewContent();

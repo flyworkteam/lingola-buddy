@@ -1,11 +1,16 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Riverpod/Providers/tutor_repository_provider.dart';
+import 'package:lingola_buddy/Services/tutor_assets_warmup_service.dart';
 
-final tutorsCatalogAsyncProvider = FutureProvider<List<TutorModel>>((ref) {
+final tutorsCatalogAsyncProvider = FutureProvider<List<TutorModel>>((ref) async {
   ref.watch(userProfileControllerProvider.select((s) => s.uiLanguageCode));
-  return ref.read(tutorRepositoryProvider).fetchTutors();
+  final list = await ref.read(tutorRepositoryProvider).fetchTutors();
+  unawaited(TutorAssetsWarmupService.warmupCatalog(list));
+  return list;
 });
 
 /// API’den yüklenen eğitmen listesi; yüklenirken veya hata durumunda boş.
