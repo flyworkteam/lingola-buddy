@@ -46,12 +46,46 @@ class OpenAiChatService {
         'role': 'system',
         'content': systemPrompt,
       },
-      for (final m in history)
-        if (!m.isTyping && m.apiText.isNotEmpty)
-          {'role': m.isUser ? 'user' : 'assistant', 'content': m.apiText},
+      ..._historyToApiMessages(history),
     ];
 
-    return _complete(messages);
+    var reply = await _complete(messages);
+
+    final lastUserText = history
+        .where((m) => m.isUser && m.apiText.trim().isNotEmpty)
+        .map((m) => m.apiText)
+        .lastOrNull;
+    if (lastUserText != null &&
+        ChatPromptBuilder.isVoiceDeliveryRequest(lastUserText) &&
+        ChatPromptBuilder.looksLikeVoiceRefusal(reply)) {
+      reply = await _complete([
+        ...messages,
+        {'role': 'assistant', 'content': reply},
+        {
+          'role': 'user',
+          'content':
+              'Wrong: you CAN send voice — every reply is auto-played as your voice. '
+              'Send ONLY a short helpful teaching line now. No refusal, no meta talk.',
+        },
+      ]);
+    }
+
+    return reply;
+  }
+
+  static List<Map<String, String>> _historyToApiMessages(
+    List<ChatMessage> history,
+  ) {
+    return [
+      for (final m in history)
+        if (!m.isTyping && m.apiText.isNotEmpty)
+          {
+            'role': m.isUser ? 'user' : 'assistant',
+            'content': m.isUser
+                ? ChatPromptBuilder.normalizeUserMessageForApi(m.apiText)
+                : m.apiText,
+          },
+    ];
   }
 
   Future<String> transcribeAudio(

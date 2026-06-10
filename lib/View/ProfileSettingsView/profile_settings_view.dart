@@ -30,6 +30,8 @@ class ProfileSettingsView extends ConsumerStatefulWidget {
 }
 
 class _ProfileSettingsViewState extends ConsumerState<ProfileSettingsView> {
+  static const int _maxNameLength = 20;
+
   TextEditingController? _name;
   TextEditingController? _email;
 
@@ -50,6 +52,20 @@ class _ProfileSettingsViewState extends ConsumerState<ProfileSettingsView> {
     if (name.isEmpty) {
       AppSnackBar.error(
         AppTranslations.section('profile_settings', 'name_empty'),
+        context: context,
+      );
+      return;
+    }
+    if (name.length > _maxNameLength) {
+      AppSnackBar.error(
+        AppTranslations.interpolate(
+          AppTranslations.sectionOr(
+            'profile_settings',
+            'name_too_long',
+            'İsim en fazla {max} karakter olabilir',
+          ),
+          {'max': '$_maxNameLength'},
+        ),
         context: context,
       );
       return;
@@ -212,7 +228,11 @@ class _ProfileSettingsViewState extends ConsumerState<ProfileSettingsView> {
                     onChangePhoto: _openPhotoSheet,
                   ),
                   const SizedBox(height: 8),
-                  _FormPanel(nameController: _name!, emailController: _email!),
+                  _FormPanel(
+                    nameController: _name!,
+                    emailController: _email!,
+                    maxNameLength: _maxNameLength,
+                  ),
                 ],
               ),
             ),
@@ -319,10 +339,12 @@ class _FormPanel extends StatelessWidget {
   const _FormPanel({
     required this.nameController,
     required this.emailController,
+    required this.maxNameLength,
   });
 
   final TextEditingController nameController;
   final TextEditingController emailController;
+  final int maxNameLength;
 
   @override
   Widget build(BuildContext context) {
@@ -339,6 +361,7 @@ class _FormPanel extends StatelessWidget {
             _ProfileSettingsField(
               label: AppTranslations.section('profile_settings', 'name'),
               controller: nameController,
+              maxLength: maxNameLength,
             ),
             const SizedBox(height: 12),
             _ProfileSettingsField(
@@ -364,12 +387,14 @@ class _ProfileSettingsField extends StatelessWidget {
     required this.controller,
     this.readOnly = false,
     this.suffixIcon,
+    this.maxLength,
   });
 
   final String label;
   final TextEditingController controller;
   final bool readOnly;
   final Widget? suffixIcon;
+  final int? maxLength;
 
   @override
   Widget build(BuildContext context) {
@@ -398,6 +423,11 @@ class _ProfileSettingsField extends StatelessWidget {
             child: TextField(
               controller: controller,
               readOnly: readOnly,
+              maxLength: maxLength,
+              buildCounter: maxLength == null
+                  ? null
+                  : (_, {required currentLength, required isFocused, maxLength}) =>
+                      null,
               style: AppTextStyles.notificationCardTitle().copyWith(
                 fontWeight: FontWeight.w500,
                 fontSize: 14,

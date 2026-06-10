@@ -5,14 +5,45 @@ import 'package:flutter/foundation.dart';
 import 'package:lingola_buddy/Services/microphone_permission_platform.dart';
 import 'package:path/path.dart' as p;
 
+/// Sohbet sesli mesaj oynatma anlık durumu (UI optimistic güncelleme).
+class ChatVoicePlaybackSnapshot {
+  const ChatVoicePlaybackSnapshot({
+    this.activePath,
+    this.isPlaying = false,
+  });
+
+  final String? activePath;
+  final bool isPlaying;
+}
+
 /// Sohbet sesli mesajlarını platforma uygun şekilde oynatır.
 abstract final class ChatVoicePlaybackService {
   static final AudioPlayer sharedPlayer = AudioPlayer();
-  static String? activePath;
+  static final ValueNotifier<ChatVoicePlaybackSnapshot> playback =
+      ValueNotifier(const ChatVoicePlaybackSnapshot());
+
+  static String? get activePath => playback.value.activePath;
   static bool _audioContextReady = false;
+  static bool _listenersAttached = false;
+
+  static void _attachListeners() {
+    if (_listenersAttached) return;
+    _listenersAttached = true;
+
+    sharedPlayer.onPlayerComplete.listen((_) {
+      _emit(activePath: null, isPlaying: false);
+    });
+  }
+
+  static void _emit({String? activePath, required bool isPlaying}) {
+    playback.value = ChatVoicePlaybackSnapshot(
+      activePath: activePath,
+      isPlaying: isPlaying,
+    );
+  }
 
   static Future<void> stopPlayback() async {
-    activePath = null;
+    _emit(activePath: null, isPlaying: false);
     try {
       await sharedPlayer.stop();
     } catch (_) {}
@@ -62,6 +93,8 @@ abstract final class ChatVoicePlaybackService {
   }
 
   static Future<void> play(String path) async {
+    _attachListeners();
+
     final player = sharedPlayer;
     final file = File(path);
     if (!await file.exists()) {
@@ -78,19 +111,29 @@ abstract final class ChatVoicePlaybackService {
       mimeType: mimeTypeForPath(path),
     );
 
+    final sameFile = activePath == path;
     final state = player.state;
-    if (state == PlayerState.playing) {
-      await player.pause();
-      return;
-    }
 
-    if (state == PlayerState.paused) {
-      await player.resume();
-      return;
+    if (sameFile) {
+      if (state == PlayerState.playing) {
+        _emit(activePath: path, isPlaying: false);
+        await player.pause();
+        return;
+      }
+      if (state == PlayerState.paused) {
+        _emit(activePath: path, isPlaying: true);
+        await player.resume();
+        return;
+      }
     }
 
     await player.stop();
-    activePath = path;
-    await player.play(source);
+    _emit(activePath: path, isPlaying: true);
+    try {
+      await player.play(source);
+    } catch (e) {
+      _emit(activePath: null, isPlaying: false);
+      rethrow;
+    }
   }
 }

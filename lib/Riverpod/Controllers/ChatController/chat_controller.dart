@@ -23,6 +23,7 @@ import 'package:lingola_buddy/Services/chat_tts_service.dart';
 import 'package:lingola_buddy/Services/chat_voice_playback_service.dart';
 import 'package:lingola_buddy/Services/chat_voice_recorder_service.dart';
 import 'package:lingola_buddy/Services/chat_prompt_builder.dart';
+import 'package:lingola_buddy/Services/chat_tutor_voice_service.dart';
 import 'package:lingola_buddy/Services/openai_chat_service.dart';
 
 final openAiChatServiceProvider = Provider<OpenAiChatService>((ref) {
@@ -45,6 +46,10 @@ final chatVoiceRecorderProvider = Provider<ChatVoiceRecorderService>((ref) {
 
 final chatAttachmentServiceProvider = Provider<ChatAttachmentService>((ref) {
   return ChatAttachmentService();
+});
+
+final chatTutorVoiceServiceProvider = Provider<ChatTutorVoiceService>((ref) {
+  return ChatTutorVoiceService();
 });
 
 class ChatSelection {
@@ -158,6 +163,7 @@ class ChatController extends StateNotifier<ChatState> {
     required ChatTtsService tts,
     required ChatVoiceRecorderService voiceRecorder,
     required ChatAttachmentService attachments,
+    required ChatTutorVoiceService tutorVoice,
     this.showHistoryShimmer = false,
     this.onThreadUpdated,
   })  : _conversationRepo = conversationRepo,
@@ -165,6 +171,7 @@ class ChatController extends StateNotifier<ChatState> {
         _tts = tts,
         _voiceRecorder = voiceRecorder,
         _attachments = attachments,
+        _tutorVoice = tutorVoice,
         super(
           ChatState(
             messages: showHistoryShimmer
@@ -192,6 +199,7 @@ class ChatController extends StateNotifier<ChatState> {
   final ChatTtsService _tts;
   final ChatVoiceRecorderService _voiceRecorder;
   final ChatAttachmentService _attachments;
+  final ChatTutorVoiceService _tutorVoice;
   final Map<String, String> _translationCache = {};
   final Map<String, String> _englishSpeechCache = {};
   StreamSubscription<double>? _voiceLevelSub;
@@ -204,11 +212,7 @@ class ChatController extends StateNotifier<ChatState> {
       final hasHistory = await _conversationRepo.hasMessages(tutor.id);
       if (!hasHistory) {
         state = state.copyWith(
-          messages: _seedMessages(
-            tutor: tutor,
-            uiLanguageCode: uiLanguageCode,
-            lessonContext: lessonContext,
-          ),
+          messages: _ensureSeedFirst(const []),
           isLoadingHistory: false,
         );
         return;
@@ -216,27 +220,26 @@ class ChatController extends StateNotifier<ChatState> {
 
       final saved = await _conversationRepo.fetchMessages(tutor.id);
       state = state.copyWith(
-        messages: saved.isNotEmpty
-            ? saved
-            : _seedMessages(
-                tutor: tutor,
-                uiLanguageCode: uiLanguageCode,
-                lessonContext: lessonContext,
-              ),
+        messages: _ensureSeedFirst(saved),
         isLoadingHistory: false,
       );
     } catch (_) {
       state = state.copyWith(
-        messages: state.messages.isEmpty
-            ? _seedMessages(
-                tutor: tutor,
-                uiLanguageCode: uiLanguageCode,
-                lessonContext: lessonContext,
-              )
-            : state.messages,
+        messages: _ensureSeedFirst(state.messages),
         isLoadingHistory: false,
       );
     }
+  }
+
+  /// Karşılama mesajı her zaman ilk sırada; sunucuya kaydedilmez.
+  List<ChatMessage> _ensureSeedFirst(List<ChatMessage> messages) {
+    final seed = _seedMessages(
+      tutor: tutor,
+      uiLanguageCode: uiLanguageCode,
+      lessonContext: lessonContext,
+    );
+    final rest = messages.where((m) => !m.id.startsWith('seed-')).toList();
+    return [...seed, ...rest];
   }
 
   Future<void> _persistMessage(ChatMessage message) async {
@@ -590,17 +593,45 @@ class ChatController extends StateNotifier<ChatState> {
       return;
     }
 
+    if (recordedFor.inMilliseconds < 600) {
+      try {
+        await file.delete();
+      } catch (_) {}
+      state = state.copyWith(
+        error: AppTranslations.section('chat', 'voice_too_short'),
+      );
+      return;
+    }
+
     try {
       final persisted = await _voiceRecorder.persistRecording(path);
       final duration = recordedFor.inMilliseconds > 0
           ? recordedFor
           : const Duration(seconds: 1);
 
+      state = state.copyWith(isTranscribing: true, clearError: true);
+      String transcript;
+      try {
+        transcript = await _openAi.transcribeAudio(persisted);
+      } catch (e) {
+        state = state.copyWith(isTranscribing: false, error: e.toString());
+        return;
+      }
+      state = state.copyWith(isTranscribing: false);
+
+      final spoken = transcript.trim();
+      if (spoken.isEmpty) {
+        state = state.copyWith(
+          error: AppTranslations.section('chat', 'voice_too_short'),
+        );
+        return;
+      }
+
       await _dispatchUserMessage(
         ChatMessage(
           id: 'u-${DateTime.now().microsecondsSinceEpoch}',
           role: ChatMessageRole.user,
-          text: AppTranslations.section('chat', 'sent_voice'),
+          text: spoken,
           attachment: ChatAttachment(
             kind: ChatAttachmentKind.voice,
             localPath: persisted,
@@ -610,7 +641,7 @@ class ChatController extends StateNotifier<ChatState> {
         ),
       );
     } catch (e) {
-      state = state.copyWith(error: e.toString());
+      state = state.copyWith(isTranscribing: false, error: e.toString());
     }
   }
 
@@ -682,10 +713,17 @@ class ChatController extends StateNotifier<ChatState> {
           )
           .timeout(const Duration(seconds: 45));
 
+      final voiceAttachment = await _tutorVoice.synthesizeVoice(
+        tutorId: tutor.id,
+        tutor: tutor,
+        text: reply,
+      );
+
       final assistantMsg = ChatMessage(
         id: 'a-${DateTime.now().microsecondsSinceEpoch}',
         role: ChatMessageRole.assistant,
         text: reply,
+        attachment: voiceAttachment,
       );
 
       state = state.copyWith(
@@ -755,6 +793,7 @@ final chatControllerProvider = StateNotifierProvider.autoDispose
         tts: ref.watch(chatTtsServiceProvider),
         voiceRecorder: ref.watch(chatVoiceRecorderProvider),
         attachments: ref.watch(chatAttachmentServiceProvider),
+        tutorVoice: ref.watch(chatTutorVoiceServiceProvider),
         onThreadUpdated: () => ref.invalidate(talkHistoryProvider),
       );
       Future.microtask(() {

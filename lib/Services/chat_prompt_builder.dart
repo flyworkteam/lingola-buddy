@@ -26,7 +26,8 @@ abstract final class ChatPromptBuilder {
         'You are $tutorName, a friendly English tutor in a text chat app. '
         'Keep replies short and natural (1–3 sentences). Stay in character. '
         'Bio: ${tutorBio.trim().isEmpty ? 'Experienced English tutor.' : tutorBio.trim()}\n'
-        '- NEVER ask the learner for their name — you already have it from their profile.';
+        '- NEVER ask the learner for their name — you already have it from their profile.\n'
+        '${_voiceChatRules()}';
 
     if (appLangCode == 'en') {
       return _englishOnlyPrompt(base, lessonContext, cefr);
@@ -44,6 +45,88 @@ abstract final class ChatPromptBuilder {
     }
 
     return '$base$bilingualBlock$topicBlock';
+  }
+
+  static String _voiceChatRules() {
+    return '- VOICE CHAT (critical): Every reply you write is automatically delivered as YOUR voice '
+        'message — the learner taps play and hears you speak their text.\n'
+        '- You ALWAYS send voice. NEVER say you cannot send voice, audio, recordings, or voice messages.\n'
+        '- NEVER mention text-only limits, transcription, TTS, or app restrictions.\n'
+        '- If the learner asks you to send a voice message, reply with normal short teaching content '
+        '(1–2 sentences); it already arrives as your voice. Do not refuse.\n'
+        '- When the learner sends a voice message, you receive an accurate transcript — respond to '
+        'what they said, not to the medium.';
+  }
+
+  /// Learner asks for voice delivery ("sesli mesaj gönder" etc.) — API'ye net talimat.
+  static bool isVoiceDeliveryRequest(String text) {
+    final t = text.toLowerCase().trim();
+    if (t.isEmpty) return false;
+
+    const phrases = [
+      'sesli mesaj',
+      'ses kaydı',
+      'sesli gönder',
+      'ses gönder',
+      'ses at',
+      'voice message',
+      'voice note',
+      'send voice',
+      'send a voice',
+      'send me voice',
+      'record voice',
+    ];
+    for (final phrase in phrases) {
+      if (t.contains(phrase)) return true;
+    }
+
+    if (t.length <= 48 &&
+        RegExp(r'(sesli|voice|ses\b)').hasMatch(t) &&
+        RegExp(r'(gönder|gonder|send|at|yolla|record|mesaj)').hasMatch(t)) {
+      return true;
+    }
+    return false;
+  }
+
+  static String normalizeUserMessageForApi(String text) {
+    final trimmed = text.trim();
+    if (!isVoiceDeliveryRequest(trimmed)) return trimmed;
+
+    return 'The learner asked you to send a voice message. '
+        'Reply with a short, natural teaching line in your usual style (1–2 sentences). '
+        'Your reply is automatically played as your voice — do NOT refuse or say you cannot send audio.';
+  }
+
+  static bool looksLikeVoiceRefusal(String text) {
+    final t = text.toLowerCase();
+    if (t.isEmpty) return false;
+
+    const refusalBits = [
+      "can't",
+      'cannot',
+      'unable to',
+      'yapamam',
+      'yapamıyorum',
+      'gönderemem',
+      'gonderemem',
+      'imkansız',
+      'imkansiz',
+      'mümkün değil',
+      'mumkun degil',
+    ];
+    const voiceBits = [
+      'voice',
+      'ses',
+      'audio',
+      'kayıt',
+      'kayit',
+      'mesaj',
+      'recording',
+    ];
+
+    final hasRefusal = refusalBits.any(t.contains);
+    final hasVoice = voiceBits.any(t.contains);
+    return hasRefusal && hasVoice;
   }
 
   static String buildSeedGreeting({

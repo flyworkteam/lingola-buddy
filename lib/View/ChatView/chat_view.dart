@@ -313,6 +313,10 @@ class _TutorMessageRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final voice = message.attachment?.isVoice == true
+        ? message.attachment
+        : null;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -326,6 +330,9 @@ class _TutorMessageRow extends StatelessWidget {
                 child: _TutorBubble(
                   messageId: message.id,
                   text: message.text,
+                  voicePath: voice?.localPath,
+                  voiceDuration:
+                      voice?.duration ?? const Duration(seconds: 1),
                   selection: selection,
                   wordTranslations: wordTranslations,
                   isTranslating: isTranslating,
@@ -500,6 +507,8 @@ class _TutorBubble extends StatelessWidget {
   const _TutorBubble({
     required this.messageId,
     required this.text,
+    this.voicePath,
+    this.voiceDuration = const Duration(seconds: 1),
     required this.selection,
     required this.wordTranslations,
     required this.isTranslating,
@@ -508,6 +517,8 @@ class _TutorBubble extends StatelessWidget {
 
   final String messageId;
   final String text;
+  final String? voicePath;
+  final Duration voiceDuration;
   final ChatSelection? selection;
   final Map<String, String> wordTranslations;
   final bool isTranslating;
@@ -515,6 +526,8 @@ class _TutorBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasVoice = voicePath != null && voicePath!.isNotEmpty;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -525,16 +538,34 @@ class _TutorBubble extends StatelessWidget {
         ),
         border: Border.all(color: Colors.black.withValues(alpha: 0.1)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: _SelectableTutorText(
-          text: text,
-          messageId: messageId,
-          selection: selection,
-          wordTranslations: wordTranslations,
-          isTranslating: isTranslating,
-          onWordTap: onWordTap,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (hasVoice)
+            ChatVoiceMessageBubble(
+              path: voicePath!,
+              duration: voiceDuration,
+              variant: ChatVoiceBubbleVariant.tutor,
+            ),
+          if (hasVoice)
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: Colors.black.withValues(alpha: 0.08),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: _SelectableTutorText(
+              text: text,
+              messageId: messageId,
+              selection: selection,
+              wordTranslations: wordTranslations,
+              isTranslating: isTranslating,
+              onWordTap: onWordTap,
+            ),
+          ),
+        ],
       ),
     );
   }

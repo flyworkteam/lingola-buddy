@@ -23,13 +23,17 @@ class HttpApiService {
     String path, {
     Map<String, dynamic>? body,
     bool authenticated = false,
+    Duration? receiveTimeout,
   }) async {
     return _request(() async {
       final headers = await _headers(authenticated: authenticated);
       final response = await _dio.post<Map<String, dynamic>>(
         path,
         data: body,
-        options: Options(headers: headers),
+        options: Options(
+          headers: headers,
+          receiveTimeout: receiveTimeout,
+        ),
       );
       return _parseEnvelope(response.data);
     });

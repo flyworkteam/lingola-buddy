@@ -21,8 +21,8 @@ class ChatMessage {
   bool get isAssistant => role == ChatMessageRole.assistant;
   bool get hasAttachment => attachment != null;
 
-  /// OpenAI geçmişi için metin özeti.
-  String get apiText => hasAttachment ? text : text.trim();
+  /// OpenAI geçmişi için metin (sesli mesajlarda transkript).
+  String get apiText => text.trim();
 
   ChatMessage copyWith({
     String? id,
