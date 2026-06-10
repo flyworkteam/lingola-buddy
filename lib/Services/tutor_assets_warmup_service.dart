@@ -19,12 +19,12 @@ abstract final class TutorAssetsWarmupService {
 
   static Future<void> warmupTutor(TutorModel tutor) async {
     final photo = tutor.photoUrl.trim();
-    final riv = tutor.rivUrl.trim();
+    final riv = tutor.resolvedRivUrl;
 
     await Future.wait([
       if (photo.startsWith('http'))
         TutorAssetCacheService.instance.getCachedFile(photo),
-      if (riv.isNotEmpty) RivePreloadService.instance.ensureLoader(riv),
+      RivePreloadService.instance.ensureLoader(riv),
     ], eagerError: false);
   }
 }

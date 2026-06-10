@@ -21,9 +21,11 @@ import 'package:lingola_buddy/Services/notification_permission_service.dart';
 import 'package:lingola_buddy/Services/revenuecat_service.dart';
 import 'package:lingola_buddy/Services/session_local_storage.dart';
 import 'package:lingola_buddy/firebase_options.dart';
+import 'package:rive/rive.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await RiveNative.init();
   await dotenv.load(fileName: '.env');
   if (kDebugMode) {
     debugPrint(

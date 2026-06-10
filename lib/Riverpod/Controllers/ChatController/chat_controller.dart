@@ -713,11 +713,14 @@ class ChatController extends StateNotifier<ChatState> {
           )
           .timeout(const Duration(seconds: 45));
 
-      final voiceAttachment = await _tutorVoice.synthesizeVoice(
-        tutorId: tutor.id,
-        tutor: tutor,
-        text: reply,
-      );
+      ChatAttachment? voiceAttachment;
+      if (ChatPromptBuilder.isVoiceDeliveryRequest(userMsg.apiText)) {
+        voiceAttachment = await _tutorVoice.synthesizeVoice(
+          tutorId: tutor.id,
+          tutor: tutor,
+          text: reply,
+        );
+      }
 
       final assistantMsg = ChatMessage(
         id: 'a-${DateTime.now().microsecondsSinceEpoch}',

@@ -13,7 +13,6 @@ import 'package:lingola_buddy/Core/Utils/realtime_auth_token.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/CallSessionController/call_session_controller.dart';
 import 'package:lingola_buddy/Riverpod/Controllers/UserProfileController/user_profile_controller.dart';
 import 'package:lingola_buddy/Core/Widgets/local_camera_preview.dart';
-import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Core/Widgets/tutor_rive_avatar.dart';
 import 'package:lingola_buddy/Models/app_enums.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
@@ -371,7 +370,6 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
     required Widget? bottomOverlay,
     bool isLocalPreview = false,
     bool dimContent = false,
-    int? portraitCacheWidth,
   }) {
     final Widget portrait;
     if (tutor != null) {
@@ -380,8 +378,6 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
         isTalking: _lipSyncAudible,
         fit: BoxFit.cover,
         alignment: const Alignment(0, -0.15),
-        cacheWidth: portraitCacheWidth,
-        cacheHeight: portraitCacheWidth,
         shimmerBaseColor: const Color(0xFFE8E8EC),
         shimmerHighlightColor: const Color(0xFFF6F6F6),
       );
@@ -472,8 +468,6 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
     final tutor = ref.watch(tutorByIdProvider(tutorId)) ??
         ref.watch(tutorsCatalogProvider).first;
     final name = tutor.localizedDisplayName;
-    final cardWidth = MediaQuery.sizeOf(context).width - 32;
-    final portraitCacheWidth = TutorAvatarImage.decodePixels(context, cardWidth);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -526,7 +520,6 @@ class _ActiveCallViewState extends ConsumerState<ActiveCallView> {
                 child: _videoCard(
                   tutor: tutor,
                   bottomOverlay: null,
-                  portraitCacheWidth: portraitCacheWidth,
                 ),
               ),
             ),

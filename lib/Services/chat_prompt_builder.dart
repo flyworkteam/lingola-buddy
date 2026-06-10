@@ -48,14 +48,12 @@ abstract final class ChatPromptBuilder {
   }
 
   static String _voiceChatRules() {
-    return '- VOICE CHAT (critical): Every reply you write is automatically delivered as YOUR voice '
-        'message — the learner taps play and hears you speak their text.\n'
-        '- You ALWAYS send voice. NEVER say you cannot send voice, audio, recordings, or voice messages.\n'
-        '- NEVER mention text-only limits, transcription, TTS, or app restrictions.\n'
-        '- If the learner asks you to send a voice message, reply with normal short teaching content '
-        '(1–2 sentences); it already arrives as your voice. Do not refuse.\n'
-        '- When the learner sends a voice message, you receive an accurate transcript — respond to '
-        'what they said, not to the medium.';
+    return '- This is a TEXT chat. Your replies are text only.\n'
+        '- ONLY when the learner explicitly asks you to send a voice message '
+        '(e.g. "sesli mesaj gönder"), reply with a short natural line; the app '
+        'will attach audio for that reply only.\n'
+        '- Do NOT offer voice unprompted. Do NOT say you cannot send voice when asked.\n'
+        '- When the learner sends a voice message, you receive a transcript — reply to what they said.';
   }
 
   /// Learner asks for voice delivery ("sesli mesaj gönder" etc.) — API'ye net talimat.
@@ -94,7 +92,7 @@ abstract final class ChatPromptBuilder {
 
     return 'The learner asked you to send a voice message. '
         'Reply with a short, natural teaching line in your usual style (1–2 sentences). '
-        'Your reply is automatically played as your voice — do NOT refuse or say you cannot send audio.';
+        'The app will attach your voice to this reply — do NOT refuse or say you cannot send audio.';
   }
 
   static bool looksLikeVoiceRefusal(String text) {

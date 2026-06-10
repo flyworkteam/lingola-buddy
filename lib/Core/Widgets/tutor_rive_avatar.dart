@@ -2,7 +2,6 @@ import 'dart:async' show unawaited;
 
 import 'package:flutter/material.dart';
 import 'package:lingola_buddy/Core/Widgets/avatar_shimmer.dart';
-import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
 import 'package:lingola_buddy/Models/tutor_model.dart';
 import 'package:lingola_buddy/Services/rive_preload_service.dart';
 import 'package:rive/rive.dart' as rive;
@@ -15,8 +14,6 @@ class TutorRiveAvatar extends StatefulWidget {
     this.isTalking = false,
     this.fit = BoxFit.cover,
     this.alignment = const Alignment(0, -1.05),
-    this.cacheWidth,
-    this.cacheHeight,
     this.shimmerBaseColor,
     this.shimmerHighlightColor,
   });
@@ -25,8 +22,6 @@ class TutorRiveAvatar extends StatefulWidget {
   final bool isTalking;
   final BoxFit fit;
   final Alignment alignment;
-  final int? cacheWidth;
-  final int? cacheHeight;
   final Color? shimmerBaseColor;
   final Color? shimmerHighlightColor;
 
@@ -50,7 +45,7 @@ class _TutorRiveAvatarState extends State<TutorRiveAvatar> {
 
   Future<void> _resolveLoader() async {
     final loader =
-        await RivePreloadService.instance.ensureLoader(widget.tutor.rivUrl);
+        await RivePreloadService.instance.ensureLoader(widget.tutor.resolvedRivUrl);
     if (!mounted) return;
     setState(() {
       _loader = loader;
@@ -62,7 +57,7 @@ class _TutorRiveAvatarState extends State<TutorRiveAvatar> {
   @override
   void didUpdateWidget(covariant TutorRiveAvatar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.tutor.rivUrl != widget.tutor.rivUrl) {
+    if (oldWidget.tutor.resolvedRivUrl != widget.tutor.resolvedRivUrl) {
       _riveVisible = false;
       _loader = null;
       _riveFailed = false;
@@ -117,18 +112,6 @@ class _TutorRiveAvatarState extends State<TutorRiveAvatar> {
     );
   }
 
-  Widget _photoFallback() {
-    return TutorAvatarImage(
-      tutor: widget.tutor,
-      fit: widget.fit,
-      alignment: widget.alignment,
-      cacheWidth: widget.cacheWidth,
-      cacheHeight: widget.cacheHeight,
-      shimmerBaseColor: widget.shimmerBaseColor,
-      shimmerHighlightColor: widget.shimmerHighlightColor,
-    );
-  }
-
   rive.Fit _toRiveFit(BoxFit fit) {
     switch (fit) {
       case BoxFit.contain:
@@ -151,7 +134,7 @@ class _TutorRiveAvatarState extends State<TutorRiveAvatar> {
   @override
   Widget build(BuildContext context) {
     if (_riveFailed) {
-      return _photoFallback();
+      return _loadingPlaceholder();
     }
 
     final loader = _loader;
@@ -170,7 +153,7 @@ class _TutorRiveAvatarState extends State<TutorRiveAvatar> {
             builder: (context, state) {
               return switch (state) {
                 rive.RiveLoading() => const SizedBox.shrink(),
-                rive.RiveFailed() => _photoFallback(),
+                rive.RiveFailed() => _loadingPlaceholder(),
                 rive.RiveLoaded() => rive.RiveWidget(
                   controller: state.controller,
                   fit: _toRiveFit(widget.fit),

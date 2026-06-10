@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:rive/rive.dart' as rive;
 import 'package:lingola_buddy/Services/tutor_asset_cache_service.dart';
 
-/// Tutor .riv dosyalarını disk önbelleğinden yükler.
+/// Tutor .riv dosyalarını disk önbelleğinden veya CDN'den yükler.
 class RivePreloadService {
   RivePreloadService._();
   static final RivePreloadService instance = RivePreloadService._();
@@ -47,31 +47,60 @@ class RivePreloadService {
     try {
       final file = await TutorAssetCacheService.instance.getCachedFile(url);
       if (file != null) {
-        final riveFile = await rive.File.path(
-          file.path,
-          riveFactory: rive.Factory.rive,
-        );
-        if (riveFile != null) {
-          if (kDebugMode) debugPrint('[RivePreload] ready (disk) $url');
-          return rive.FileLoader.fromFile(
-            riveFile,
-            riveFactory: rive.Factory.rive,
-          );
+        final fromDisk = await _loaderFromPath(file.path);
+        if (fromDisk != null) {
+          _log('ready (disk) $url');
+          return fromDisk;
         }
       }
     } catch (e) {
-      if (kDebugMode) debugPrint('[RivePreload] disk failed $url — $e');
+      _log('disk failed $url — $e');
     }
 
-    if (kDebugMode) debugPrint('[RivePreload] fallback url $url');
-    final loader = rive.FileLoader.fromUrl(url, riveFactory: rive.Factory.rive);
-    loader.file().then((_) {
-      if (kDebugMode) debugPrint('[RivePreload] ready (url) $url');
-    }).catchError((Object e) {
-      if (kDebugMode) debugPrint('[RivePreload] failed $url — $e');
-      _cache.remove(url);
-    });
-    return loader;
+    final fromNetwork = await _loaderFromUrl(url);
+    if (fromNetwork != null) {
+      _log('ready (network) $url');
+      return fromNetwork;
+    }
+
+    _log('failed $url');
+    return null;
+  }
+
+  Future<rive.FileLoader?> _loaderFromPath(String path) async {
+    for (final factory in _factories) {
+      try {
+        final riveFile = await rive.File.path(path, riveFactory: factory);
+        if (riveFile == null) continue;
+        return rive.FileLoader.fromFile(riveFile, riveFactory: factory);
+      } catch (e) {
+        _log('path $factory — $e');
+      }
+    }
+    return null;
+  }
+
+  Future<rive.FileLoader?> _loaderFromUrl(String url) async {
+    for (final factory in _factories) {
+      try {
+        final riveFile = await rive.File.url(url, riveFactory: factory);
+        if (riveFile == null) continue;
+        return rive.FileLoader.fromFile(riveFile, riveFactory: factory);
+      } catch (e) {
+        _log('url $factory — $e');
+      }
+    }
+    return null;
+  }
+
+  /// Release iOS'ta native renderer sessizce düşebilir — Flutter renderer yedek.
+  static List<rive.Factory> get _factories => [
+        rive.Factory.rive,
+        rive.Factory.flutter,
+      ];
+
+  static void _log(String message) {
+    if (kDebugMode) debugPrint('[RivePreload] $message');
   }
 
   rive.FileLoader? obtainOrCreateLoader(String? rawUrl) {

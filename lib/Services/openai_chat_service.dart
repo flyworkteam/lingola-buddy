@@ -64,8 +64,8 @@ class OpenAiChatService {
         {
           'role': 'user',
           'content':
-              'Wrong: you CAN send voice — every reply is auto-played as your voice. '
-              'Send ONLY a short helpful teaching line now. No refusal, no meta talk.',
+              'Wrong: when the learner asks for voice, reply with a short helpful teaching line only. '
+              'The app attaches voice separately. No refusal, no meta talk.',
         },
       ]);
     }

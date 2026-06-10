@@ -75,6 +75,15 @@ class TutorModel {
   static String cdnRivUrlV2(String id) =>
       '$_cdnBase/${folderNameFromId(id)}/c_$id.riv';
 
+  /// API boş dönerse CDN yedeği; göreli URL'ye https ekler.
+  String get resolvedRivUrl {
+    final raw = rivUrl.trim();
+    if (raw.isEmpty) return cdnRivUrlV2(id);
+    final lower = raw.toLowerCase();
+    if (lower.startsWith('http://') || lower.startsWith('https://')) return raw;
+    return 'https://$raw';
+  }
+
   static String folderNameFromId(String id) {
     if (id.isEmpty) return id;
     return id[0].toUpperCase() + id.substring(1);

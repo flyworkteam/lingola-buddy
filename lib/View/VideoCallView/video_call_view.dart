@@ -75,7 +75,7 @@ class _VideoCallViewState extends ConsumerState<VideoCallView> {
     final tutor =
         ref.read(tutorByIdProvider(widget.tutorId)) ??
         ref.read(tutorsCatalogProvider).first;
-    unawaited(_waitForRive(tutor.rivUrl));
+    unawaited(_waitForRive(tutor.resolvedRivUrl));
 
     ref
         .read(callSessionControllerProvider.notifier)
