@@ -38,6 +38,9 @@ class _VideoCallViewState extends ConsumerState<VideoCallView> {
   RealtimeCallPhase _phase = RealtimeCallPhase.connecting;
   bool _handoffToActive = false;
   bool _ending = false;
+  bool _serverConnected = false;
+  bool _riveReady = false;
+  int _ringBurstsHeard = 0;
 
   static const ColorFilter _whiteIcon = ColorFilter.mode(
     Colors.white,
@@ -72,7 +75,7 @@ class _VideoCallViewState extends ConsumerState<VideoCallView> {
     final tutor =
         ref.read(tutorByIdProvider(widget.tutorId)) ??
         ref.read(tutorsCatalogProvider).first;
-    RivePreloadService.instance.preload(tutor.rivUrl);
+    unawaited(_waitForRive(tutor.rivUrl));
 
     ref
         .read(callSessionControllerProvider.notifier)
@@ -113,14 +116,41 @@ class _VideoCallViewState extends ConsumerState<VideoCallView> {
         if (!mounted) return;
         setState(() => _phase = p);
       },
-      onConnectionReady: _openActiveCall,
+      onConnectionReady: () {
+        if (!mounted) return;
+        _serverConnected = true;
+        _tryHandoffToActiveCall();
+      },
+      onRingBurstComplete: () {
+        if (!mounted) return;
+        _ringBurstsHeard++;
+        _tryHandoffToActiveCall();
+      },
     );
     ref.read(realtimeCallHolderProvider.notifier).attach(engine);
     await engine.start(skipPermissionRequest: true);
   }
 
-  void _openActiveCall() {
+  Future<void> _waitForRive(String? rivUrl) async {
+    final loader = await RivePreloadService.instance.ensureLoader(rivUrl);
+    if (loader != null) {
+      try {
+        await loader.file();
+      } catch (_) {}
+    }
     if (!mounted) return;
+    _riveReady = true;
+    _tryHandoffToActiveCall();
+  }
+
+  void _tryHandoffToActiveCall() {
+    if (_handoffToActive || _ending) return;
+    if (!_serverConnected || !_riveReady || _ringBurstsHeard < 2) return;
+    _openActiveCall();
+  }
+
+  void _openActiveCall() {
+    if (!mounted || _handoffToActive) return;
     _handoffToActive = true;
     Navigator.of(
       context,

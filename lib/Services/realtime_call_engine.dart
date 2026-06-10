@@ -42,6 +42,7 @@ class RealtimeCallEngine {
     this.onPhaseChanged,
     this.onVisemeTimeline,
     this.onConnectionReady,
+    this.onRingBurstComplete,
     this.onServerEnded,
     this.onEnded,
   });
@@ -57,6 +58,9 @@ class RealtimeCallEngine {
   RealtimeLipSyncAudibleCallback? onLipSyncAudibleChanged;
   final RealtimeVisemeTimelineCallback? onVisemeTimeline;
   VoidCallback? onConnectionReady;
+
+  /// Tek “çalıyor” darbesi (~0,9 sn) tamamlandığında.
+  VoidCallback? onRingBurstComplete;
 
   /// İlk kez kullanıcı konuşmaya başladığında (VAD).
   VoidCallback? onUserSpeechStarted;
@@ -89,11 +93,15 @@ class RealtimeCallEngine {
   bool _pcmSetup = false;
   bool _pcmStarted = false;
 
-  bool _isRinging = false;
+  bool _ringSessionActive = false;
+  bool _ringBurstPlaying = false;
   int _ringSamplePos = 0;
+  Timer? _ringPauseTimer;
 
-  /// Tek “çalıyor” darbesi (~0,9 sn); tekrarlayan zil döngüsü yok.
-  static const int _ringOnSamples = (sampleRate * 9) ~/ 10;
+  /// Tek “çalıyor” darbesi (~0,8 sn).
+  static const int _ringOnSamples = (sampleRate * 4) ~/ 5;
+  /// Darbe arası sessizlik (telefon çalma ritmi).
+  static const Duration _ringPauseDuration = Duration(milliseconds: 2800);
   DateTime? _lastAudioSessionConfigAt;
 
   RealtimeCallPhase _phase = RealtimeCallPhase.connecting;
@@ -359,17 +367,34 @@ class RealtimeCallEngine {
   }
 
   Future<void> _startRingTone() async {
-    if (_isRinging) return;
-    _isRinging = true;
-    _ringSamplePos = 0;
+    if (_ringSessionActive) return;
+    _ringSessionActive = true;
     await _ensurePcmStarted();
     RealtimeCallLog.d('ring tone başladı');
+    _beginRingBurst();
+  }
+
+  void _beginRingBurst() {
+    if (!_ringSessionActive || _disposed) return;
+    _ringBurstPlaying = true;
+    _ringSamplePos = 0;
     _feedRingToneChunk();
   }
 
+  void _scheduleRingPause() {
+    _ringPauseTimer?.cancel();
+    _ringPauseTimer = Timer(_ringPauseDuration, () {
+      if (!_ringSessionActive || _disposed || _callActivated) return;
+      _beginRingBurst();
+    });
+  }
+
   void _stopRingTone() {
-    if (!_isRinging) return;
-    _isRinging = false;
+    if (!_ringSessionActive && !_ringBurstPlaying) return;
+    _ringSessionActive = false;
+    _ringBurstPlaying = false;
+    _ringPauseTimer?.cancel();
+    _ringPauseTimer = null;
     RealtimeCallLog.d('ring tone durdu');
     _flushPcm();
   }
@@ -400,7 +425,7 @@ class RealtimeCallEngine {
   }
 
   void _feedRingToneChunk() {
-    if (!_isRinging || !_pcmStarted) return;
+    if (!_ringBurstPlaying || !_pcmStarted) return;
     if (_ringSamplePos >= _ringOnSamples) return;
     const chunkSamples = 6000;
     final samples = Int16List(chunkSamples);
@@ -434,11 +459,17 @@ class RealtimeCallEngine {
   void _onPcmFeed(int remainingFrames) {
     if (!_pcmStarted) return;
 
-    if (_isRinging) {
+    if (_ringBurstPlaying) {
       if (_ringSamplePos < _ringOnSamples) {
         _feedRingToneChunk();
       } else {
-        _isRinging = false;
+        _ringBurstPlaying = false;
+        onRingBurstComplete?.call();
+        if (videoMode && !_callActivated && _ringSessionActive) {
+          _scheduleRingPause();
+        } else {
+          _ringSessionActive = false;
+        }
       }
       return;
     }
@@ -606,7 +637,9 @@ class RealtimeCallEngine {
   Future<void> _onConnectionReady() async {
     if (_disposed) return;
     _markServerReady();
-    _stopRingTone();
+    if (!videoMode) {
+      _stopRingTone();
+    }
     if (videoMode) {
       onConnectionReady?.call();
       return;

@@ -50,13 +50,17 @@ class _CallPreviewViewState extends ConsumerState<CallPreviewView> {
     final tutorId = _resolveTutorId(catalog);
     final tutor =
         ref.watch(tutorByIdProvider(tutorId)) ??
-        catalog.where((t) => t.id == tutorId).firstOrNull;
+        catalog.where((t) => t.id == tutorId).firstOrNull ??
+        (catalog.isNotEmpty ? catalog.first : null);
     final topic = widget.args.isGuestPreview
         ? null
         : resolveCallTopicDisplay(ref, widget.args.lessonId);
 
     if (tutor == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator(color: Colors.white)),
+      );
     }
 
     final tutorDisplayName = tutor.localizedDisplayName;
@@ -83,6 +87,7 @@ class _CallPreviewViewState extends ConsumerState<CallPreviewView> {
     final avatarR = (mq.width * 0.31).clamp(96.0, 121.0);
     final avatarSize = avatarR * 2;
     final avatarCacheSize = TutorAvatarImage.decodePixels(context, avatarSize);
+    final bgCacheSize = TutorAvatarImage.decodePixels(context, 160);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -90,14 +95,21 @@ class _CallPreviewViewState extends ConsumerState<CallPreviewView> {
         fit: StackFit.expand,
         children: [
           Positioned.fill(
-            child: ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: TutorAvatarImage(
-                tutor: tutor,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-                alignment: const Alignment(0, 0.5),
+            child: RepaintBoundary(
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Transform.scale(
+                  scale: 1.12,
+                  child: TutorAvatarImage(
+                    tutor: tutor,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    alignment: const Alignment(0, 0.5),
+                    cacheWidth: bgCacheSize,
+                    filterQuality: FilterQuality.low,
+                  ),
+                ),
               ),
             ),
           ),

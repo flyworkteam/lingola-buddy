@@ -12,12 +12,12 @@ abstract final class TutorAssetsWarmupService {
     if (tutors.isEmpty) return;
 
     await Future.wait(
-      tutors.map(_warmupTutor),
+      tutors.map(warmupTutor),
       eagerError: false,
     );
   }
 
-  static Future<void> _warmupTutor(TutorModel tutor) async {
+  static Future<void> warmupTutor(TutorModel tutor) async {
     final photo = tutor.photoUrl.trim();
     final riv = tutor.rivUrl.trim();
 

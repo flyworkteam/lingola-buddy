@@ -22,16 +22,19 @@ abstract final class CallNavigation {
   /// Onboarding / giriş öncesi — rastgele bir eğitmen.
   static Future<T?> pushGuestPreview<T>(
     BuildContext context,
-    WidgetRef ref,
-  ) {
+    WidgetRef ref, {
+    String? tutorId,
+  }) {
     ref
         .read(callSessionControllerProvider.notifier)
         .markOnboardingGuestCallLimit();
     final catalog = ref.read(tutorsCatalogProvider);
-    final tutorId = catalog.isEmpty
-        ? 'sophie'
-        : catalog[Random().nextInt(catalog.length)].id;
-    return _pushArgs(context, CallPreviewArgs.guest(tutorId: tutorId));
+    final resolved = (tutorId != null && tutorId.isNotEmpty)
+        ? tutorId
+        : catalog.isEmpty
+            ? 'sophie'
+            : catalog[Random().nextInt(catalog.length)].id;
+    return _pushArgs(context, CallPreviewArgs.guest(tutorId: resolved));
   }
 
   /// Giriş sonrası — doğrudan görüntülü arama (önizleme ekranı yok).

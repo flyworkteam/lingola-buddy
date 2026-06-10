@@ -1,3 +1,6 @@
+import 'dart:async' show unawaited;
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,6 +11,9 @@ import 'package:lingola_buddy/Core/Theme/app_colors.dart';
 import 'package:lingola_buddy/Core/Theme/app_text_styles.dart';
 import 'package:lingola_buddy/Core/Widgets/app_primary_button.dart';
 import 'package:lingola_buddy/Core/Widgets/brand_aura_backdrop.dart';
+import 'package:lingola_buddy/Core/Widgets/tutor_avatar_image.dart';
+import 'package:lingola_buddy/Riverpod/Providers/tutors_catalog_provider.dart';
+import 'package:lingola_buddy/Services/tutor_assets_warmup_service.dart';
 
 /// Kişiselleştirilmiş plan animasyonu: aura, checklist illüstrasyonu, sırayla tamamlanan maddeler, hazır CTA.
 class GeneratingPlanView extends ConsumerStatefulWidget {
@@ -29,17 +35,52 @@ class _GeneratingPlanViewState extends ConsumerState<GeneratingPlanView> {
   int _completedSteps = 0;
   bool _ready = false;
   bool _cancelled = false;
+  String? _guestTutorId;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _runSequence());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_prefetchGuestPreview());
+      unawaited(_runSequence());
+    });
   }
 
   @override
   void dispose() {
     _cancelled = true;
     super.dispose();
+  }
+
+  Future<void> _prefetchGuestPreview() async {
+    try {
+      final catalog = await ref.read(tutorsCatalogAsyncProvider.future);
+      if (!mounted || catalog.isEmpty) return;
+
+      final tutor = catalog[Random().nextInt(catalog.length)];
+      _guestTutorId = tutor.id;
+      await TutorAssetsWarmupService.warmupTutor(tutor);
+      if (!mounted) return;
+
+      final width = MediaQuery.sizeOf(context).width;
+      final avatarSize = (width * 0.62).clamp(192.0, 242.0);
+      final avatarCache = TutorAvatarImage.decodePixels(context, avatarSize);
+      final bgCache = TutorAvatarImage.decodePixels(context, 160);
+
+      await Future.wait([
+        TutorAvatarImage.precache(
+          context,
+          tutor,
+          cacheWidth: avatarCache,
+          cacheHeight: avatarCache,
+        ),
+        TutorAvatarImage.precache(
+          context,
+          tutor,
+          cacheWidth: bgCache,
+        ),
+      ]);
+    } catch (_) {}
   }
 
   Future<void> _runSequence() async {
@@ -195,7 +236,11 @@ class _GeneratingPlanViewState extends ConsumerState<GeneratingPlanView> {
                       minimumHeight: 60,
                       icon: _ctaArrowIcon(),
                       onPressed: () {
-                        CallNavigation.pushGuestPreview(context, ref);
+                        CallNavigation.pushGuestPreview(
+                          context,
+                          ref,
+                          tutorId: _guestTutorId,
+                        );
                       },
                     ),
                   ],

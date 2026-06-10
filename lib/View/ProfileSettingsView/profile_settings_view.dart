@@ -81,6 +81,7 @@ class _ProfileSettingsViewState extends ConsumerState<ProfileSettingsView> {
         }(),
       );
       if (!mounted) return;
+      FocusManager.instance.primaryFocus?.unfocus();
       AppSnackBar.success(
         AppTranslations.section('profile_settings', 'profile_saved'),
         context: context,

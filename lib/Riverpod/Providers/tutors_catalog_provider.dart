@@ -9,7 +9,13 @@ import 'package:lingola_buddy/Services/tutor_assets_warmup_service.dart';
 final tutorsCatalogAsyncProvider = FutureProvider<List<TutorModel>>((ref) async {
   ref.watch(userProfileControllerProvider.select((s) => s.uiLanguageCode));
   final list = await ref.read(tutorRepositoryProvider).fetchTutors();
-  unawaited(TutorAssetsWarmupService.warmupCatalog(list));
+  // Tam katalog ısınması arka planda; onboarding önizlemesini kilitlemesin.
+  unawaited(
+    Future<void>.delayed(
+      const Duration(seconds: 2),
+      () => TutorAssetsWarmupService.warmupCatalog(list),
+    ),
+  );
   return list;
 });
 
